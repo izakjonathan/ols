@@ -128,3 +128,12 @@ Also refreshed the local logo image asset.
   - compact Gem timer form
   - task list with tap-to-expand details
 - Frontend services and copy adjusted for Ølands Service as a transport/logistics company.
+
+
+## v11 button/style fix
+
+- Restored correct rounded pill styling for all gold-button/outline-button elements after the white-accent conversion.
+- Kept white/neutral design, no gold accent utilities.
+- Migrates old car-care service catalogue from existing local/Supabase state to the new transport/logistics catalogue.
+- Replaced remaining visible bil/car wording in frontend/draft/order summaries with opgave/task wording.
+- Production build tested successfully.

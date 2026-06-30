@@ -167,33 +167,56 @@ a {
 
 .gold-button,
 .outline-button {
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  color: #ffffff;
-  background: rgba(0,0,0,0.32);
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.86rem 1.2rem;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease;
 }
 
 .gold-button {
-  color: #050505;
-  background: linear-gradient(135deg, #ffffff, #d9d9d9);
   border: 1px solid rgba(255, 255, 255, 0.95);
+  color: #050505;
+  background: linear-gradient(135deg, #ffffff 0%, #f1f1f1 48%, #d9d9d9 100%);
   box-shadow: 0 10px 34px rgba(255, 255, 255, 0.12);
 }
 
 .outline-button {
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.52);
   color: #ffffff;
-  background: rgba(0,0,0,0.32);
+  background: rgba(0, 0, 0, 0.34);
 }
 
 .gold-button:hover,
 .outline-button:hover {
-  border-color: rgba(255, 255, 255, 0.76);
-  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 42px rgba(255, 255, 255, 0.16);
+}
+
+.gold-button:hover {
+  background: linear-gradient(135deg, #ffffff 0%, #ffffff 42%, #e6e6e6 100%);
 }
 
 .outline-button:hover {
-  border-color: rgba(255, 255, 255, 0.76);
+  border-color: rgba(255, 255, 255, 0.82);
   background: rgba(255, 255, 255, 0.08);
+}
+
+.gold-button:active,
+.outline-button:active {
+  transform: translateY(0);
 }
 
 @media (max-width: 640px) {
