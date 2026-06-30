@@ -69,3 +69,20 @@ This build uses normal Vercel Next.js detection:
 - no custom buildCommand
 
 Supabase support from v2/v3 is preserved.
+
+
+## v5 fast install
+
+Reduces Vercel dependency installation by removing ESLint-related packages and deleting the lockfile so Vercel uses npm install rather than npm ci. Supabase support is unchanged.
+
+
+## v6 EventOS deployment settings
+
+This build copies the deployment pattern from the EventOS ZIP that deploys quickly:
+- npm install instead of npm ci
+- no package-lock
+- package-lock=false in .npmrc
+- Next 16 / React 19.2 stack
+- build limited to 1 CPU worker
+- Node 24.x kept for Vercel requirement
+- Supabase support preserved
