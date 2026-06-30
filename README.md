@@ -187,3 +187,14 @@ Also refreshed the local logo image asset.
 - Home Screen icon / favicon assets regenerated from uploaded image 2.
 - Top-left navigation logo replaced with uploaded image 3.
 - v15 backend outer border and dock-clearance fixes preserved.
+
+
+## v17 backend login / fixed header
+
+- Removed "Beskyttet backend" text.
+- Removed backend login explanatory text.
+- Removed bordered panel around backend login element.
+- Reduced top negative space on backend login screen.
+- Header changed from sticky to fixed so it remains visible while scrolling.
+- Added content top padding to avoid fixed-header overlap.
+- Production build tested successfully.
