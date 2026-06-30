@@ -917,13 +917,13 @@ function EmployeesModule({ employees, timeEntries, newEmployeeName, onNameChange
     setOpenTaskId("");
   }
 
-  return <div className="mt-6 grid gap-5 pb-36">
-    <section className="panel p-6">
-      <button type="button" onClick={openAllTasks} className={`w-full rounded-2xl border p-5 text-left transition ${allTaskListOpen ? "border-white bg-white/10" : "border-white/10 bg-white/[0.04] hover:border-white/35"}`}>
+  return <div className="mt-4 grid gap-4 pb-48">
+    <section className="grid gap-2">
+      <button type="button" onClick={openAllTasks} className={`w-full rounded-2xl border px-4 py-3 text-left transition ${allTaskListOpen ? "border-white bg-white/10" : "border-white/10 bg-white/[0.04] hover:border-white/35"}`}>
         <p className="text-xs uppercase tracking-[0.18em] text-stone-400">Total timer</p>
-        <p className="mt-2 text-4xl font-black text-white">{formatHours(totalHours)}</p>
+        <p className="mt-1 text-3xl font-black text-white">{formatHours(totalHours)}</p>
       </button>
-      <div className="mt-4 grid gap-2">
+      <div className="grid gap-2">
         {employees.length === 0 && <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-stone-300/75">Ingen medarbejdere oprettet endnu.</p>}
         {employees.map((employee) => {
           const active = selectedEmployeeId === employee.id;
@@ -935,7 +935,7 @@ function EmployeesModule({ employees, timeEntries, newEmployeeName, onNameChange
       </div>
     </section>
 
-    {(allTaskListOpen || selectedEmployee) && <section className="panel p-6">
+    {(allTaskListOpen || selectedEmployee) && <section className="panel p-4">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <h3 className="panel-title">{selectedEmployee ? `${selectedEmployee.name} · opgaver` : "Alle opgaver"}</h3>
         <button type="button" className="outline-button" onClick={() => { setSelectedEmployeeId(""); setShowAllTasks(false); setOpenTaskId(""); }}>Luk liste</button>
@@ -964,12 +964,12 @@ function EmployeesModule({ employees, timeEntries, newEmployeeName, onNameChange
       </div>
     </section>}
 
-    <section className="panel p-6">
+    <section className="grid gap-4">
       <button type="button" onClick={() => setEmployeeDashboardOpen((open) => !open)} className="flex w-full items-center justify-between gap-4 rounded-2xl border border-white/15 bg-white/[0.04] px-4 py-3 text-left">
-        <span className="font-black uppercase tracking-[0.18em] text-white">Medarbejderdashboard</span>
+        <span className="min-w-0 truncate text-sm font-black uppercase tracking-[0.14em] text-white sm:text-base">Medarbejderdashboard</span>
         <span className="text-2xl text-white">{employeeDashboardOpen ? "−" : "+"}</span>
       </button>
-      {employeeDashboardOpen && <div className="mt-5">
+      {employeeDashboardOpen && <div className="panel p-4">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="eyebrow">Medarbejdere</p>
@@ -981,27 +981,27 @@ function EmployeesModule({ employees, timeEntries, newEmployeeName, onNameChange
           </form>
         </div>
 
-        <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {employees.length === 0 && <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-stone-300/75">Ingen medarbejdere oprettet endnu.</p>}
-          {employees.map((employee) => <div key={employee.id} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+          {employees.map((employee) => <div key={employee.id} className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h4 className="text-xl font-black text-white">{employee.name}</h4>
                 <p className="mt-1 text-sm text-stone-300/75">{formatHours(totalFor(employee))}</p>
-                <p className="mt-1 text-xs text-stone-500">/employee/{employee.token}</p>
+                <p className="mt-1 truncate text-xs text-stone-500">/employee/{employee.token}</p>
               </div>
               <span className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-[0.12em] ${employee.active ? "border-white/30 text-white" : "border-red-300/35 text-red-200"}`}>{employee.active ? "Aktiv" : "Deaktiveret"}</span>
             </div>
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              <button type="button" className="gold-button" onClick={() => onCopyLink(employee)}>Kopiér link</button>
-              <button type="button" className="outline-button" onClick={() => onUpdateEmployee(employee.id, { active: !employee.active })}>{employee.active ? "Deaktiver" : "Aktiver"}</button>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <button type="button" className="gold-button !min-h-[2.55rem] !px-2 !text-[0.62rem] !tracking-[0.12em]" onClick={() => onCopyLink(employee)}>Kopiér link</button>
+              <button type="button" className="outline-button !min-h-[2.55rem] !px-2 !text-[0.62rem] !tracking-[0.12em]" onClick={() => onUpdateEmployee(employee.id, { active: !employee.active })}>{employee.active ? "Deaktiver" : "Aktiver"}</button>
             </div>
           </div>)}
         </div>
       </div>}
     </section>
 
-    <section className="panel p-6">
+    <section className="panel p-4">
       <h3 className="panel-title">Fjern timer fra total</h3>
       <form onSubmit={removeHours} className="mt-5 grid gap-4 lg:grid-cols-[1fr_10rem_1fr_auto] lg:items-end">
         <Field label="Medarbejder"><Select value={adjustEmployeeId} onChange={(event) => setAdjustEmployeeId(event.target.value)} required><option value="">Vælg medarbejder</option>{employees.map((employee) => <option key={employee.id} value={employee.id}>{employee.name}</option>)}</Select></Field>

@@ -152,3 +152,14 @@ Also refreshed the local logo image asset.
 - Copy/deactivate buttons sit next to each other.
 - Copy link alert now only says "Link kopieret".
 - Production build tested successfully.
+
+
+## v13 timer scale fix
+
+- Removed outer wrapping card around the Timer top dashboard.
+- Removed outer wrapping card around the collapsed Medarbejderdashboard toggle.
+- Reduced Timer spacing and padding.
+- Compact employee management cards inside the collapsed dashboard.
+- Made Kopiér link / Deaktiver buttons smaller so they stay next to each other on mobile.
+- Truncated long employee token paths to avoid horizontal overflow.
+- Production build tested successfully.
