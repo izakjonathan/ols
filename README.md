@@ -86,3 +86,21 @@ This build copies the deployment pattern from the EventOS ZIP that deploys quick
 - build limited to 1 CPU worker
 - Node 24.x kept for Vercel requirement
 - Supabase support preserved
+
+
+## v7 white UI
+
+Replaces the gold accent colour across the customer frontend and backend with white/neutral accents. Functionality, Supabase support, and EventOS deployment settings are unchanged.
+
+
+## v8 Employee hour control
+
+Adds a backend employee-hours module:
+- Admin can create employees.
+- Each employee gets a private link: `/employee/[token]`.
+- Employee page only allows time entry and does not expose backend access.
+- Employees can add date, start time, end time, task name and note.
+- Duration is calculated automatically.
+- Backend dashboard shows all employee tasks with date, start, end, total time, employee name, task name and note.
+- Backend can remove a chosen amount of hours from a chosen employee total with a note.
+- Employee/hour data is included in Supabase shared state when Supabase is configured.

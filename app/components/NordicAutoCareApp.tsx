@@ -15,8 +15,10 @@ type InvoiceStatus = "Kladde" | "Sendt" | "Betalt" | "Forfalden" | "Annulleret";
 type InvoiceLine = { id: string; text: string; qty: number; price: number };
 type InvoiceRecord = { id: string; orderId: string; invoiceNo: string; createdAt: string; dueDate: string; sentAt?: string; paidAt?: string; customerName: string; email: string; invoiceAddress: string; company: string; cvr: string; status: InvoiceStatus; lines: InvoiceLine[]; note: string };
 type Priority = "Normal" | "Haster" | "VIP";
+type Employee = { id: string; name: string; token: string; active: boolean; createdAt: string };
+type TimeEntry = { id: string; employeeId: string; employeeName: string; date: string; startTime: string; endTime: string; taskName: string; note: string; hours: number; createdAt: string; kind: "work" | "adjustment" };
 type CompanyInfo = { name: string; phone: string; email: string; openingHours: string; address: string; invoiceName: string; cvr: string; invoiceEmail: string; invoiceAddress: string; paymentTerms: string; bankInfo: string };
-type AdminView = "newOrders" | "calendar" | "invoices" | "completed" | "services" | "company" | "settings";
+type AdminView = "newOrders" | "calendar" | "invoices" | "completed" | "services" | "company" | "employees" | "settings";
 type Order = {
   id: string;
   createdAt: string;
@@ -41,6 +43,76 @@ const INVOICE_STORAGE_KEY = "oland-service-invoices-v1";
 const SERVICE_DRAFTS_KEY = "oland-service-service-drafts-v1";
 const COMPANY_INFO_KEY = "oland-service-company-info-v1";
 const LEGACY_STORAGE_KEY = "oland-service-orders-v1";
+
+const EMPLOYEES_STORAGE_KEY = "oland-service-employees-v1";
+const TIME_ENTRIES_STORAGE_KEY = "oland-service-time-entries-v1";
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, "") ?? "";
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+const SUPABASE_TABLE = process.env.NEXT_PUBLIC_SUPABASE_TABLE || "oland_service_state";
+const SUPABASE_STATE_ID = process.env.NEXT_PUBLIC_SUPABASE_STATE_ID || "main";
+
+type PersistentState = {
+  orders?: Order[];
+  invoices?: InvoiceRecord[];
+  serviceDrafts?: { services: Service[]; extras: Extra[]; packages: CarePackage[] };
+  companyInfo?: CompanyInfo;
+  employees?: Employee[];
+  timeEntries?: TimeEntry[];
+  updatedAt?: string;
+};
+
+function supabaseConfigured() {
+  return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
+}
+
+async function supabaseRequest(path: string, init: RequestInit = {}) {
+  if (!supabaseConfigured()) throw new Error("Supabase is not configured");
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    ...init,
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      "Content-Type": "application/json",
+      ...(init.headers ?? {})
+    }
+  });
+  if (!response.ok) {
+    const message = await response.text().catch(() => "");
+    throw new Error(`Supabase error ${response.status}: ${message}`);
+  }
+  return response;
+}
+
+async function loadSupabaseState(): Promise<PersistentState | null> {
+  if (!supabaseConfigured()) return null;
+  const response = await supabaseRequest(`${SUPABASE_TABLE}?select=data&id=eq.${encodeURIComponent(SUPABASE_STATE_ID)}&limit=1`);
+  const rows = await response.json();
+  return rows?.[0]?.data ?? null;
+}
+
+async function saveSupabaseState(data: PersistentState) {
+  if (!supabaseConfigured()) return;
+  await supabaseRequest(SUPABASE_TABLE, {
+    method: "POST",
+    headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
+    body: JSON.stringify({ id: SUPABASE_STATE_ID, data: { ...data, updatedAt: new Date().toISOString() } })
+  });
+}
+
+function hoursBetween(start: string, end: string) {
+  if (!start || !end) return 0;
+  const [sh, sm] = start.split(":").map(Number);
+  const [eh, em] = end.split(":").map(Number);
+  let startMinutes = sh * 60 + sm;
+  let endMinutes = eh * 60 + em;
+  if (endMinutes < startMinutes) endMinutes += 24 * 60;
+  return Math.max(0, Math.round(((endMinutes - startMinutes) / 60) * 100) / 100);
+}
+
+function formatHours(hours: number) {
+  return `${hours.toLocaleString("da-DK", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} timer`;
+}
+
 
 let services: Service[] = [
   { id: "handwash", name: "Udvendig håndvask", price: 249 },
@@ -87,6 +159,7 @@ const adminViews: Array<{ id: AdminView; label: string; icon: string }> = [
   { id: "completed", label: "Færdige", icon: "✓" },
   { id: "services", label: "Ydelser", icon: "✎" },
   { id: "company", label: "Firma", icon: "◎" },
+  { id: "employees", label: "Timer", icon: "◴" },
   { id: "settings", label: "Backup", icon: "↧" }
 ];
 
@@ -170,7 +243,7 @@ function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>) { return 
 function TextArea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) { return <textarea {...props} className={`form-input min-h-28 resize-none ${props.className ?? ""}`} />; }
 function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) { return <select {...props} className={`form-input ${props.className ?? ""}`} />; }
 
-export default function NordicAutoCareApp({ mode = "frontend" }: { mode?: "frontend" | "backend" }) {
+export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "" }: { mode?: "frontend" | "backend" | "employee"; employeeToken?: string }) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [invoices, setInvoices] = useState<InvoiceRecord[]>([]);
   const [customer, setCustomer] = useState<CustomerInfo>(emptyCustomer);
@@ -187,11 +260,17 @@ export default function NordicAutoCareApp({ mode = "frontend" }: { mode?: "front
   const [searchTerm, setSearchTerm] = useState("");
   const importRef = useRef<HTMLInputElement>(null);
   const isBackend = mode === "backend";
+  const isEmployee = mode === "employee";
   const [adminPin, setAdminPin] = useState("");
   const [adminUnlocked, setAdminUnlocked] = useState(false);
   const [draftSummaryOpen, setDraftSummaryOpen] = useState(false);
   const [serviceDrafts, setServiceDrafts] = useState(() => ({ services: services.map((item) => ({ ...item, draft: false })), extras: extras.map((item) => ({ ...item, draft: false })), packages: packages.map((item) => ({ ...item, draft: false, description: item.items.join(", ") })) }));
   const [companyInfo, setCompanyInfo] = useState<CompanyInfo>(defaultCompanyInfo);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
+  const [newEmployeeName, setNewEmployeeName] = useState("");
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [syncStatus, setSyncStatus] = useState("Lokal lagring");
 
   useEffect(() => {
     if (!isBackend) return;
@@ -213,39 +292,118 @@ export default function NordicAutoCareApp({ mode = "frontend" }: { mode?: "front
   }
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
-      if (stored) {
-        const parsed = (JSON.parse(stored) as Order[]).map(normaliseOrder);
+    let cancelled = false;
+
+    function applyState(data: PersistentState | null) {
+      if (!data) return;
+      if (data.orders) {
+        const parsed = data.orders.map(normaliseOrder);
         setOrders(parsed);
         setSelectedOrderId(parsed[0]?.id ?? "");
       }
-    } catch { setOrders([]); }
-    try {
-      const storedInvoices = localStorage.getItem(INVOICE_STORAGE_KEY);
-      if (storedInvoices) {
-        const parsedInvoices = (JSON.parse(storedInvoices) as InvoiceRecord[]).map(normaliseInvoice);
+      if (data.invoices) {
+        const parsedInvoices = data.invoices.map(normaliseInvoice);
         setInvoices(parsedInvoices);
         setSelectedInvoiceId(parsedInvoices[0]?.id ?? "");
       }
-    } catch { setInvoices([]); }
-    try {
-      const storedCatalog = localStorage.getItem(SERVICE_DRAFTS_KEY);
-      if (storedCatalog) {
-        const parsedCatalog = JSON.parse(storedCatalog);
-        if (parsedCatalog.services) services = parsedCatalog.services.filter((item: Service) => !item.draft);
-        if (parsedCatalog.extras) extras = parsedCatalog.extras.filter((item: Extra) => !item.draft);
-        if (parsedCatalog.packages) packages = parsedCatalog.packages.filter((item: CarePackage) => !item.draft);
-        setServiceDrafts(parsedCatalog);
+      if (data.serviceDrafts) {
+        if (data.serviceDrafts.services) services = data.serviceDrafts.services.filter((item: Service) => !item.draft);
+        if (data.serviceDrafts.extras) extras = data.serviceDrafts.extras.filter((item: Extra) => !item.draft);
+        if (data.serviceDrafts.packages) packages = data.serviceDrafts.packages.filter((item: CarePackage) => !item.draft);
+        setServiceDrafts(data.serviceDrafts as any);
       }
-    } catch {}
-    try { const storedCompany = localStorage.getItem(COMPANY_INFO_KEY); if (storedCompany) setCompanyInfo({ ...defaultCompanyInfo, ...JSON.parse(storedCompany) }); } catch {}
+      if (data.companyInfo) setCompanyInfo({ ...defaultCompanyInfo, ...data.companyInfo });
+      if (data.employees) setEmployees(data.employees);
+      if (data.timeEntries) setTimeEntries(data.timeEntries);
+    }
+
+    async function loadInitialData() {
+      let localState: PersistentState = {};
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
+        if (stored) localState.orders = (JSON.parse(stored) as Order[]).map(normaliseOrder);
+      } catch { localState.orders = []; }
+      try {
+        const storedInvoices = localStorage.getItem(INVOICE_STORAGE_KEY);
+        if (storedInvoices) localState.invoices = (JSON.parse(storedInvoices) as InvoiceRecord[]).map(normaliseInvoice);
+      } catch { localState.invoices = []; }
+      try {
+        const storedCatalog = localStorage.getItem(SERVICE_DRAFTS_KEY);
+        if (storedCatalog) localState.serviceDrafts = JSON.parse(storedCatalog);
+      } catch {}
+      try {
+        const storedCompany = localStorage.getItem(COMPANY_INFO_KEY);
+        if (storedCompany) localState.companyInfo = { ...defaultCompanyInfo, ...JSON.parse(storedCompany) };
+      } catch {}
+      try {
+        const storedEmployees = localStorage.getItem(EMPLOYEES_STORAGE_KEY);
+        if (storedEmployees) localState.employees = JSON.parse(storedEmployees);
+      } catch {}
+      try {
+        const storedTimeEntries = localStorage.getItem(TIME_ENTRIES_STORAGE_KEY);
+        if (storedTimeEntries) localState.timeEntries = JSON.parse(storedTimeEntries);
+      } catch {}
+
+      if (supabaseConfigured()) {
+        try {
+          setSyncStatus("Henter fra Supabase...");
+          const cloudState = await loadSupabaseState();
+          if (!cancelled && cloudState) {
+            applyState(cloudState);
+            setSyncStatus("Supabase synkroniseret");
+          } else if (!cancelled) {
+            applyState(localState);
+            await saveSupabaseState(localState);
+            setSyncStatus("Supabase oprettet");
+          }
+        } catch (error) {
+          console.error(error);
+          if (!cancelled) {
+            applyState(localState);
+            setSyncStatus("Supabase fejl - bruger lokal backup");
+          }
+        }
+      } else if (!cancelled) {
+        applyState(localState);
+        setSyncStatus("Lokal lagring - Supabase ikke konfigureret");
+      }
+
+      if (!cancelled) setDataLoaded(true);
+    }
+
+    loadInitialData();
+    return () => { cancelled = true; };
   }, []);
 
-  useEffect(() => { localStorage.setItem(STORAGE_KEY, JSON.stringify(orders)); }, [orders]);
-  useEffect(() => { localStorage.setItem(INVOICE_STORAGE_KEY, JSON.stringify(invoices)); }, [invoices]);
-  useEffect(() => { localStorage.setItem(SERVICE_DRAFTS_KEY, JSON.stringify(serviceDrafts)); services = serviceDrafts.services.filter((item) => !item.draft); extras = serviceDrafts.extras.filter((item) => !item.draft); packages = serviceDrafts.packages.filter((item) => !item.draft); }, [serviceDrafts]);
-  useEffect(() => { localStorage.setItem(COMPANY_INFO_KEY, JSON.stringify(companyInfo)); }, [companyInfo]);
+  useEffect(() => {
+    services = serviceDrafts.services.filter((item) => !item.draft);
+    extras = serviceDrafts.extras.filter((item) => !item.draft);
+    packages = serviceDrafts.packages.filter((item) => !item.draft);
+  }, [serviceDrafts]);
+
+  useEffect(() => {
+    if (!dataLoaded) return;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+    localStorage.setItem(INVOICE_STORAGE_KEY, JSON.stringify(invoices));
+    localStorage.setItem(SERVICE_DRAFTS_KEY, JSON.stringify(serviceDrafts));
+    localStorage.setItem(COMPANY_INFO_KEY, JSON.stringify(companyInfo));
+    localStorage.setItem(EMPLOYEES_STORAGE_KEY, JSON.stringify(employees));
+    localStorage.setItem(TIME_ENTRIES_STORAGE_KEY, JSON.stringify(timeEntries));
+
+    if (!supabaseConfigured()) {
+      setSyncStatus("Lokal lagring - Supabase ikke konfigureret");
+      return;
+    }
+
+    const syncTimer = window.setTimeout(() => {
+      setSyncStatus("Gemmer i Supabase...");
+      saveSupabaseState({ orders, invoices, serviceDrafts, companyInfo, employees, timeEntries })
+        .then(() => setSyncStatus(`Supabase gemt ${new Date().toLocaleTimeString("da-DK", { hour: "2-digit", minute: "2-digit" })}`))
+        .catch((error) => { console.error(error); setSyncStatus("Supabase fejl - lokal backup gemt"); });
+    }, 650);
+
+    return () => window.clearTimeout(syncTimer);
+  }, [orders, invoices, serviceDrafts, companyInfo, employees, timeEntries, dataLoaded]);
 
   const draftTotal = useMemo(() => orderTotal({ cars }), [cars]);
   const draftStarted = useMemo(() => {
@@ -320,6 +478,64 @@ export default function NordicAutoCareApp({ mode = "frontend" }: { mode?: "front
     setSelectedOrderId(newOrder.id); setSubmittedId(newOrder.id);
     setCustomer(emptyCustomer); setInvoice(emptyInvoice); setPreferredDate(""); setPreferredTime(""); setCustomerMessage(""); setCars([makeCar()]); setDraftSummaryOpen(false);
   }
+  function createEmployee(event?: React.FormEvent<HTMLFormElement>) {
+    event?.preventDefault();
+    const name = newEmployeeName.trim();
+    if (!name) return;
+    const employee: Employee = { id: cryptoId(), name, token: cryptoId().replaceAll("-", ""), active: true, createdAt: new Date().toISOString() };
+    setEmployees((current) => [employee, ...current]);
+    setNewEmployeeName("");
+  }
+
+  function updateEmployee(id: string, patch: Partial<Employee>) {
+    setEmployees((current) => current.map((employee) => employee.id === id ? { ...employee, ...patch } : employee));
+  }
+
+  function employeeLink(employee: Employee) {
+    if (typeof window === "undefined") return `/employee/${employee.token}`;
+    return `${window.location.origin}/employee/${employee.token}`;
+  }
+
+  async function copyEmployeeLink(employee: Employee) {
+    const link = employeeLink(employee);
+    try {
+      await navigator.clipboard.writeText(link);
+      alert(`Link kopieret:\n${link}`);
+    } catch {
+      window.prompt("Kopiér medarbejderlink", link);
+    }
+  }
+
+  function addTimeEntry(employee: Employee, entry: Omit<TimeEntry, "id" | "employeeId" | "employeeName" | "createdAt" | "kind">) {
+    const fullEntry: TimeEntry = {
+      ...entry,
+      id: cryptoId(),
+      employeeId: employee.id,
+      employeeName: employee.name,
+      createdAt: new Date().toISOString(),
+      kind: "work"
+    };
+    setTimeEntries((current) => [fullEntry, ...current]);
+  }
+
+  function removeEmployeeHours(employee: Employee, hours: number, note: string) {
+    if (!hours || hours <= 0) return;
+    const entry: TimeEntry = {
+      id: cryptoId(),
+      employeeId: employee.id,
+      employeeName: employee.name,
+      date: new Date().toISOString().slice(0, 10),
+      startTime: "",
+      endTime: "",
+      taskName: "Timer fjernet",
+      note: note || "Manuel justering",
+      hours: -Math.abs(hours),
+      createdAt: new Date().toISOString(),
+      kind: "adjustment"
+    };
+    setTimeEntries((current) => [entry, ...current]);
+  }
+
   function updateOrder(id: string, patch: Partial<Order>, activity?: string) {
     setOrders((current) => current.map((order) => order.id === id ? { ...order, ...patch, activity: activity ? [`${new Date().toLocaleString("da-DK")}: ${activity}`, ...(order.activity ?? [])] : order.activity } : order));
   }
@@ -453,11 +669,18 @@ export default function NordicAutoCareApp({ mode = "frontend" }: { mode?: "front
     setSelectedOrderId(parsed[0]?.id ?? "");
   }
 
+  const activeEmployee = employees.find((employee) => employee.token === employeeToken && employee.active);
+  const employeeEntries = activeEmployee ? timeEntries.filter((entry) => entry.employeeId === activeEmployee.id) : [];
+
+  if (isEmployee) {
+    return <EmployeeHourPage employee={activeEmployee} entries={employeeEntries} onAddEntry={addTimeEntry} dataLoaded={dataLoaded} syncStatus={syncStatus} />;
+  }
+
   if (isBackend && !adminUnlocked) {
     return (
       <main className="relative grid min-h-screen place-items-center overflow-hidden bg-black px-5 text-stone-50">
         <div className="splash-screen" aria-hidden="true"><Image src="/images/nordic-logo-splash.jpeg" alt="" fill priority sizes="100vw" className="object-cover" /></div>
-        <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_-10%,rgba(180,116,59,.25),transparent_34%),linear-gradient(180deg,#0b0a09_0%,#030303_100%)]" />
+        <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_-10%,rgba(255,255,255,.25),transparent_34%),linear-gradient(180deg,#0b0a09_0%,#030303_100%)]" />
         <div className="noise fixed inset-0 -z-10 opacity-35" />
         <section className="panel w-full max-w-md p-6 sm:p-8">
           <p className="eyebrow">Beskyttet backend</p>
@@ -477,7 +700,7 @@ export default function NordicAutoCareApp({ mode = "frontend" }: { mode?: "front
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-stone-50">
       <div className="splash-screen" aria-hidden="true"><Image src="/images/nordic-logo-splash.jpeg" alt="" fill priority sizes="100vw" className="object-cover" /></div>
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_-10%,rgba(180,116,59,.25),transparent_34%),linear-gradient(180deg,#0b0a09_0%,#030303_100%)]" />
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_-10%,rgba(255,255,255,.25),transparent_34%),linear-gradient(180deg,#0b0a09_0%,#030303_100%)]" />
       <div className="noise fixed inset-0 -z-10 opacity-35" />
 
       <nav className="sticky top-0 z-40 border-b border-gold/15 bg-black/72 px-4 py-3 backdrop-blur-xl sm:px-8">
@@ -491,7 +714,7 @@ export default function NordicAutoCareApp({ mode = "frontend" }: { mode?: "front
 
       {!isBackend && <>
       <section id="top" className="relative px-5 pb-8 pt-12 sm:px-8 lg:px-12 lg:pt-20">
-        <div className="absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(circle_at_50%_0%,rgba(196,135,77,.18),transparent_55%)]" aria-hidden="true" />
+        <div className="absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,.18),transparent_55%)]" aria-hidden="true" />
         <div className="mx-auto grid w-full max-w-7xl items-center gap-8 lg:grid-cols-[1.02fr_.98fr]">
           <div className="relative z-10 flex flex-col justify-center gap-8 pt-4 lg:pt-0">
             <div><p className="text-center text-[0.78rem] uppercase tracking-[0.54em] text-stone-200 lg:text-left">Din opgave i sikre hænder</p><div className="mx-auto mt-4 h-px w-48 bg-gold/70 lg:mx-0" /><p className="mt-4 text-center text-sm uppercase tracking-[0.42em] text-gold lg:text-left">Kvalitet · Omhu · Tillid</p></div>
@@ -529,9 +752,10 @@ export default function NordicAutoCareApp({ mode = "frontend" }: { mode?: "front
           {adminView === "completed" && <CompletedOrdersModule orders={orders.filter((order) => ["Udført", "Faktura sendt", "Betaling modtaget", "Færdig", "Faktureret"].includes(order.status))} onUpdate={updateOrder} onUpdateCustomer={updateOrderCustomer} onUpdateInvoice={updateOrderInvoice} onUpdateCar={updateOrderCar} onToggleCarArray={toggleOrderCarArray} onAddCar={addCarToOrder} onRemoveCar={removeCarFromOrder} onDelete={deleteOrder} />}
           {adminView === "services" && <ServicesModule drafts={serviceDrafts} onUpdate={updateServiceDraft} onAdd={addServiceDraft} onPublish={publishServices} />}
           {adminView === "company" && <CompanyInfoModule companyInfo={companyInfo} onChange={setCompanyInfo} />}
-          {adminView === "settings" && <div className="mt-6 grid gap-5 lg:grid-cols-2"><section className="panel p-6"><h3 className="panel-title">Backup</h3><p className="text-stone-300/75">Eksporter alle ordrer til JSON, så data kan gemmes eller flyttes til en anden browser.</p><button className="gold-button mt-5 w-full" onClick={exportOrders}>Eksporter ordrer</button></section><section className="panel p-6"><h3 className="panel-title">Importer</h3><p className="text-stone-300/75">Importer en tidligere JSON backup. Dette erstatter de nuværende lokale ordrer.</p><input ref={importRef} type="file" accept="application/json" className="hidden" onChange={(e) => importOrders(e.target.files?.[0])} /><button className="outline-button mt-5 w-full" onClick={() => importRef.current?.click()}>Importer backup</button></section></div>}
-          <nav className="admin-dock fixed bottom-3 left-1/2 z-50 flex w-[calc(100%-1.25rem)] max-w-3xl -translate-x-1/2 items-stretch gap-2 overflow-x-auto rounded-[1.45rem] border border-gold/35 bg-black/94 p-2 shadow-[0_0_35px_rgba(199,127,58,.22)] backdrop-blur-xl sm:justify-between" aria-label="Backend menu">
-            {adminViews.map((view) => <button key={view.id} type="button" onClick={() => setAdminView(view.id)} className={`grid min-w-[4.85rem] shrink-0 place-items-center rounded-[1.05rem] px-2.5 py-2 text-[0.64rem] font-black uppercase leading-tight tracking-[0.045em] transition sm:min-w-0 sm:flex-1 ${adminView === view.id ? "bg-gold text-black shadow-[0_0_22px_rgba(199,127,58,.28)]" : "text-gold hover:bg-gold/10"}`}><span className="text-lg leading-none">{view.icon}</span><span className="mt-1 whitespace-nowrap">{view.label}</span></button>)}
+          {adminView === "employees" && <EmployeesModule employees={employees} timeEntries={timeEntries} newEmployeeName={newEmployeeName} onNameChange={setNewEmployeeName} onCreate={createEmployee} onUpdateEmployee={updateEmployee} onCopyLink={copyEmployeeLink} onRemoveHours={removeEmployeeHours} />}
+          {adminView === "settings" && <div className="mt-6 grid gap-5 lg:grid-cols-2"><section className="panel p-6 lg:col-span-2"><h3 className="panel-title">Supabase</h3><p className="text-stone-300/75">Status: {syncStatus}</p><p className="mt-3 text-sm text-stone-400/80">Medarbejdere, timer, ordrer, fakturaer, ydelser og firmaoplysninger gemmes i Supabase, når miljøvariablerne er sat i Vercel. Ellers bruges lokal browserbackup.</p></section><section className="panel p-6"><h3 className="panel-title">Backup</h3><p className="text-stone-300/75">Eksporter alle ordrer til JSON, så data kan gemmes eller flyttes til en anden browser.</p><button className="gold-button mt-5 w-full" onClick={exportOrders}>Eksporter ordrer</button></section><section className="panel p-6"><h3 className="panel-title">Importer</h3><p className="text-stone-300/75">Importer en tidligere JSON backup. Dette erstatter de nuværende lokale ordrer.</p><input ref={importRef} type="file" accept="application/json" className="hidden" onChange={(e) => importOrders(e.target.files?.[0])} /><button className="outline-button mt-5 w-full" onClick={() => importRef.current?.click()}>Importer backup</button></section></div>}
+          <nav className="admin-dock fixed bottom-3 left-1/2 z-50 flex w-[calc(100%-1.25rem)] max-w-3xl -translate-x-1/2 items-stretch gap-2 overflow-x-auto rounded-[1.45rem] border border-gold/35 bg-black/94 p-2 shadow-[0_0_35px_rgba(255,255,255,.22)] backdrop-blur-xl sm:justify-between" aria-label="Backend menu">
+            {adminViews.map((view) => <button key={view.id} type="button" onClick={() => setAdminView(view.id)} className={`grid min-w-[4.85rem] shrink-0 place-items-center rounded-[1.05rem] px-2.5 py-2 text-[0.64rem] font-black uppercase leading-tight tracking-[0.045em] transition sm:min-w-0 sm:flex-1 ${adminView === view.id ? "bg-gold text-black shadow-[0_0_22px_rgba(255,255,255,.28)]" : "text-gold hover:bg-gold/10"}`}><span className="text-lg leading-none">{view.icon}</span><span className="mt-1 whitespace-nowrap">{view.label}</span></button>)}
           </nav>
         </div></div></section>}
       {!isBackend && draftStarted && <DraftOrderFooter cars={cars} customer={customer} invoice={invoice} preferredDate={preferredDate} preferredTime={preferredTime} customerMessage={customerMessage} total={draftTotal} isOpen={draftSummaryOpen} onToggle={() => setDraftSummaryOpen((open) => !open)} />}
@@ -549,6 +773,179 @@ export default function NordicAutoCareApp({ mode = "frontend" }: { mode?: "front
       )}
     </main>
   );
+}
+
+
+
+function EmployeeHourPage({ employee, entries, onAddEntry, dataLoaded, syncStatus }: { employee?: Employee; entries: TimeEntry[]; onAddEntry: (employee: Employee, entry: Omit<TimeEntry, "id" | "employeeId" | "employeeName" | "createdAt" | "kind">) => void; dataLoaded: boolean; syncStatus: string }) {
+  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [taskName, setTaskName] = useState("");
+  const [note, setNote] = useState("");
+  const calculatedHours = hoursBetween(startTime, endTime);
+  const totalHours = entries.reduce((sum, entry) => sum + entry.hours, 0);
+
+  function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!employee || !date || !startTime || !endTime || !taskName.trim()) return;
+    onAddEntry(employee, { date, startTime, endTime, taskName: taskName.trim(), note: note.trim(), hours: calculatedHours });
+    setStartTime("");
+    setEndTime("");
+    setTaskName("");
+    setNote("");
+  }
+
+  if (!dataLoaded) {
+    return <main className="min-h-screen bg-black px-5 py-8 text-stone-50"><section className="panel mx-auto max-w-xl p-6"><h1 className="panel-title">Indlæser timer...</h1><p className="mt-3 text-stone-300/75">{syncStatus}</p></section></main>;
+  }
+
+  if (!employee) {
+    return <main className="min-h-screen bg-black px-5 py-8 text-stone-50"><section className="panel mx-auto max-w-xl p-6"><p className="eyebrow">Ølands Service</p><h1 className="mt-3 text-3xl font-black uppercase tracking-[0.16em] text-gold">Link ikke aktivt</h1><p className="mt-4 text-stone-300/75">Dette medarbejderlink findes ikke eller er deaktiveret. Kontakt admin for et nyt link.</p></section></main>;
+  }
+
+  return <main className="min-h-screen bg-black px-5 py-8 text-stone-50">
+    <section className="mx-auto grid max-w-3xl gap-5">
+      <div className="panel p-6">
+        <p className="eyebrow">Ølands Service</p>
+        <h1 className="mt-3 text-3xl font-black uppercase tracking-[0.16em] text-gold">Timekontrol</h1>
+        <p className="mt-3 text-stone-300/75">Medarbejder: <span className="font-bold text-white">{employee.name}</span></p>
+        <p className="mt-1 text-xs text-stone-400">{syncStatus}</p>
+      </div>
+
+      <form onSubmit={submit} className="panel grid gap-4 p-6">
+        <h2 className="panel-title">Tilføj opgave</h2>
+        <div className="grid gap-4 sm:grid-cols-3">
+          <Field label="Dato"><TextInput type="date" value={date} onChange={(event) => setDate(event.target.value)} required /></Field>
+          <Field label="Start"><TextInput type="time" value={startTime} onChange={(event) => setStartTime(event.target.value)} required /></Field>
+          <Field label="Slut"><TextInput type="time" value={endTime} onChange={(event) => setEndTime(event.target.value)} required /></Field>
+        </div>
+        <Field label="Opgavenavn"><TextInput value={taskName} onChange={(event) => setTaskName(event.target.value)} placeholder="Fx flytning, rengøring, kørsel" required /></Field>
+        <Field label="Note"><TextArea value={note} onChange={(event) => setNote(event.target.value)} placeholder="Kort note til opgaven" /></Field>
+        <div className="rounded-2xl border border-gold/25 bg-white/5 p-4">
+          <p className="text-xs font-black uppercase tracking-[0.16em] text-gold">Beregnet tid</p>
+          <p className="mt-1 text-2xl font-black">{formatHours(calculatedHours)}</p>
+        </div>
+        <button type="submit" className="gold-button w-full">Gem timer</button>
+      </form>
+
+      <section className="panel p-6">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="panel-title">Dine registreringer</h2>
+            <p className="mt-1 text-sm text-stone-300/70">Samlet: {formatHours(totalHours)}</p>
+          </div>
+        </div>
+        <div className="mt-5 grid gap-3">
+          {entries.length === 0 && <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-stone-300/75">Ingen timer registreret endnu.</p>}
+          {entries.map((entry) => <div key={entry.id} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <p className="font-black text-white">{entry.taskName}</p>
+                <p className="text-sm text-stone-300/75">{entry.date} {entry.startTime && entry.endTime ? `· ${entry.startTime}-${entry.endTime}` : ""}</p>
+                {entry.note && <p className="mt-2 text-sm text-stone-300/75">{entry.note}</p>}
+              </div>
+              <p className={`text-lg font-black ${entry.hours < 0 ? "text-red-200" : "text-gold"}`}>{formatHours(entry.hours)}</p>
+            </div>
+          </div>)}
+        </div>
+      </section>
+    </section>
+  </main>;
+}
+
+function EmployeesModule({ employees, timeEntries, newEmployeeName, onNameChange, onCreate, onUpdateEmployee, onCopyLink, onRemoveHours }: { employees: Employee[]; timeEntries: TimeEntry[]; newEmployeeName: string; onNameChange: (value: string) => void; onCreate: (event?: React.FormEvent<HTMLFormElement>) => void; onUpdateEmployee: (id: string, patch: Partial<Employee>) => void; onCopyLink: (employee: Employee) => void; onRemoveHours: (employee: Employee, hours: number, note: string) => void }) {
+  const [adjustEmployeeId, setAdjustEmployeeId] = useState("");
+  const [adjustHours, setAdjustHours] = useState("");
+  const [adjustNote, setAdjustNote] = useState("");
+
+  const sortedEntries = [...timeEntries].sort((a, b) => `${b.date}${b.createdAt}`.localeCompare(`${a.date}${a.createdAt}`));
+  const selectedAdjustEmployee = employees.find((employee) => employee.id === adjustEmployeeId);
+
+  function totalFor(employee: Employee) {
+    return timeEntries.filter((entry) => entry.employeeId === employee.id).reduce((sum, entry) => sum + entry.hours, 0);
+  }
+
+  function removeHours(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!selectedAdjustEmployee) return;
+    onRemoveHours(selectedAdjustEmployee, Number(adjustHours), adjustNote.trim());
+    setAdjustHours("");
+    setAdjustNote("");
+  }
+
+  return <div className="mt-6 grid gap-5">
+    <section className="panel p-6">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p className="eyebrow">Medarbejdere</p>
+          <h3 className="mt-2 panel-title">Opret medarbejderlinks</h3>
+          <p className="mt-2 text-sm text-stone-300/75">Hver medarbejder får sit eget link til timekontrol. Linket giver ikke adgang til backend.</p>
+        </div>
+        <form onSubmit={onCreate} className="flex min-w-0 flex-col gap-3 sm:flex-row lg:min-w-[30rem]">
+          <TextInput value={newEmployeeName} onChange={(event) => onNameChange(event.target.value)} placeholder="Medarbejdernavn" />
+          <button type="submit" className="gold-button shrink-0">Opret</button>
+        </form>
+      </div>
+      <div className="mt-6 grid gap-3">
+        {employees.length === 0 && <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-stone-300/75">Ingen medarbejdere oprettet endnu.</p>}
+        {employees.map((employee) => <div key={employee.id} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <h4 className="text-xl font-black text-white">{employee.name}</h4>
+                <span className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-[0.12em] ${employee.active ? "border-white/30 text-white" : "border-red-300/35 text-red-200"}`}>{employee.active ? "Aktiv" : "Deaktiveret"}</span>
+              </div>
+              <p className="mt-1 text-sm text-stone-300/75">Samlet: {formatHours(totalFor(employee))}</p>
+              <p className="mt-1 break-all text-xs text-stone-500">/employee/{employee.token}</p>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2 lg:w-[22rem]">
+              <button type="button" className="gold-button" onClick={() => onCopyLink(employee)}>Kopiér link</button>
+              <button type="button" className="outline-button" onClick={() => onUpdateEmployee(employee.id, { active: !employee.active })}>{employee.active ? "Deaktiver" : "Aktiver"}</button>
+            </div>
+          </div>
+        </div>)}
+      </div>
+    </section>
+
+    <section className="panel p-6">
+      <h3 className="panel-title">Fjern timer fra total</h3>
+      <p className="mt-2 text-sm text-stone-300/75">Bruges til manuel justering, fx pause, fejl eller timer der ikke skal tælles med.</p>
+      <form onSubmit={removeHours} className="mt-5 grid gap-4 lg:grid-cols-[1fr_10rem_1fr_auto] lg:items-end">
+        <Field label="Medarbejder"><Select value={adjustEmployeeId} onChange={(event) => setAdjustEmployeeId(event.target.value)} required><option value="">Vælg medarbejder</option>{employees.map((employee) => <option key={employee.id} value={employee.id}>{employee.name}</option>)}</Select></Field>
+        <Field label="Timer"><TextInput type="number" min="0" step="0.25" value={adjustHours} onChange={(event) => setAdjustHours(event.target.value)} placeholder="2.5" required /></Field>
+        <Field label="Note"><TextInput value={adjustNote} onChange={(event) => setAdjustNote(event.target.value)} placeholder="Hvorfor fjernes timer?" /></Field>
+        <button type="submit" className="gold-button">Fjern</button>
+      </form>
+    </section>
+
+    <section className="panel p-6">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h3 className="panel-title">Alle medarbejderopgaver</h3>
+          <p className="mt-1 text-sm text-stone-300/75">Dato, start, slut, total tid, navn og note.</p>
+        </div>
+        <p className="text-sm font-black text-gold">Total: {formatHours(timeEntries.reduce((sum, entry) => sum + entry.hours, 0))}</p>
+      </div>
+      <div className="mt-5 overflow-hidden rounded-2xl border border-white/10">
+        <div className="hidden grid-cols-[1fr_0.8fr_0.8fr_0.8fr_1.2fr_1.4fr_1.4fr] gap-3 border-b border-white/10 bg-white/5 px-4 py-3 text-xs font-black uppercase tracking-[0.12em] text-stone-300/75 lg:grid">
+          <span>Dato</span><span>Start</span><span>Slut</span><span>Tid</span><span>Navn</span><span>Opgave</span><span>Note</span>
+        </div>
+        <div className="grid">
+          {sortedEntries.length === 0 && <p className="p-4 text-sm text-stone-300/75">Ingen opgaver registreret endnu.</p>}
+          {sortedEntries.map((entry) => <div key={entry.id} className="grid gap-2 border-b border-white/10 px-4 py-4 text-sm last:border-b-0 lg:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_1.2fr_1.4fr_1.4fr] lg:gap-3">
+            <p><span className="lg:hidden text-stone-500">Dato: </span>{entry.date}</p>
+            <p><span className="lg:hidden text-stone-500">Start: </span>{entry.startTime || "—"}</p>
+            <p><span className="lg:hidden text-stone-500">Slut: </span>{entry.endTime || "—"}</p>
+            <p className={entry.hours < 0 ? "font-black text-red-200" : "font-black text-white"}><span className="lg:hidden text-stone-500">Tid: </span>{formatHours(entry.hours)}</p>
+            <p><span className="lg:hidden text-stone-500">Navn: </span>{entry.employeeName}</p>
+            <p><span className="lg:hidden text-stone-500">Opgave: </span>{entry.taskName}</p>
+            <p className="text-stone-300/75"><span className="lg:hidden text-stone-500">Note: </span>{entry.note || "—"}</p>
+          </div>)}
+        </div>
+      </div>
+    </section>
+  </div>;
 }
 
 
