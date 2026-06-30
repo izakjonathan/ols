@@ -969,32 +969,31 @@ function EmployeesModule({ employees, timeEntries, newEmployeeName, onNameChange
         <span className="min-w-0 truncate text-sm font-black uppercase tracking-[0.14em] text-white sm:text-base">Medarbejderdashboard</span>
         <span className="text-2xl text-white">{employeeDashboardOpen ? "−" : "+"}</span>
       </button>
-      {employeeDashboardOpen && <div className="panel p-4">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      {employeeDashboardOpen && <div className="grid gap-4">
+        <div className="grid gap-3">
           <div>
             <p className="eyebrow">Medarbejdere</p>
-            <h3 className="mt-2 panel-title">Opret medarbejderlinks</h3>
+            <h3 className="panel-title mt-2">Opret medarbejderlinks</h3>
           </div>
-          <form onSubmit={onCreate} className="flex min-w-0 flex-col gap-3 sm:flex-row lg:min-w-[30rem]">
+          <form onSubmit={onCreate} className="grid gap-3 sm:grid-cols-[1fr_auto]">
             <TextInput value={newEmployeeName} onChange={(event) => onNameChange(event.target.value)} placeholder="Medarbejdernavn" />
-            <button type="submit" className="gold-button shrink-0">Opret</button>
+            <button type="submit" className="gold-button w-full sm:w-auto">Opret</button>
           </form>
         </div>
 
-        <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {employees.length === 0 && <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-stone-300/75">Ingen medarbejdere oprettet endnu.</p>}
-          {employees.map((employee) => <div key={employee.id} className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <h4 className="text-xl font-black text-white">{employee.name}</h4>
-                <p className="mt-1 text-sm text-stone-300/75">{formatHours(totalFor(employee))}</p>
-                <p className="mt-1 truncate text-xs text-stone-500">/employee/{employee.token}</p>
+          {employees.map((employee) => <div key={employee.id} className="w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-3">
+            <div className="grid min-w-0 gap-1">
+              <div className="flex min-w-0 items-start justify-between gap-2">
+                <h4 className="min-w-0 truncate text-xl font-black text-white">{employee.name}</h4>
+                <span className={`shrink-0 rounded-full border px-2 py-1 text-[0.55rem] font-black uppercase tracking-[0.1em] ${employee.active ? "border-white/30 text-white" : "border-red-300/35 text-red-200"}`}>{employee.active ? "Aktiv" : "Off"}</span>
               </div>
-              <span className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-[0.12em] ${employee.active ? "border-white/30 text-white" : "border-red-300/35 text-red-200"}`}>{employee.active ? "Aktiv" : "Deaktiveret"}</span>
+              <p className="text-sm text-stone-300/75">{formatHours(totalFor(employee))}</p>
             </div>
-            <div className="mt-3 grid grid-cols-2 gap-2">
-              <button type="button" className="gold-button !min-h-[2.55rem] !px-2 !text-[0.62rem] !tracking-[0.12em]" onClick={() => onCopyLink(employee)}>Kopiér link</button>
-              <button type="button" className="outline-button !min-h-[2.55rem] !px-2 !text-[0.62rem] !tracking-[0.12em]" onClick={() => onUpdateEmployee(employee.id, { active: !employee.active })}>{employee.active ? "Deaktiver" : "Aktiver"}</button>
+            <div className="mt-3 grid w-full grid-cols-2 gap-2">
+              <button type="button" className="gold-button w-full !min-h-[2.35rem] !px-1.5 !text-[0.56rem] !tracking-[0.08em]" onClick={() => onCopyLink(employee)}>Kopiér link</button>
+              <button type="button" className="outline-button w-full !min-h-[2.35rem] !px-1.5 !text-[0.56rem] !tracking-[0.08em]" onClick={() => onUpdateEmployee(employee.id, { active: !employee.active })}>{employee.active ? "Deaktiver" : "Aktiver"}</button>
             </div>
           </div>)}
         </div>

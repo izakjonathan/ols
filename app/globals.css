@@ -180,6 +180,8 @@ a {
   text-align: center;
   text-transform: uppercase;
   text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
   appearance: none;
   -webkit-appearance: none;
   cursor: pointer;

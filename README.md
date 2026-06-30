@@ -163,3 +163,12 @@ Also refreshed the local logo image asset.
 - Made Kopiér link / Deaktiver buttons smaller so they stay next to each other on mobile.
 - Truncated long employee token paths to avoid horizontal overflow.
 - Production build tested successfully.
+
+
+## v14 timer employee card fix
+
+- Removed the remaining outer bordered wrapper from the expanded Medarbejderdashboard content.
+- Removed long visible employee token paths from cards so they do not stretch the layout.
+- Resized employee cards and action buttons for mobile.
+- Kept Kopiér link and Deaktiver side by side.
+- Production build tested successfully.
