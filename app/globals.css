@@ -250,15 +250,25 @@ a {
 }
 
 .nav-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   white-space: nowrap;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 999px;
-  padding: 0.52rem 0.72rem;
-  background: rgba(255,255,255,.025);
+  border: none;
+  padding: 0.2rem 0;
+  background: transparent;
+  color: rgba(255,255,255,.82);
+  text-decoration: none;
+}
+
+.nav-pill:hover {
+  color: rgba(255,255,255,1);
 }
 
 .form-input {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 3rem;
   border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 0.95rem;
@@ -280,6 +290,15 @@ a {
   border-color: rgba(255, 255, 255, 0.82);
   background: rgba(0, 0, 0, 0.72);
   box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.11);
+}
+
+
+input[type="date"].form-input,
+input[type="time"].form-input,
+input[type="file"].form-input,
+select.form-input {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .choice-card {
