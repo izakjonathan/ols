@@ -842,10 +842,10 @@ function EmployeeHourPage({ employee, entries, onAddEntry, dataLoaded, syncStatu
 
       <form onSubmit={submit} className="panel grid gap-3 p-5">
         <h2 className="panel-title">Gem timer</h2>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          <Field label="Dato"><TextInput type="date" value={date} onChange={(event) => setDate(event.target.value)} required /></Field>
-          <Field label="Start"><TextInput type="time" value={startTime} onChange={(event) => setStartTime(event.target.value)} required /></Field>
-          <Field label="Slut"><TextInput type="time" value={endTime} onChange={(event) => setEndTime(event.target.value)} required /></Field>
+        <div className="grid grid-cols-3 gap-2">
+          <Field label="Dato"><TextInput className="form-input time-control-input" type="date" value={date} onChange={(event) => setDate(event.target.value)} required /></Field>
+          <Field label="Start"><TextInput className="form-input time-control-input" type="time" value={startTime} onChange={(event) => setStartTime(event.target.value)} required /></Field>
+          <Field label="Slut"><TextInput className="form-input time-control-input" type="time" value={endTime} onChange={(event) => setEndTime(event.target.value)} required /></Field>
         </div>
         <Field label="Opgave"><TextInput value={taskName} onChange={(event) => setTaskName(event.target.value)} placeholder="Fx levering, flytning, lager" required /></Field>
         <Field label="Note"><textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="Kort note" rows={2} className="form-input resize-none" /></Field>

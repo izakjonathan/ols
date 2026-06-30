@@ -210,3 +210,10 @@ Removed selected helper/explanation text from backend modules:
 - Firma module helper text
 
 Production build tested successfully.
+
+
+## v19 Timekontrol input scale fix
+
+- Fixed the Date / Start / Slut inputs in employee Timekontrol.
+- The three inputs now use a compact mobile-safe class so they fit on one line without overlapping.
+- Production build tested successfully.
