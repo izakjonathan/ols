@@ -104,3 +104,9 @@ Adds a backend employee-hours module:
 - Backend dashboard shows all employee tasks with date, start, end, total time, employee name, task name and note.
 - Backend can remove a chosen amount of hours from a chosen employee total with a note.
 - Employee/hour data is included in Supabase shared state when Supabase is configured.
+
+
+## v9 splash logo
+
+Updated the splash screen asset(s) to use the provided Ølands logo image/photo.
+Also refreshed the local logo image asset.
