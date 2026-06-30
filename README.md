@@ -55,3 +55,17 @@ This uses a simple shared JSON state table. It is good for this current prototyp
 Fixes the Vercel `npm ci can only install packages when package.json and package-lock.json are in sync` error.
 
 The lockfile expected `@types/node` 22.15.30, but package.json had 24.10.3. Node runtime is still set to 24.x as required by Vercel. Only the TypeScript node type package was aligned with the existing lockfile.
+
+
+## v4 default Vercel deployment
+
+Fixes the hanging deployment by removing the custom Vercel install command that globally installed npm before running npm ci.
+
+This build uses normal Vercel Next.js detection:
+- Node 24.x
+- npm 11 packageManager
+- package-lock kept in sync
+- no custom installCommand
+- no custom buildCommand
+
+Supabase support from v2/v3 is preserved.
