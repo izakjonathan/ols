@@ -1,9 +1,11 @@
 export default function VersionPage() {
   return (
     <main style={{ padding: 24, fontFamily: "system-ui, sans-serif" }}>
-      <h1>Ølands Service v9</h1>
-      <p>Splash screen updated to use the provided Ølands logo image.</p>
-      <p>Employee hours module, Supabase support, and EventOS deployment settings are active.</p>
+      <h1>Ølands Service v10</h1>
+      <p>Backend header/KPI section only appears in Nye.</p>
+      <p>All gold accents changed to white/neutral.</p>
+      <p>Timer module redesigned with employee/task drill-down dashboards.</p>
+      <p>Frontend services/text adjusted for transport and logistics.</p>
     </main>
   );
 }

@@ -110,3 +110,21 @@ Adds a backend employee-hours module:
 
 Updated the splash screen asset(s) to use the provided Ølands logo image/photo.
 Also refreshed the local logo image asset.
+
+
+## v10 ops/timer/transport update
+
+- Backend intro/KPI block only appears in the first dock menu: Nye.
+- Other backend modules no longer show the Order Operations summary block.
+- Backend bottom padding increased so content can scroll above the dock.
+- Gold accents in CSS/Tailwind utility usage replaced with white/neutral accents.
+- Timer module redesigned:
+  - total hours dashboard
+  - hours per employee
+  - tap employee to show task list
+  - tap individual task to see full info
+- Employee Timekontrol page redesigned:
+  - total-hours dashboard
+  - compact Gem timer form
+  - task list with tap-to-expand details
+- Frontend services and copy adjusted for Ølands Service as a transport/logistics company.
