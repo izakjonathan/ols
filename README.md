@@ -217,3 +217,17 @@ Production build tested successfully.
 - Fixed the Date / Start / Slut inputs in employee Timekontrol.
 - The three inputs now use a compact mobile-safe class so they fit on one line without overlapping.
 - Production build tested successfully.
+
+
+## v20 frontend CTA / moving quote
+
+Added three call-to-action modules on the customer site:
+- Ring til Øland Service
+- Bliv ringet op af Øland Service
+- Flytte tilbud
+
+The moving quote form follows the structure of a Danish moving quote request:
+contact details, from/to address, floor/elevator, moving date, packing, m2, move type, storage and comments.
+
+Callback and moving quote submissions create new backend orders.
+Production build tested successfully.

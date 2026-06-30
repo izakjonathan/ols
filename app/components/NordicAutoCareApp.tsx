@@ -261,6 +261,30 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
   const [preferredDate, setPreferredDate] = useState("");
   const [preferredTime, setPreferredTime] = useState("");
   const [customerMessage, setCustomerMessage] = useState("");
+  const [callbackName, setCallbackName] = useState("");
+  const [callbackPhone, setCallbackPhone] = useState("");
+  const [callbackNote, setCallbackNote] = useState("");
+  const [quoteForm, setQuoteForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    fromAddress: "",
+    fromPostcode: "",
+    fromCity: "",
+    fromFloor: "",
+    fromElevator: "Nej",
+    toAddress: "",
+    toPostcode: "",
+    toCity: "",
+    toFloor: "",
+    toElevator: "Nej",
+    moveDate: "",
+    packing: "Nej",
+    homeSize: "",
+    moveType: "Komplet flytning",
+    storage: "Nej",
+    comment: ""
+  });
   const [cars, setCars] = useState<CarEntry[]>([makeCar()]);
   const [activeStatus, setActiveStatus] = useState<OrderStatus | "Alle">("Alle");
   const [selectedOrderId, setSelectedOrderId] = useState<string>("");
@@ -475,6 +499,95 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
       return { ...car, [key]: exists ? car[key].filter((id) => id !== itemId) : [...car[key], itemId] };
     }));
   }
+  function submitCallback(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const note = [`Ring mig op`, callbackNote ? `Note: ${callbackNote}` : ""].filter(Boolean).join("\n");
+    const newOrder: Order = {
+      id: `ØS-${String(Date.now()).slice(-6)}`,
+      createdAt: new Date().toISOString(),
+      customer: { ...emptyCustomer, name: callbackName, phone: callbackPhone },
+      invoice: emptyInvoice,
+      preferredDate: "",
+      preferredTime: "",
+      cars: [{ ...makeCar(), makeModel: "Bliv ringet op", notes: note, services: ["courier"], extras: [] }],
+      status: "Ny",
+      paymentStatus: "Ikke faktureret",
+      priority: "Normal",
+      assignedTo: "",
+      adminDate: "",
+      adminTime: "",
+      adminNotes: "",
+      customerMessage: note,
+      activity: [`Ring-op forespørgsel modtaget ${new Date().toLocaleString("da-DK")}`]
+    };
+    setOrders((current) => [newOrder, ...current]);
+    setSelectedOrderId(newOrder.id);
+    setSubmittedId(newOrder.id);
+    setCallbackName("");
+    setCallbackPhone("");
+    setCallbackNote("");
+  }
+
+  function submitMovingQuote(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const movingDetails = [
+      "Flyttetilbud",
+      `Fra: ${quoteForm.fromAddress}, ${quoteForm.fromPostcode} ${quoteForm.fromCity}`,
+      `Fra etage: ${quoteForm.fromFloor || "ikke angivet"} · elevator: ${quoteForm.fromElevator}`,
+      `Til: ${quoteForm.toAddress}, ${quoteForm.toPostcode} ${quoteForm.toCity}`,
+      `Til etage: ${quoteForm.toFloor || "ikke angivet"} · elevator: ${quoteForm.toElevator}`,
+      `Dato: ${quoteForm.moveDate || "ikke valgt"}`,
+      `Nedpakning: ${quoteForm.packing}`,
+      `Bolig m2: ${quoteForm.homeSize || "ikke angivet"}`,
+      `Type: ${quoteForm.moveType}`,
+      `Opbevaring: ${quoteForm.storage}`,
+      quoteForm.comment ? `Kommentar: ${quoteForm.comment}` : ""
+    ].filter(Boolean).join("\n");
+
+    const newOrder: Order = {
+      id: `ØS-${String(Date.now()).slice(-6)}`,
+      createdAt: new Date().toISOString(),
+      customer: { ...emptyCustomer, name: quoteForm.name, phone: quoteForm.phone, email: quoteForm.email, address: quoteForm.fromAddress },
+      invoice: { ...emptyInvoice, invoiceEmail: quoteForm.email, invoiceAddress: quoteForm.fromAddress },
+      preferredDate: quoteForm.moveDate,
+      preferredTime: "",
+      cars: [{ ...makeCar(), makeModel: `Flyttetilbud · ${quoteForm.homeSize || "?"} m2`, notes: movingDetails, services: ["moving-full"], extras: quoteForm.packing === "Ja" ? ["extra-helper"] : [] }],
+      status: "Ny",
+      paymentStatus: "Ikke faktureret",
+      priority: "Normal",
+      assignedTo: "",
+      adminDate: quoteForm.moveDate,
+      adminTime: "",
+      adminNotes: "",
+      customerMessage: movingDetails,
+      activity: [`Flyttetilbud modtaget ${new Date().toLocaleString("da-DK")}`]
+    };
+    setOrders((current) => [newOrder, ...current]);
+    setSelectedOrderId(newOrder.id);
+    setSubmittedId(newOrder.id);
+    setQuoteForm({
+      name: "",
+      phone: "",
+      email: "",
+      fromAddress: "",
+      fromPostcode: "",
+      fromCity: "",
+      fromFloor: "",
+      fromElevator: "Nej",
+      toAddress: "",
+      toPostcode: "",
+      toCity: "",
+      toFloor: "",
+      toElevator: "Nej",
+      moveDate: "",
+      packing: "Nej",
+      homeSize: "",
+      moveType: "Komplet flytning",
+      storage: "Nej",
+      comment: ""
+    });
+  }
+
   function submitRequest(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const newOrder: Order = {
@@ -721,7 +834,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
           <a href="#top" className="relative block h-7 w-28 shrink-0 overflow-hidden sm:h-8 sm:w-36"><Image src="/images/oland-service-top-logo.jpeg" alt="Øland Service" fill sizes="144px" className="object-contain object-left" /></a>
           <div className="flex gap-2 overflow-x-auto text-[0.68rem] font-black uppercase tracking-[0.14em] text-stone-200/80">
-            {isBackend ? <><a className="nav-pill" href="/">Kundeside</a><button type="button" className="nav-pill" onClick={lockBackend}>Lås backend</button></> : <><a className="nav-pill" href="#booking">Book</a><a className="nav-pill" href="#priser">Priser</a></>}
+            {isBackend ? <><a className="nav-pill" href="/">Kundeside</a><button type="button" className="nav-pill" onClick={lockBackend}>Lås backend</button></> : <><a className="nav-pill" href="#kontakt">Kontakt</a><a className="nav-pill" href="#booking">Book</a><a className="nav-pill" href="#priser">Ydelser</a></>}
           </div>
         </div>
       </nav>
@@ -739,8 +852,80 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
             <p className="eyebrow">Kontakt os i dag</p><h1 className="mt-3 text-4xl font-semibold uppercase leading-none tracking-[0.18em] text-white sm:text-5xl">Ølands Service</h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-stone-200/82">Transport, flytning og praktisk logistik med enkel booking, tydelige priser og personlig service.</p>
             <div className="mt-8 grid gap-3"><a href="tel:+4526848789" className="contact-card group"><Icon name="phone" className="h-5 w-5 text-white transition group-hover:scale-110" /><span>26848789</span></a><a href="mailto:kontakt@olandservice.dk" className="contact-card group"><Icon name="mail" className="h-5 w-5 text-white transition group-hover:scale-110" /><span>kontakt@olandservice.dk</span></a><div className="contact-card"><span className="grid h-5 w-5 place-items-center text-lg text-white">◷</span><span>Åben 8-20 hver dag</span></div></div>
-            <div className="mt-8 flex flex-wrap gap-3"><a href="#booking" className="gold-button">Book transport</a><a href="#priser" className="outline-button">Se ydelser</a></div>
+            <div className="mt-8 flex flex-wrap gap-3"><a href="#kontakt" className="gold-button">Kontakt Øland</a><a href="#booking" className="outline-button">Book transport</a></div>
           </aside>
+        </div>
+      </section>
+
+      <section id="kontakt" className="px-5 py-10 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-8 text-center">
+            <p className="eyebrow">Hurtig kontakt</p>
+            <h2 className="mt-2 text-3xl font-semibold uppercase tracking-[0.2em] text-white sm:text-5xl">Kontakt Øland Service</h2>
+          </div>
+          <div className="grid gap-5 lg:grid-cols-3">
+            <article className="panel flex flex-col justify-between p-5 sm:p-6">
+              <div>
+                <p className="eyebrow">Ring direkte</p>
+                <h3 className="mt-2 panel-title">Ring til Øland Service</h3>
+                <p className="mt-4 text-sm leading-6 text-stone-300/80">Tal direkte med os om transport, flytning, levering eller hasteopgaver.</p>
+              </div>
+              <a href="tel:+4526848789" className="gold-button mt-6 w-full">Ring til Øland Service</a>
+            </article>
+
+            <article className="panel p-5 sm:p-6">
+              <p className="eyebrow">Vi ringer</p>
+              <h3 className="mt-2 panel-title">Bliv ringet op af Øland Service</h3>
+              <form onSubmit={submitCallback} className="mt-5 grid gap-4">
+                <Field label="Navn"><TextInput value={callbackName} onChange={(event) => setCallbackName(event.target.value)} placeholder="Fulde navn" required /></Field>
+                <Field label="Telefon"><TextInput inputMode="tel" value={callbackPhone} onChange={(event) => setCallbackPhone(event.target.value)} placeholder="26848789" required /></Field>
+                <Field label="Note"><TextArea value={callbackNote} onChange={(event) => setCallbackNote(event.target.value)} placeholder="Hvornår skal vi ringe? Hvad handler det om?" /></Field>
+                <button type="submit" className="gold-button w-full">Bliv ringet op</button>
+              </form>
+            </article>
+
+            <article className="panel p-5 sm:p-6 lg:row-span-2">
+              <p className="eyebrow">Flyttetilbud</p>
+              <h3 className="mt-2 panel-title">Få flyttetilbud</h3>
+              <form onSubmit={submitMovingQuote} className="mt-5 grid gap-4">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Field label="Navn"><TextInput value={quoteForm.name} onChange={(event) => setQuoteForm({ ...quoteForm, name: event.target.value })} required /></Field>
+                  <Field label="Telefon"><TextInput inputMode="tel" value={quoteForm.phone} onChange={(event) => setQuoteForm({ ...quoteForm, phone: event.target.value })} required /></Field>
+                </div>
+                <Field label="Email"><TextInput type="email" value={quoteForm.email} onChange={(event) => setQuoteForm({ ...quoteForm, email: event.target.value })} required /></Field>
+
+                <div className="rounded-2xl border border-white/15 bg-white/[0.03] p-4">
+                  <h4 className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-white">Fra adresse</h4>
+                  <div className="grid gap-3">
+                    <Field label="Adresse"><TextInput value={quoteForm.fromAddress} onChange={(event) => setQuoteForm({ ...quoteForm, fromAddress: event.target.value })} required /></Field>
+                    <div className="grid grid-cols-2 gap-3"><Field label="Postnr"><TextInput value={quoteForm.fromPostcode} onChange={(event) => setQuoteForm({ ...quoteForm, fromPostcode: event.target.value })} /></Field><Field label="By"><TextInput value={quoteForm.fromCity} onChange={(event) => setQuoteForm({ ...quoteForm, fromCity: event.target.value })} /></Field></div>
+                    <div className="grid grid-cols-2 gap-3"><Field label="Etage"><TextInput value={quoteForm.fromFloor} onChange={(event) => setQuoteForm({ ...quoteForm, fromFloor: event.target.value })} placeholder="fx 3. sal" /></Field><Field label="Elevator"><Select value={quoteForm.fromElevator} onChange={(event) => setQuoteForm({ ...quoteForm, fromElevator: event.target.value })}><option>Nej</option><option>Ja</option></Select></Field></div>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-white/15 bg-white/[0.03] p-4">
+                  <h4 className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-white">Til adresse</h4>
+                  <div className="grid gap-3">
+                    <Field label="Adresse"><TextInput value={quoteForm.toAddress} onChange={(event) => setQuoteForm({ ...quoteForm, toAddress: event.target.value })} required /></Field>
+                    <div className="grid grid-cols-2 gap-3"><Field label="Postnr"><TextInput value={quoteForm.toPostcode} onChange={(event) => setQuoteForm({ ...quoteForm, toPostcode: event.target.value })} /></Field><Field label="By"><TextInput value={quoteForm.toCity} onChange={(event) => setQuoteForm({ ...quoteForm, toCity: event.target.value })} /></Field></div>
+                    <div className="grid grid-cols-2 gap-3"><Field label="Etage"><TextInput value={quoteForm.toFloor} onChange={(event) => setQuoteForm({ ...quoteForm, toFloor: event.target.value })} placeholder="fx st." /></Field><Field label="Elevator"><Select value={quoteForm.toElevator} onChange={(event) => setQuoteForm({ ...quoteForm, toElevator: event.target.value })}><option>Nej</option><option>Ja</option></Select></Field></div>
+                  </div>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Field label="Flyttedato"><TextInput type="date" value={quoteForm.moveDate} onChange={(event) => setQuoteForm({ ...quoteForm, moveDate: event.target.value })} /></Field>
+                  <Field label="Bolig m2"><TextInput inputMode="numeric" value={quoteForm.homeSize} onChange={(event) => setQuoteForm({ ...quoteForm, homeSize: event.target.value })} placeholder="fx 75" required /></Field>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Field label="Nedpakning"><Select value={quoteForm.packing} onChange={(event) => setQuoteForm({ ...quoteForm, packing: event.target.value })}><option>Nej</option><option>Ja</option></Select></Field>
+                  <Field label="Opbevaring"><Select value={quoteForm.storage} onChange={(event) => setQuoteForm({ ...quoteForm, storage: event.target.value })}><option>Nej</option><option>Ja</option></Select></Field>
+                </div>
+                <Field label="Type af flytning"><Select value={quoteForm.moveType} onChange={(event) => setQuoteForm({ ...quoteForm, moveType: event.target.value })}><option>Komplet flytning</option><option>Flyttekasser, få møbler</option><option>Kun flyttekasser</option><option>Klaver</option><option>Andet</option></Select></Field>
+                <Field label="Kommentar"><TextArea value={quoteForm.comment} onChange={(event) => setQuoteForm({ ...quoteForm, comment: event.target.value })} placeholder="Særlige forhold, adgang, parkering, tidsrum..." /></Field>
+                <button type="submit" className="gold-button w-full">Send flyttetilbud</button>
+              </form>
+            </article>
+          </div>
         </div>
       </section>
 
