@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" rx="80" fill="#050505"/>
+  <g fill="#ffffff">
+    <g transform="translate(735 165) scale(5.2)">
+      <path d="M10 55h70l20-18v42H10z"/>
+      <path d="M88 44h28l28 28v7h-44V55H88z"/>
+      <rect x="15" y="18" width="72" height="10" rx="4"/>
+      <rect x="25" y="2" width="62" height="10" rx="4"/>
+      <rect x="40" y="-14" width="52" height="10" rx="4"/>
+      <circle cx="31" cy="91" r="11"/>
+      <circle cx="111" cy="91" r="11"/>
+      <path d="M92 58h18l14 14H92z" fill="#050505"/>
+    </g>
+    <text x="95" y="350" font-family="Arial, Helvetica, sans-serif" font-size="96" font-weight="900" letter-spacing="2">ØLANDS SERVICE</text>
+    <text x="95" y="470" font-family="Arial, Helvetica, sans-serif" font-size="70" font-weight="800">TLF. 26848789</text>
+  </g>
+</svg>

@@ -1,0 +1,5 @@
+{
+  "framework": "nextjs",
+  "installCommand": "npm install -g npm@10.9.4 --force --no-audit --no-fund && npm ci --no-audit --no-fund --legacy-peer-deps --progress=false",
+  "buildCommand": "npm run build"
+}
