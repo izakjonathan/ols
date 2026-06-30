@@ -172,3 +172,18 @@ Also refreshed the local logo image asset.
 - Resized employee cards and action buttons for mobile.
 - Kept Kopiér link and Deaktiver side by side.
 - Production build tested successfully.
+
+
+## v15 outer border / dock clearance
+
+- Removed the most outer backend module border/background (`admin-shell`) that sat closest to the screen edges.
+- Backend module content now has large safe bottom spacing so the final content can scroll fully above the fixed dock and iOS browser bar.
+- Production build tested successfully.
+
+
+## v16 brand assets
+
+- Splash screen replaced with uploaded image 1.
+- Home Screen icon / favicon assets regenerated from uploaded image 2.
+- Top-left navigation logo replaced with uploaded image 3.
+- v15 backend outer border and dock-clearance fixes preserved.

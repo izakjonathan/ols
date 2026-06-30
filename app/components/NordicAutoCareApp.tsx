@@ -716,7 +716,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
 
       <nav className="sticky top-0 z-40 border-b border-white/15 bg-black/72 px-4 py-3 backdrop-blur-xl sm:px-8">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
-          <a href="#top" className="text-xs font-black uppercase tracking-[0.26em] text-white">ØS</a>
+          <a href="#top" className="relative block h-7 w-28 shrink-0 overflow-hidden sm:h-8 sm:w-36"><Image src="/images/oland-service-top-logo.jpeg" alt="Øland Service" fill sizes="144px" className="object-contain object-left" /></a>
           <div className="flex gap-2 overflow-x-auto text-[0.68rem] font-black uppercase tracking-[0.14em] text-stone-200/80">
             {isBackend ? <><a className="nav-pill" href="/">Kundeside</a><button type="button" className="nav-pill" onClick={lockBackend}>Lås backend</button></> : <><a className="nav-pill" href="#booking">Book</a><a className="nav-pill" href="#priser">Priser</a></>}
           </div>
@@ -754,12 +754,12 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
       <section id="priser" className="relative px-5 py-10 sm:px-8 lg:px-12"><div className="mx-auto max-w-7xl"><div className="mb-8 text-center"><p className="eyebrow">Ydelser</p><h2 className="mt-2 text-3xl font-semibold uppercase tracking-[0.22em] text-white sm:text-5xl">Transport og logistik</h2></div><div className="grid gap-7 lg:grid-cols-[.9fr_1.1fr]"><div className="panel p-5 sm:p-6"><h3 className="panel-title">Enkeltydelser</h3><div className="divide-y divide-white/18">{services.map((row) => <div key={row.id} className="flex items-start justify-between gap-5 py-2.5 text-[0.94rem] leading-tight sm:text-base"><span className="text-stone-100/90">{row.name}</span><span className="shrink-0 text-right font-medium tracking-wide text-stone-100/90">{kr(row.price)}</span></div>)}</div><p className="mt-6 text-sm leading-6 text-white/86">Priserne er fra-priser og kan variere afhængigt af opgavens omfang og afstand.</p><div className="mt-9"><h3 className="panel-title">Tillæg</h3><div className="divide-y divide-white/18">{extras.map((row) => <div key={row.id} className="flex items-start justify-between gap-5 py-2.5 text-[0.94rem] leading-tight sm:text-base"><span className="text-stone-100/90">{row.name}</span><span className="shrink-0 text-right font-medium tracking-wide text-stone-100/90">{row.note ?? kr(row.price)}</span></div>)}</div></div></div><div id="pakker" className="grid gap-4"><h3 className="panel-title mb-0">Pakkeløsninger</h3>{packages.map((pack) => <article key={pack.title} className="package-card"><div className="flex items-center gap-5"><Icon name={pack.icon} className="h-16 w-16 shrink-0 text-white sm:h-20 sm:w-20" /><div className="min-w-0 flex-1"><div className="flex flex-wrap items-baseline justify-between gap-2"><h4 className="text-xl font-semibold uppercase tracking-[0.14em] text-white sm:text-2xl">{pack.title}</h4><p className="text-2xl font-bold tracking-wide text-white sm:text-3xl">{kr(pack.price)}</p></div><ul className="mt-3 grid gap-1.5 text-sm leading-5 text-stone-100/86 sm:text-base">{pack.items.map((item) => <li key={item} className="flex gap-2"><span className="text-white">•</span><span>{item}</span></li>)}</ul></div></div></article>)}</div></div></div></section>
       </>}
 
-      {isBackend && <section id="admin" className="px-5 py-10 sm:px-8 lg:px-12"><div className="mx-auto max-w-7xl">
+      {isBackend && <section id="admin" className="backend-safe-bottom px-5 pt-10 sm:px-8 lg:px-12"><div className="mx-auto max-w-7xl">
         {adminView === "newOrders" && <>
           <div className="mb-8 flex flex-col justify-between gap-4 lg:flex-row lg:items-end"><div><p className="eyebrow">Åben backend</p><h2 className="mt-2 text-3xl font-semibold uppercase tracking-[0.18em] text-white sm:text-5xl">Order Operations</h2><p className="mt-3 max-w-3xl text-stone-300/75">Ordresystemet er adskilt fra kundesiden og har pipeline, kalender, kundeliste, fuld redigering og backup/import.</p></div><a href="/" className="gold-button">Åbn kundeside</a></div>
           <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-7">{[{ label: "Nye", value: orders.filter((order) => order.status === "Ny").length }, { label: "Bekræftet", value: orders.filter((order) => ["Bekræftet", "Planlagt", "I gang"].includes(order.status)).length }, { label: "Udført", value: orders.filter((order) => order.status === "Udført").length }, { label: "Faktura sendt", value: orders.filter((order) => order.status === "Faktura sendt").length }, { label: "Betalt", value: orders.filter((order) => order.status === "Betaling modtaget").length }, { label: "Værdi", value: kr(kpis.value) }, { label: "Ikke betalt", value: kr(kpis.unpaid) }].map((item) => <div key={item.label} className="panel p-4"><p className="text-xs uppercase tracking-[0.22em] text-stone-400">{item.label}</p><p className="mt-2 text-2xl font-black text-white">{item.value}</p></div>)}</div>
         </>}
-        <div className="admin-shell pb-56">
+        <div className="admin-shell">
 
           {adminView === "newOrders" && <NewOrdersModule orders={orders.filter((order) => order.status === "Ny")} onAccept={acceptOrder} onUpdate={updateOrder} onUpdateCustomer={updateOrderCustomer} onUpdateInvoice={updateOrderInvoice} onUpdateCar={updateOrderCar} onToggleCarArray={toggleOrderCarArray} onAddCar={addCarToOrder} onRemoveCar={removeCarFromOrder} onDelete={deleteOrder} />}
           {adminView === "calendar" && <CalendarModule calendarDays={calendarDays} onUpdate={updateOrder} onSelect={(id) => setSelectedOrderId(id)} />}
@@ -917,7 +917,7 @@ function EmployeesModule({ employees, timeEntries, newEmployeeName, onNameChange
     setOpenTaskId("");
   }
 
-  return <div className="mt-4 grid gap-4 pb-48">
+  return <div className="mt-4 grid gap-4">
     <section className="grid gap-2">
       <button type="button" onClick={openAllTasks} className={`w-full rounded-2xl border px-4 py-3 text-left transition ${allTaskListOpen ? "border-white bg-white/10" : "border-white/10 bg-white/[0.04] hover:border-white/35"}`}>
         <p className="text-xs uppercase tracking-[0.18em] text-stone-400">Total timer</p>
