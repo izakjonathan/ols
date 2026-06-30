@@ -198,3 +198,15 @@ Also refreshed the local logo image asset.
 - Header changed from sticky to fixed so it remains visible while scrolling.
 - Added content top padding to avoid fixed-header overlap.
 - Production build tested successfully.
+
+
+## v18 backend helper text removal
+
+Removed selected helper/explanation text from backend modules:
+- Order Operations intro description
+- Nye module helper text
+- Kalender module helper text
+- Færdige module helper text
+- Firma module helper text
+
+Production build tested successfully.
