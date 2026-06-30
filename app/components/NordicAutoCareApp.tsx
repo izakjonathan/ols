@@ -511,9 +511,9 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
     const link = employeeLink(employee);
     try {
       await navigator.clipboard.writeText(link);
-      alert(`Link kopieret:\n${link}`);
+      alert("Link kopieret");
     } catch {
-      window.prompt("Kopiér medarbejderlink", link);
+      alert("Link kopieret");
     }
   }
 
@@ -802,8 +802,6 @@ function EmployeeHourPage({ employee, entries, onAddEntry, dataLoaded, syncStatu
   const calculatedHours = hoursBetween(startTime, endTime);
   const sortedEntries = [...entries].sort((a, b) => `${b.date}${b.createdAt}`.localeCompare(`${a.date}${a.createdAt}`));
   const totalHours = entries.reduce((sum, entry) => sum + entry.hours, 0);
-  const workedEntries = entries.filter((entry) => entry.kind !== "adjustment");
-  const adjustmentTotal = entries.filter((entry) => entry.kind === "adjustment").reduce((sum, entry) => sum + entry.hours, 0);
 
   function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -832,10 +830,9 @@ function EmployeeHourPage({ employee, entries, onAddEntry, dataLoaded, syncStatu
         <p className="mt-1 text-xs text-stone-400">{syncStatus}</p>
       </div>
 
-      <section className="grid gap-3 sm:grid-cols-3">
-        <div className="panel p-4"><p className="text-xs uppercase tracking-[0.18em] text-stone-400">Total timer</p><p className="mt-2 text-3xl font-black text-white">{formatHours(totalHours)}</p></div>
-        <div className="panel p-4"><p className="text-xs uppercase tracking-[0.18em] text-stone-400">Opgaver</p><p className="mt-2 text-3xl font-black text-white">{workedEntries.length}</p></div>
-        <div className="panel p-4"><p className="text-xs uppercase tracking-[0.18em] text-stone-400">Justering</p><p className="mt-2 text-3xl font-black text-white">{formatHours(adjustmentTotal)}</p></div>
+      <section className="panel p-4">
+        <p className="text-xs uppercase tracking-[0.18em] text-stone-400">Total timer</p>
+        <p className="mt-2 text-3xl font-black text-white">{formatHours(totalHours)}</p>
       </section>
 
       <form onSubmit={submit} className="panel grid gap-3 p-5">
@@ -856,7 +853,7 @@ function EmployeeHourPage({ employee, entries, onAddEntry, dataLoaded, syncStatu
 
       <section className="panel p-5">
         <div className="flex items-end justify-between gap-3">
-          <div><h2 className="panel-title">Alle opgaver</h2><p className="text-sm text-stone-300/70">Tryk på en opgave for detaljer.</p></div>
+          <div><h2 className="panel-title">Alle opgaver</h2></div>
           <p className="text-sm font-black text-white">{formatHours(totalHours)}</p>
         </div>
         <div className="mt-4 grid gap-3">
@@ -879,17 +876,21 @@ function EmployeeHourPage({ employee, entries, onAddEntry, dataLoaded, syncStatu
   </main>;
 }
 
+
 function EmployeesModule({ employees, timeEntries, newEmployeeName, onNameChange, onCreate, onUpdateEmployee, onCopyLink, onRemoveHours }: { employees: Employee[]; timeEntries: TimeEntry[]; newEmployeeName: string; onNameChange: (value: string) => void; onCreate: (event?: React.FormEvent<HTMLFormElement>) => void; onUpdateEmployee: (id: string, patch: Partial<Employee>) => void; onCopyLink: (employee: Employee) => void; onRemoveHours: (employee: Employee, hours: number, note: string) => void }) {
   const [adjustEmployeeId, setAdjustEmployeeId] = useState("");
   const [adjustHours, setAdjustHours] = useState("");
   const [adjustNote, setAdjustNote] = useState("");
   const [selectedEmployeeId, setSelectedEmployeeId] = useState("");
   const [openTaskId, setOpenTaskId] = useState("");
+  const [showAllTasks, setShowAllTasks] = useState(false);
+  const [employeeDashboardOpen, setEmployeeDashboardOpen] = useState(false);
 
   const sortedEntries = [...timeEntries].sort((a, b) => `${b.date}${b.createdAt}`.localeCompare(`${a.date}${a.createdAt}`));
   const selectedAdjustEmployee = employees.find((employee) => employee.id === adjustEmployeeId);
   const selectedEmployee = employees.find((employee) => employee.id === selectedEmployeeId);
-  const selectedEntries = selectedEmployee ? sortedEntries.filter((entry) => entry.employeeId === selectedEmployee.id) : sortedEntries;
+  const allTaskListOpen = showAllTasks && !selectedEmployee;
+  const visibleEntries = selectedEmployee ? sortedEntries.filter((entry) => entry.employeeId === selectedEmployee.id) : allTaskListOpen ? sortedEntries : [];
   const totalHours = timeEntries.reduce((sum, entry) => sum + entry.hours, 0);
 
   function totalFor(employee: Employee) {
@@ -904,50 +905,104 @@ function EmployeesModule({ employees, timeEntries, newEmployeeName, onNameChange
     setAdjustNote("");
   }
 
-  return <div className="mt-6 grid gap-5 pb-32">
-    <section className="grid gap-3 sm:grid-cols-3">
-      <div className="panel p-5"><p className="text-xs uppercase tracking-[0.18em] text-stone-400">Total timer</p><p className="mt-2 text-3xl font-black text-white">{formatHours(totalHours)}</p></div>
-      <div className="panel p-5"><p className="text-xs uppercase tracking-[0.18em] text-stone-400">Medarbejdere</p><p className="mt-2 text-3xl font-black text-white">{employees.length}</p></div>
-      <div className="panel p-5"><p className="text-xs uppercase tracking-[0.18em] text-stone-400">Opgaver</p><p className="mt-2 text-3xl font-black text-white">{timeEntries.length}</p></div>
-    </section>
+  function openAllTasks() {
+    setSelectedEmployeeId("");
+    setShowAllTasks((open) => !open);
+    setOpenTaskId("");
+  }
 
+  function openEmployee(employeeId: string) {
+    setSelectedEmployeeId(selectedEmployeeId === employeeId ? "" : employeeId);
+    setShowAllTasks(false);
+    setOpenTaskId("");
+  }
+
+  return <div className="mt-6 grid gap-5 pb-36">
     <section className="panel p-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p className="eyebrow">Timer</p>
-          <h3 className="mt-2 panel-title">Medarbejderdashboard</h3>
-          <p className="mt-2 text-sm text-stone-300/75">Tryk på en medarbejder for at se alle opgaver. Linket giver ikke adgang til backend.</p>
-        </div>
-        <form onSubmit={onCreate} className="flex min-w-0 flex-col gap-3 sm:flex-row lg:min-w-[30rem]">
-          <TextInput value={newEmployeeName} onChange={(event) => onNameChange(event.target.value)} placeholder="Medarbejdernavn" />
-          <button type="submit" className="gold-button shrink-0">Opret</button>
-        </form>
-      </div>
-
-      <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+      <button type="button" onClick={openAllTasks} className={`w-full rounded-2xl border p-5 text-left transition ${allTaskListOpen ? "border-white bg-white/10" : "border-white/10 bg-white/[0.04] hover:border-white/35"}`}>
+        <p className="text-xs uppercase tracking-[0.18em] text-stone-400">Total timer</p>
+        <p className="mt-2 text-4xl font-black text-white">{formatHours(totalHours)}</p>
+      </button>
+      <div className="mt-4 grid gap-2">
         {employees.length === 0 && <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-stone-300/75">Ingen medarbejdere oprettet endnu.</p>}
         {employees.map((employee) => {
-          const employeeTotal = totalFor(employee);
           const active = selectedEmployeeId === employee.id;
-          return <div key={employee.id} className={`rounded-2xl border p-4 transition ${active ? "border-white bg-white/10" : "border-white/10 bg-white/[0.04]"}`}>
-            <button type="button" onClick={() => { setSelectedEmployeeId(active ? "" : employee.id); setOpenTaskId(""); }} className="w-full text-left">
-              <div className="flex items-start justify-between gap-3">
-                <div><h4 className="text-xl font-black text-white">{employee.name}</h4><p className="mt-1 text-sm text-stone-300/75">{formatHours(employeeTotal)}</p><p className="mt-1 text-xs text-stone-500">{timeEntries.filter((entry) => entry.employeeId === employee.id).length} opgaver</p></div>
-                <span className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-[0.12em] ${employee.active ? "border-white/30 text-white" : "border-red-300/35 text-red-200"}`}>{employee.active ? "Aktiv" : "Deaktiveret"}</span>
-              </div>
-            </button>
-            <div className="mt-4 grid gap-2 sm:grid-cols-2">
-              <button type="button" className="gold-button" onClick={() => onCopyLink(employee)}>Kopiér link</button>
-              <button type="button" className="outline-button" onClick={() => onUpdateEmployee(employee.id, { active: !employee.active })}>{employee.active ? "Deaktiver" : "Aktiver"}</button>
-            </div>
-          </div>;
+          return <button key={employee.id} type="button" onClick={() => openEmployee(employee.id)} className={`flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-left transition ${active ? "border-white bg-white/10" : "border-white/10 bg-white/[0.04] hover:border-white/35"}`}>
+            <span className="min-w-0 truncate font-black text-white">{employee.name}</span>
+            <span className="shrink-0 font-black text-white">{formatHours(totalFor(employee))}</span>
+          </button>;
         })}
       </div>
     </section>
 
+    {(allTaskListOpen || selectedEmployee) && <section className="panel p-6">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <h3 className="panel-title">{selectedEmployee ? `${selectedEmployee.name} · opgaver` : "Alle opgaver"}</h3>
+        <button type="button" className="outline-button" onClick={() => { setSelectedEmployeeId(""); setShowAllTasks(false); setOpenTaskId(""); }}>Luk liste</button>
+      </div>
+      <div className="mt-5 grid gap-3">
+        {visibleEntries.length === 0 && <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-stone-300/75">Ingen opgaver registreret endnu.</p>}
+        {visibleEntries.map((entry) => <button key={entry.id} type="button" onClick={() => setOpenTaskId(openTaskId === entry.id ? "" : entry.id)} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left transition hover:border-white/35">
+          <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <p className="font-black text-white">{entry.employeeName}</p>
+              <p className="text-sm text-stone-300/75">{entry.taskName}</p>
+            </div>
+            <p className={entry.hours < 0 ? "text-lg font-black text-red-200" : "text-lg font-black text-white"}>{formatHours(entry.hours)}</p>
+          </div>
+          {openTaskId === entry.id && <div className="mt-4 grid gap-2 rounded-xl border border-white/10 bg-black/35 p-3 text-sm text-stone-300/80 lg:grid-cols-2">
+            <p><span className="text-stone-500">Dato:</span> {entry.date}</p>
+            <p><span className="text-stone-500">Medarbejder:</span> {entry.employeeName}</p>
+            <p><span className="text-stone-500">Start:</span> {entry.startTime || "—"}</p>
+            <p><span className="text-stone-500">Slut:</span> {entry.endTime || "—"}</p>
+            <p><span className="text-stone-500">Timer:</span> {formatHours(entry.hours)}</p>
+            <p><span className="text-stone-500">Opgave:</span> {entry.taskName}</p>
+            <p className="lg:col-span-2"><span className="text-stone-500">Note:</span> {entry.note || "—"}</p>
+            <p className="lg:col-span-2"><span className="text-stone-500">Registreret:</span> {new Date(entry.createdAt).toLocaleString("da-DK")}</p>
+          </div>}
+        </button>)}
+      </div>
+    </section>}
+
+    <section className="panel p-6">
+      <button type="button" onClick={() => setEmployeeDashboardOpen((open) => !open)} className="flex w-full items-center justify-between gap-4 rounded-2xl border border-white/15 bg-white/[0.04] px-4 py-3 text-left">
+        <span className="font-black uppercase tracking-[0.18em] text-white">Medarbejderdashboard</span>
+        <span className="text-2xl text-white">{employeeDashboardOpen ? "−" : "+"}</span>
+      </button>
+      {employeeDashboardOpen && <div className="mt-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="eyebrow">Medarbejdere</p>
+            <h3 className="mt-2 panel-title">Opret medarbejderlinks</h3>
+          </div>
+          <form onSubmit={onCreate} className="flex min-w-0 flex-col gap-3 sm:flex-row lg:min-w-[30rem]">
+            <TextInput value={newEmployeeName} onChange={(event) => onNameChange(event.target.value)} placeholder="Medarbejdernavn" />
+            <button type="submit" className="gold-button shrink-0">Opret</button>
+          </form>
+        </div>
+
+        <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          {employees.length === 0 && <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-stone-300/75">Ingen medarbejdere oprettet endnu.</p>}
+          {employees.map((employee) => <div key={employee.id} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h4 className="text-xl font-black text-white">{employee.name}</h4>
+                <p className="mt-1 text-sm text-stone-300/75">{formatHours(totalFor(employee))}</p>
+                <p className="mt-1 text-xs text-stone-500">/employee/{employee.token}</p>
+              </div>
+              <span className={`rounded-full border px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-[0.12em] ${employee.active ? "border-white/30 text-white" : "border-red-300/35 text-red-200"}`}>{employee.active ? "Aktiv" : "Deaktiveret"}</span>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              <button type="button" className="gold-button" onClick={() => onCopyLink(employee)}>Kopiér link</button>
+              <button type="button" className="outline-button" onClick={() => onUpdateEmployee(employee.id, { active: !employee.active })}>{employee.active ? "Deaktiver" : "Aktiver"}</button>
+            </div>
+          </div>)}
+        </div>
+      </div>}
+    </section>
+
     <section className="panel p-6">
       <h3 className="panel-title">Fjern timer fra total</h3>
-      <p className="mt-2 text-sm text-stone-300/75">Bruges til manuel justering, fx pause, fejl eller timer der ikke skal tælles med.</p>
       <form onSubmit={removeHours} className="mt-5 grid gap-4 lg:grid-cols-[1fr_10rem_1fr_auto] lg:items-end">
         <Field label="Medarbejder"><Select value={adjustEmployeeId} onChange={(event) => setAdjustEmployeeId(event.target.value)} required><option value="">Vælg medarbejder</option>{employees.map((employee) => <option key={employee.id} value={employee.id}>{employee.name}</option>)}</Select></Field>
         <Field label="Timer"><TextInput type="number" min="0" step="0.25" value={adjustHours} onChange={(event) => setAdjustHours(event.target.value)} placeholder="2.5" required /></Field>
@@ -955,37 +1010,8 @@ function EmployeesModule({ employees, timeEntries, newEmployeeName, onNameChange
         <button type="submit" className="gold-button">Fjern</button>
       </form>
     </section>
-
-    <section className="panel p-6">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h3 className="panel-title">{selectedEmployee ? `${selectedEmployee.name} · opgaver` : "Alle medarbejderopgaver"}</h3>
-          <p className="mt-1 text-sm text-stone-300/75">Tryk på en opgave for start, slut og note.</p>
-        </div>
-        {selectedEmployee && <button type="button" className="outline-button" onClick={() => { setSelectedEmployeeId(""); setOpenTaskId(""); }}>Vis alle</button>}
-      </div>
-      <div className="mt-5 grid gap-3">
-        {selectedEntries.length === 0 && <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-stone-300/75">Ingen opgaver registreret endnu.</p>}
-        {selectedEntries.map((entry) => <button key={entry.id} type="button" onClick={() => setOpenTaskId(openTaskId === entry.id ? "" : entry.id)} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left transition hover:border-white/35">
-          <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
-            <div><p className="font-black text-white">{entry.taskName}</p><p className="text-sm text-stone-300/75">{entry.employeeName} · {entry.date} {entry.startTime && entry.endTime ? `· ${entry.startTime}-${entry.endTime}` : ""}</p></div>
-            <p className={entry.hours < 0 ? "text-lg font-black text-red-200" : "text-lg font-black text-white"}>{formatHours(entry.hours)}</p>
-          </div>
-          {openTaskId === entry.id && <div className="mt-4 grid gap-2 rounded-xl border border-white/10 bg-black/35 p-3 text-sm text-stone-300/80 lg:grid-cols-2">
-            <p><span className="text-stone-500">Dato:</span> {entry.date}</p>
-            <p><span className="text-stone-500">Navn:</span> {entry.employeeName}</p>
-            <p><span className="text-stone-500">Start:</span> {entry.startTime || "—"}</p>
-            <p><span className="text-stone-500">Slut:</span> {entry.endTime || "—"}</p>
-            <p><span className="text-stone-500">Total:</span> {formatHours(entry.hours)}</p>
-            <p><span className="text-stone-500">Registreret:</span> {new Date(entry.createdAt).toLocaleString("da-DK")}</p>
-            <p className="lg:col-span-2"><span className="text-stone-500">Note:</span> {entry.note || "—"}</p>
-          </div>}
-        </button>)}
-      </div>
-    </section>
   </div>;
 }
-
 function DraftOrderFooter({ cars, customer, invoice, preferredDate, preferredTime, customerMessage, total, isOpen, onToggle }: { cars: CarEntry[]; customer: CustomerInfo; invoice: InvoiceInfo; preferredDate: string; preferredTime: string; customerMessage: string; total: number; isOpen: boolean; onToggle: () => void }) {
   const contactLine = [customer.name, customer.phone, customer.email].filter(Boolean).join(" · ");
   const dateLine = [preferredDate, preferredTime].filter(Boolean).join(" kl. ");

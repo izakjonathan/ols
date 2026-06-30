@@ -137,3 +137,18 @@ Also refreshed the local logo image asset.
 - Migrates old car-care service catalogue from existing local/Supabase state to the new transport/logistics catalogue.
 - Replaced remaining visible bil/car wording in frontend/draft/order summaries with opgave/task wording.
 - Production build tested successfully.
+
+
+## v12 timer dashboard
+
+- Timer top section now shows total hours first.
+- Employee names with total hours appear directly under the total.
+- Tapping total hours opens all tasks with employee name, hours, and task name.
+- Tapping an employee opens only that employee's tasks.
+- Tapping a task opens full task info.
+- Removed Medarbejdere/Opgaver count cards.
+- Removed helper texts.
+- Medarbejderdashboard is collapsible and collapsed by default.
+- Copy/deactivate buttons sit next to each other.
+- Copy link alert now only says "Link kopieret".
+- Production build tested successfully.
