@@ -872,7 +872,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
         </div>
       </nav>
 
-      <div className="pt-24 sm:pt-24">
+      <div className={isBackend ? "pt-24 sm:pt-24" : ""}>
       {!isBackend && <>
       <section id="top" data-snap-section className="snap-section landing-section relative grid place-items-center px-5 text-center sm:px-8 lg:px-12">
         <div className="mx-auto max-w-5xl">

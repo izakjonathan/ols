@@ -340,3 +340,15 @@ Production build tested successfully.
 - Removed unused active-section chevron switching logic.
 - Kept smooth scrolling and scroll snap.
 - Production build tested successfully.
+
+
+## v32 section position / visibility fix
+
+- Removed frontend pt-24 wrapper offset that caused previous-section chevrons to appear in the next viewport.
+- Snap sections now use exact 100svh height.
+- Added safe-area-aware top/bottom padding inside sections.
+- Top chevrons are positioned below the fixed nav.
+- Bottom chevrons are positioned above iPhone browser controls.
+- Section content can internally scroll if expanded content becomes too tall.
+- Smooth scroll and snap behavior preserved.
+- Production build tested successfully.
