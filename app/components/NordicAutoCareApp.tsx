@@ -269,6 +269,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
   const [quoteFiles, setQuoteFiles] = useState<string[]>([]);
   const [customerInfoOpen, setCustomerInfoOpen] = useState(false);
   const [openCarIds, setOpenCarIds] = useState<Record<string, boolean>>({});
+  const [activeSnapSection, setActiveSnapSection] = useState("top");
   const [quoteForm, setQuoteForm] = useState({
     name: "",
     phone: "",
@@ -446,6 +447,22 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
   }, [orders, invoices, serviceDrafts, companyInfo, employees, timeEntries, dataLoaded]);
 
   const draftTotal = useMemo(() => orderTotal({ cars }), [cars]);
+
+  useEffect(() => {
+    if (isBackend) return;
+    const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-snap-section]"));
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible?.target?.id) setActiveSnapSection(visible.target.id);
+    }, { threshold: [0.55, 0.7, 0.85] });
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, [isBackend]);
   const draftStarted = useMemo(() => {
     if (isBackend) return false;
     const hasCustomerInfo = Object.values(customer).some((value) => value.trim());
@@ -867,14 +884,14 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
           <a href="#top" className="relative block h-7 w-28 shrink-0 overflow-hidden sm:h-8 sm:w-36"><Image src="/images/oland-service-top-logo.jpeg" alt="Øland Service" fill sizes="144px" className="object-contain object-left" /></a>
           <div className="flex gap-4 overflow-x-auto text-[0.62rem] font-black uppercase tracking-[0.18em] text-stone-200/80 sm:text-[0.68rem]">
-            {isBackend ? <><a className="nav-pill" href="/">Kundeside</a><button type="button" className="nav-pill" onClick={lockBackend}>Lås backend</button></> : <><a className="nav-pill" href="#kontakt">Kontakt</a><a className="nav-pill" href="#booking">Book</a><a className="nav-pill" href="#priser">Services</a></>}
+            {isBackend ? <><a className="nav-pill" href="/">Kundeside</a><button type="button" className="nav-pill" onClick={lockBackend}>Lås backend</button></> : <><a className="nav-pill" href="#action">Kontakt</a><a className="nav-pill" href="#action">Book</a><a className="nav-pill" href="#priser">Services</a></>}
           </div>
         </div>
       </nav>
 
       <div className="pt-24 sm:pt-24">
       {!isBackend && <>
-      <section id="top" className="snap-section landing-section relative grid place-items-center px-5 text-center sm:px-8 lg:px-12">
+      <section id="top" data-snap-section className="snap-section landing-section relative grid place-items-center px-5 text-center sm:px-8 lg:px-12">
         <div className="mx-auto max-w-5xl">
           <h1 className="landing-title text-white">
             <span>Transport</span>
@@ -884,10 +901,10 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
           </h1>
           <p className="landing-subtitle">Kvalitet . Omhu . Tillid</p>
         </div>
-        <a href="#services-overview" className="section-chevron" aria-label="Gå til services">⌄</a>
+        <a href="#services-overview" className="section-chevron" aria-label="Gå til services"><span>⌄</span></a>
       </section>
 
-      <section id="services-overview" className="snap-section section-panel px-5 sm:px-8 lg:px-12">
+      <section id="services-overview" data-snap-section className="snap-section section-panel px-5 sm:px-8 lg:px-12">
         <div className="mx-auto grid h-full max-w-3xl content-center gap-6 text-center">
           <div>
             <p className="eyebrow">Services</p>
@@ -908,13 +925,13 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
             </article>
           </div>
         </div>
-        <a href="#kontakt" className="section-chevron" aria-label="Gå til kontakt">⌄</a>
+        <a href={activeSnapSection === "services-overview" ? "#top" : "#action"} className={activeSnapSection === "services-overview" ? "section-chevron points-up" : "section-chevron"} aria-label={activeSnapSection === "services-overview" ? "Gå til landing" : "Gå til kontakt"}><span>⌄</span></a>
       </section>
 
-      <section id="kontakt" className="snap-section section-panel px-5 sm:px-8 lg:px-12">
-        <div className="mx-auto grid h-full max-w-3xl content-center gap-5">
-          {submittedId && <div className="rounded-2xl border border-white/40 bg-white/[0.08] p-4 text-sm text-stone-100">Forespørgsel <strong className="text-white">{submittedId}</strong> er oprettet i backend.</div>}
-          <div className="grid gap-4">
+      <section id="action" data-snap-section className="snap-section action-section section-panel px-5 sm:px-8 lg:px-12">
+        <div className="mx-auto grid h-full max-w-3xl content-center gap-3">
+          {submittedId && <div className="rounded-2xl border border-white/40 bg-white/[0.08] p-3 text-xs text-stone-100">Forespørgsel <strong className="text-white">{submittedId}</strong> er oprettet i backend.</div>}
+          <div className="grid gap-3">
             <a href="tel:+4526848789" className="panel cta-card block p-4 sm:p-5">
               <div><h3 className="text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Ring til Øland</h3></div>
             </a>
@@ -924,7 +941,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
                 <div><h3 className="text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Bliv ringet op</h3></div>
                 <span className={`chevron-toggle ${callbackExpanded ? "is-open" : ""}`}>›</span>
               </button>
-              {callbackExpanded && <form onSubmit={submitCallback} className="mt-4 grid gap-3">
+              {callbackExpanded && <form onSubmit={submitCallback} className="mt-3 grid max-h-[38svh] gap-3 overflow-y-auto pr-1">
                 <Field label="Navn"><TextInput value={callbackName} onChange={(event) => setCallbackName(event.target.value)} placeholder="Fulde navn" required /></Field>
                 <Field label="Telefon"><TextInput inputMode="tel" value={callbackPhone} onChange={(event) => setCallbackPhone(event.target.value)} placeholder="26848789" required /></Field>
                 <Field label="Note"><TextArea value={callbackNote} onChange={(event) => setCallbackNote(event.target.value)} placeholder="Hvornår skal vi ringe? Hvad handler det om?" /></Field>
@@ -937,7 +954,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
                 <div><h3 className="text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Gratis flyttetilbud</h3></div>
                 <span className={`chevron-toggle ${quoteExpanded ? "is-open" : ""}`}>›</span>
               </button>
-              {quoteExpanded && <form onSubmit={submitMovingQuote} className="mt-4 grid max-h-[50svh] gap-3 overflow-y-auto pr-1">
+              {quoteExpanded && <form onSubmit={submitMovingQuote} className="mt-3 grid max-h-[42svh] gap-3 overflow-y-auto pr-1">
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Field label="Navn"><TextInput value={quoteForm.name} onChange={(event) => setQuoteForm({ ...quoteForm, name: event.target.value })} required /></Field>
                   <Field label="Telefon"><TextInput inputMode="tel" value={quoteForm.phone} onChange={(event) => setQuoteForm({ ...quoteForm, phone: event.target.value })} required /></Field>
@@ -976,14 +993,9 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
               </form>}
             </article>
           </div>
-        </div>
-        <a href="#booking" className="section-chevron" aria-label="Gå til forespørgsel">⌄</a>
-      </section>
 
-      <section id="booking" className="snap-section section-panel px-5 sm:px-8 lg:px-12">
-        <div className="mx-auto grid h-full max-w-3xl content-center">
-          <form id="booking-form" onSubmit={submitRequest} className="grid gap-4">
-            <div className="grid gap-4">
+          <form id="booking-form" onSubmit={submitRequest} className="grid gap-3">
+            <div className="grid gap-3">
               {cars.map((car, index) => {
                 const open = Boolean(openCarIds[car.id]);
                 return <article key={car.id} className="panel p-4 sm:p-5">
@@ -991,36 +1003,34 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
                     <div><h3 className="text-[1.18rem] font-black uppercase tight-card-title text-white sm:text-2xl">Forespørgsel</h3></div>
                     <span className={`chevron-toggle ${open ? "is-open" : ""}`}>›</span>
                   </button>
-                  {open && <><div className="mt-4 max-h-[50svh] overflow-y-auto pr-1"><CarEditor car={car} preferredDate={preferredDate} preferredTime={preferredTime} onDateChange={setPreferredDate} onTimeChange={setPreferredTime} onPatch={(patch) => updateCar(car.id, patch)} onToggle={(key, itemId) => toggleCarArray(car.id, key, itemId)} /></div><div className="mt-4 rounded-2xl border border-white/25 bg-black/35 p-4 text-right text-sm uppercase tracking-[0.16em] text-stone-300/80">Opgave {index + 1} total <strong className="ml-3 text-xl text-white">{kr(carTotal(car))}</strong></div></>}
-                  {cars.length > 1 && <button type="button" className="small-danger mt-4" onClick={() => { setCars((current) => current.filter((item) => item.id !== car.id)); setOpenCarIds((current) => { const next = { ...current }; delete next[car.id]; return next; }); }}>Fjern</button>}
+                  {open && <><div className="mt-3 max-h-[36svh] overflow-y-auto pr-1"><CarEditor car={car} preferredDate={preferredDate} preferredTime={preferredTime} onDateChange={setPreferredDate} onTimeChange={setPreferredTime} onPatch={(patch) => updateCar(car.id, patch)} onToggle={(key, itemId) => toggleCarArray(car.id, key, itemId)} /></div><div className="mt-3 rounded-2xl border border-white/25 bg-black/35 p-3 text-right text-xs uppercase tracking-[0.12em] text-stone-300/80">Opgave {index + 1} total <strong className="ml-3 text-lg text-white">{kr(carTotal(car))}</strong></div></>}
+                  {cars.length > 1 && <button type="button" className="small-danger mt-3" onClick={() => { setCars((current) => current.filter((item) => item.id !== car.id)); setOpenCarIds((current) => { const next = { ...current }; delete next[car.id]; return next; }); }}>Fjern</button>}
                 </article>;
               })}
               <button type="button" className="outline-button w-full !tracking-[0.08em] !leading-tight" onClick={() => { const next = makeCar(); setCars((current) => [...current, next]); }}>+ Tilføj opgave</button>
             </div>
-            <aside className="grid content-start gap-4">
-              <section className="panel p-4 sm:p-5">
-                <button type="button" className="flex w-full items-center justify-between gap-4 text-left" onClick={() => setCustomerInfoOpen((open) => !open)}>
-                  <div><p className="eyebrow tight-card-kicker">Registrer</p><h3 className="mt-1 text-[1.18rem] font-black uppercase tight-card-title text-white sm:text-2xl">Kundeinformation</h3></div>
-                  <span className={`chevron-toggle ${customerInfoOpen ? "is-open" : ""}`}>›</span>
-                </button>
-                {customerInfoOpen && <div className="mt-4 grid gap-3">
-                  <Field label="Navn"><TextInput required value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} placeholder="Fulde navn" /></Field>
-                  <Field label="Telefon"><TextInput required value={customer.phone} onChange={(e) => setCustomer({ ...customer, phone: e.target.value })} placeholder="26848789" /></Field>
-                  <Field label="Email"><TextInput type="email" value={customer.email} onChange={(e) => setCustomer({ ...customer, email: e.target.value })} placeholder="kunde@email.dk" /></Field>
-                  <Field label="Adresse"><TextInput value={customer.address} onChange={(e) => setCustomer({ ...customer, address: e.target.value })} placeholder="Afhentningsadresse / område" /></Field>
-                  <Field label="Betaling"><Select value={invoice.paymentMethod} onChange={(e) => setInvoice({ ...invoice, paymentMethod: e.target.value })}><option>Faktura</option><option>Kontant</option></Select></Field>
-                  <Field label="Type"><Select value={invoice.customerType || "Privat"} onChange={(e) => setInvoice({ ...invoice, customerType: e.target.value })}><option>Privat</option><option>Erhverv</option></Select></Field>
-                  <Field label="Faktura email"><TextInput type="email" value={invoice.invoiceEmail} onChange={(e) => setInvoice({ ...invoice, invoiceEmail: e.target.value })} placeholder="Hvis anden end kontakt email" /></Field>
-                </div>}
-              </section>
-              <button type="submit" className="gold-button w-full">Send</button>
-            </aside>
+            <section className="panel p-4 sm:p-5">
+              <button type="button" className="flex w-full items-center justify-between gap-4 text-left" onClick={() => setCustomerInfoOpen((open) => !open)}>
+                <div><p className="eyebrow tight-card-kicker">Registrer</p><h3 className="mt-1 text-[1.18rem] font-black uppercase tight-card-title text-white sm:text-2xl">Kundeinformation</h3></div>
+                <span className={`chevron-toggle ${customerInfoOpen ? "is-open" : ""}`}>›</span>
+              </button>
+              {customerInfoOpen && <div className="mt-3 grid max-h-[34svh] gap-3 overflow-y-auto pr-1">
+                <Field label="Navn"><TextInput required value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} placeholder="Fulde navn" /></Field>
+                <Field label="Telefon"><TextInput required value={customer.phone} onChange={(e) => setCustomer({ ...customer, phone: e.target.value })} placeholder="26848789" /></Field>
+                <Field label="Email"><TextInput type="email" value={customer.email} onChange={(e) => setCustomer({ ...customer, email: e.target.value })} placeholder="kunde@email.dk" /></Field>
+                <Field label="Adresse"><TextInput value={customer.address} onChange={(e) => setCustomer({ ...customer, address: e.target.value })} placeholder="Afhentningsadresse / område" /></Field>
+                <Field label="Betaling"><Select value={invoice.paymentMethod} onChange={(e) => setInvoice({ ...invoice, paymentMethod: e.target.value })}><option>Faktura</option><option>Kontant</option></Select></Field>
+                <Field label="Type"><Select value={invoice.customerType || "Privat"} onChange={(e) => setInvoice({ ...invoice, customerType: e.target.value })}><option>Privat</option><option>Erhverv</option></Select></Field>
+                <Field label="Faktura email"><TextInput type="email" value={invoice.invoiceEmail} onChange={(e) => setInvoice({ ...invoice, invoiceEmail: e.target.value })} placeholder="Hvis anden end kontakt email" /></Field>
+              </div>}
+            </section>
+            <button type="submit" className="gold-button w-full">Send</button>
           </form>
         </div>
-        <a href="#priser" className="section-chevron" aria-label="Gå til næste sektion">⌄</a>
+        <a href={activeSnapSection === "action" ? "#services-overview" : "#priser"} className={activeSnapSection === "action" ? "section-chevron points-up" : "section-chevron"} aria-label={activeSnapSection === "action" ? "Gå til services" : "Gå til næste sektion"}><span>⌄</span></a>
       </section>
 
-      <section id="priser" className="snap-section relative px-5 py-10 sm:px-8 lg:px-12"><div className="mx-auto max-w-7xl"><div className="mb-8 text-center"><p className="eyebrow">Ydelser</p><h2 className="mt-2 text-3xl font-semibold uppercase tracking-[0.22em] text-white sm:text-5xl">Transport og logistik</h2></div><div className="grid gap-7 lg:grid-cols-[.9fr_1.1fr]"><div className="panel p-4 sm:p-5"><h3 className="panel-title">Enkeltydelser</h3><div className="divide-y divide-white/18">{services.map((row) => <div key={row.id} className="flex items-start justify-between gap-5 py-2.5 text-[0.94rem] leading-tight sm:text-base"><span className="text-stone-100/90">{row.name}</span><span className="shrink-0 text-right font-medium tracking-wide text-stone-100/90">{kr(row.price)}</span></div>)}</div><p className="mt-6 text-sm leading-6 text-white/86">Priserne er fra-priser og kan variere afhængigt af opgavens omfang og afstand.</p><div className="mt-9"><h3 className="panel-title">Tillæg</h3><div className="divide-y divide-white/18">{extras.map((row) => <div key={row.id} className="flex items-start justify-between gap-5 py-2.5 text-[0.94rem] leading-tight sm:text-base"><span className="text-stone-100/90">{row.name}</span><span className="shrink-0 text-right font-medium tracking-wide text-stone-100/90">{row.note ?? kr(row.price)}</span></div>)}</div></div></div><div id="pakker" className="grid gap-4"><h3 className="panel-title mb-0">Pakkeløsninger</h3>{packages.map((pack) => <article key={pack.title} className="package-card"><div className="flex items-center gap-5"><Icon name={pack.icon} className="h-16 w-16 shrink-0 text-white sm:h-20 sm:w-20" /><div className="min-w-0 flex-1"><div className="flex flex-wrap items-baseline justify-between gap-2"><h4 className="text-xl font-semibold uppercase tracking-[0.14em] text-white sm:text-2xl">{pack.title}</h4><p className="text-2xl font-bold tracking-wide text-white sm:text-3xl">{kr(pack.price)}</p></div><ul className="mt-3 grid gap-1.5 text-sm leading-5 text-stone-100/86 sm:text-base">{pack.items.map((item) => <li key={item} className="flex gap-2"><span className="text-white">•</span><span>{item}</span></li>)}</ul></div></div></article>)}</div></div></div></section>
+      <section id="priser" data-snap-section className="snap-section relative px-5 py-10 sm:px-8 lg:px-12"><div className="mx-auto max-w-7xl"><div className="mb-8 text-center"><p className="eyebrow">Ydelser</p><h2 className="mt-2 text-3xl font-semibold uppercase tracking-[0.22em] text-white sm:text-5xl">Transport og logistik</h2></div><div className="grid gap-7 lg:grid-cols-[.9fr_1.1fr]"><div className="panel p-4 sm:p-5"><h3 className="panel-title">Enkeltydelser</h3><div className="divide-y divide-white/18">{services.map((row) => <div key={row.id} className="flex items-start justify-between gap-5 py-2.5 text-[0.94rem] leading-tight sm:text-base"><span className="text-stone-100/90">{row.name}</span><span className="shrink-0 text-right font-medium tracking-wide text-stone-100/90">{kr(row.price)}</span></div>)}</div><p className="mt-6 text-sm leading-6 text-white/86">Priserne er fra-priser og kan variere afhængigt af opgavens omfang og afstand.</p><div className="mt-9"><h3 className="panel-title">Tillæg</h3><div className="divide-y divide-white/18">{extras.map((row) => <div key={row.id} className="flex items-start justify-between gap-5 py-2.5 text-[0.94rem] leading-tight sm:text-base"><span className="text-stone-100/90">{row.name}</span><span className="shrink-0 text-right font-medium tracking-wide text-stone-100/90">{row.note ?? kr(row.price)}</span></div>)}</div></div></div><div id="pakker" className="grid gap-4"><h3 className="panel-title mb-0">Pakkeløsninger</h3>{packages.map((pack) => <article key={pack.title} className="package-card"><div className="flex items-center gap-5"><Icon name={pack.icon} className="h-16 w-16 shrink-0 text-white sm:h-20 sm:w-20" /><div className="min-w-0 flex-1"><div className="flex flex-wrap items-baseline justify-between gap-2"><h4 className="text-xl font-semibold uppercase tracking-[0.14em] text-white sm:text-2xl">{pack.title}</h4><p className="text-2xl font-bold tracking-wide text-white sm:text-3xl">{kr(pack.price)}</p></div><ul className="mt-3 grid gap-1.5 text-sm leading-5 text-stone-100/86 sm:text-base">{pack.items.map((item) => <li key={item} className="flex gap-2"><span className="text-white">•</span><span>{item}</span></li>)}</ul></div></div></article>)}</div></div></div></section>
       </>}
 
       {isBackend && <section id="admin" className="backend-safe-bottom px-5 pt-6 sm:px-8 lg:px-12"><div className="mx-auto max-w-7xl">
@@ -1282,44 +1292,6 @@ function EmployeesModule({ employees, timeEntries, newEmployeeName, onNameChange
     </section>
   </div>;
 }
-function DraftOrderFooter({ cars, customer, invoice, preferredDate, preferredTime, customerMessage, total, isOpen, onToggle }: { cars: CarEntry[]; customer: CustomerInfo; invoice: InvoiceInfo; preferredDate: string; preferredTime: string; customerMessage: string; total: number; isOpen: boolean; onToggle: () => void }) {
-  const contactLine = [customer.name, customer.phone, customer.email].filter(Boolean).join(" · ");
-  const dateLine = [preferredDate, preferredTime].filter(Boolean).join(" kl. ");
-  return <section className="fixed inset-x-0 bottom-0 z-50 px-3 pb-3 sm:px-5 sm:pb-5" aria-label="Aktuel ordreoversigt">
-    <div className="mx-auto max-w-5xl overflow-hidden rounded-[1.35rem] border border-white/45 bg-[#060504]/95 shadow-[0_-24px_80px_rgba(0,0,0,.72)] backdrop-blur-2xl">
-      <button type="button" onClick={onToggle} className="flex w-full items-center justify-between gap-4 px-4 py-2.5 text-left sm:px-5">
-        <span className="min-w-0"><span className="block text-[0.66rem] font-black uppercase tracking-[0.14em] text-white/85">Aktuel forespørgsel</span><span className="mt-1 block truncate text-sm text-stone-200/80">{cars.length} opgave(r) · {dateLine || "dato og tid mangler"} · {contactLine || "kontaktinfo mangler"}</span></span>
-        <span className="flex shrink-0 items-center gap-3"><strong className="text-lg font-black text-white sm:text-2xl">{kr(total)}</strong><span className="grid h-8 w-8 place-items-center rounded-full border border-white/35 text-white">{isOpen ? "↓" : "↑"}</span></span>
-      </button>
-      {isOpen && <div className="max-h-[68vh] overflow-y-auto border-t border-white/18 px-4 py-4 sm:px-5">
-        <div className="grid gap-4 lg:grid-cols-[1fr_.82fr]">
-          <div className="grid gap-3">{cars.map((car, index) => {
-            const pack = packages.find((item) => item.id === car.packageId);
-            const selectedServices = car.services.map((id) => services.find((item) => item.id === id)).filter(Boolean) as Service[];
-            const selectedExtras = car.extras.map((id) => extras.find((item) => item.id === id)).filter(Boolean) as Extra[];
-            return <article key={car.id} className="rounded-2xl border border-white/22 bg-white/[0.035] p-4">
-              <div className="flex items-start justify-between gap-3"><div><p className="text-[0.62rem] font-black uppercase tracking-[0.22em] text-stone-400">Opgave {index + 1}</p><h4 className="mt-1 text-lg font-black uppercase tracking-[0.11em] text-white">{pack?.title ?? "Pakke"}</h4><p className="mt-1 text-xs text-stone-300/70">{[car.type, car.makeModel, car.reg].filter(Boolean).join(" · ") || "Opgaveinformation mangler"}</p></div><strong className="text-lg text-white">{kr(carTotal(car))}</strong></div>
-              {pack && <ul className="mt-3 grid gap-1 text-sm leading-5 text-stone-100/78">{pack.items.map((item) => <li key={item} className="flex gap-2"><span className="text-white">•</span><span>{item}</span></li>)}</ul>}
-              {(selectedServices.length > 0 || selectedExtras.length > 0 || car.notes) && <div className="mt-3 grid gap-2 rounded-xl border border-white/12 bg-black/25 p-3 text-xs text-stone-300/78">
-                {selectedServices.length > 0 && <p><strong className="text-white">Ekstra ydelser:</strong> {selectedServices.map((item) => `${item.name} (${kr(item.price)})`).join(", ")}</p>}
-                {selectedExtras.length > 0 && <p><strong className="text-white">Tillæg:</strong> {selectedExtras.map((item) => `${item.name} (${item.note ?? kr(item.price)})`).join(", ")}</p>}
-                {car.notes && <p><strong className="text-white">Noter:</strong> {car.notes}</p>}
-              </div>}
-            </article>;
-          })}</div>
-          <aside className="grid content-start gap-3 rounded-2xl border border-white/22 bg-black/30 p-4 text-sm text-stone-200/80">
-            <div><p className="text-[0.62rem] font-black uppercase tracking-[0.22em] text-stone-400">Kontakt</p><p className="mt-1">{contactLine || "Mangler"}</p><p>{customer.address || "Adresse mangler"}</p></div>
-            <div><p className="text-[0.62rem] font-black uppercase tracking-[0.22em] text-stone-400">Dato & tid</p><p className="mt-1">{dateLine || "Mangler"}</p>{customerMessage && <p className="mt-1 text-stone-300/70">{customerMessage}</p>}</div>
-            <div><p className="text-[0.62rem] font-black uppercase tracking-[0.22em] text-stone-400">Faktura</p><p className="mt-1">{invoice.invoiceType}</p>{invoice.company && <p>{invoice.company} · CVR {invoice.cvr || "mangler"}</p>}<p>{invoice.invoiceEmail || customer.email || "Email mangler"}</p><p>{invoice.invoiceAddress || customer.address || "Fakturaadresse mangler"}</p></div>
-            <div className="rounded-2xl border border-white/28 bg-white/[0.07] p-4 text-right"><p className="text-xs uppercase tracking-[0.2em] text-stone-300/70">Estimeret total</p><p className="text-3xl font-black text-white">{kr(total)}</p></div>
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1"><a href="#booking" className="outline-button w-full">Rediger</a><button type="submit" form="booking-form" className="gold-button w-full">Send</button></div>
-          </aside>
-        </div>
-      </div>}
-    </div>
-  </section>;
-}
-
 function CarEditor({ car, preferredDate = "", preferredTime = "", onDateChange, onTimeChange, onPatch, onToggle }: { car: CarEntry; preferredDate?: string; preferredTime?: string; onDateChange?: (value: string) => void; onTimeChange?: (value: string) => void; onPatch: (patch: Partial<CarEntry>) => void; onToggle: (key: "services" | "extras", itemId: string) => void }) {
   const showDateTime = Boolean(onDateChange && onTimeChange);
   return <>

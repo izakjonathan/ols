@@ -320,3 +320,13 @@ Production build tested successfully.
 - Made Forespørgsel section full viewport height.
 - Added smooth scrolling and vertical scroll snap to exact full-screen sections.
 - Production build tested successfully.
+
+
+## v30 chevrons / combined section
+
+- Reduced landing header size and font weight.
+- Centered all section chevron symbols inside their circles.
+- Added active-section tracking so chevrons rotate upward on later sections and scroll back to the previous section.
+- Combined the old CTA section and booking/forespørgsel section into one full-screen Action section.
+- Kept smooth scroll and scroll snap between full-screen sections.
+- Production build tested successfully.
