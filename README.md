@@ -392,3 +392,15 @@ Fix:
 - Kept `scroll-padding-top: 0`.
 - Added section containment/isolation to prevent visual bleed between neighboring snap sections.
 - Production build tested successfully.
+
+
+## v36 labelled CSS chevrons
+
+- Replaced circular chevron buttons with CSS chevron symbols using the requested `.chevron::before` pattern.
+- Removed the circle/border/background around section chevrons.
+- Added muted destination labels:
+  - label under top chevrons
+  - label above bottom chevrons
+- Labels are small, bold, caps and letter-spaced.
+- Existing smooth snap and v35 scroll-position root fix are preserved.
+- Production build tested successfully.
