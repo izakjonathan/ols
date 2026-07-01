@@ -1213,3 +1213,178 @@ textarea.form-input {
 #kontakt .tight-card-title {
   margin-top: 0 !important;
 }
+
+
+/* v29 full-screen snap sections */
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  background: #000 !important;
+}
+
+body {
+  background: #000 !important;
+}
+
+.snap-section {
+  position: relative;
+  min-height: calc(100svh - 5.35rem);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.section-panel {
+  display: grid;
+  align-items: center;
+}
+
+.landing-section {
+  background: #000;
+}
+
+.landing-title {
+  display: grid;
+  gap: 0.04em;
+  font-size: clamp(3.45rem, 15.5vw, 9rem);
+  font-weight: 950;
+  line-height: 0.86;
+  letter-spacing: -0.055em;
+  text-transform: uppercase;
+}
+
+.landing-title span {
+  display: block;
+}
+
+.landing-subtitle {
+  margin-top: clamp(1.25rem, 4.8vw, 2.6rem);
+  white-space: nowrap;
+  font-size: clamp(0.92rem, 3.2vw, 2rem);
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.section-title {
+  font-size: clamp(1.75rem, 8vw, 4.6rem);
+  font-weight: 950;
+  line-height: 0.96;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.service-intro-card {
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 1.1rem;
+  padding: 1rem;
+  background: rgba(255,255,255,.018);
+  text-align: left;
+}
+
+.service-intro-card h3 {
+  font-size: 0.86rem;
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.service-intro-card p {
+  margin-top: 0.65rem;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  color: rgba(255,255,255,.62);
+}
+
+.section-chevron {
+  position: absolute;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom) + 1.05rem);
+  z-index: 3;
+  display: grid;
+  width: 2.65rem;
+  height: 2.65rem;
+  transform: translateX(-50%);
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.42);
+  border-radius: 999px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.4rem;
+  line-height: 1;
+  background: rgba(0,0,0,.45);
+}
+
+.section-chevron:hover {
+  background: rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.72);
+}
+
+#kontakt,
+#booking {
+  padding-top: 1rem !important;
+  padding-bottom: 4.5rem !important;
+}
+
+#kontakt .panel,
+#booking .panel {
+  max-width: 100%;
+}
+
+#kontakt .grid,
+#booking .grid {
+  min-width: 0;
+}
+
+#kontakt form,
+#booking form {
+  min-width: 0;
+}
+
+#kontakt .max-h-\[50svh\],
+#booking .max-h-\[50svh\] {
+  overscroll-behavior: contain;
+}
+
+#priser {
+  min-height: calc(100svh - 5.35rem);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+@media (max-width: 430px) {
+  .landing-title {
+    font-size: clamp(3.15rem, 16.3vw, 4.7rem);
+    letter-spacing: -0.06em;
+  }
+
+  .landing-subtitle {
+    font-size: 0.82rem;
+    letter-spacing: 0.055em;
+  }
+
+  .section-chevron {
+    width: 2.35rem;
+    height: 2.35rem;
+    font-size: 1.22rem;
+  }
+
+  .service-intro-card {
+    padding: 0.82rem;
+  }
+
+  #services-overview .grid.sm\:grid-cols-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+  }
+}

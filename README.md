@@ -306,3 +306,17 @@ Production build tested successfully.
 - Matched spacing between CTAs and the Forespørgsel section.
 - Changed Kundeinformation Type field from text input to Privat/Erhverv dropdown.
 - Production build tested successfully.
+
+
+## v29 full-screen frontend sections
+
+- Removed fixed/collapsible Aktuel forespørgsel card completely.
+- Landing statement changed to four-line structure:
+  TRANSPORT / OG LOGISTIK / I SIKRE / HÆNDER.
+- Increased landing statement size.
+- Added downward chevron in circle at bottom of landing, services and CTA/booking sections.
+- Added full-height Services overview section under landing with placeholder copy.
+- Made Kontakt/CTA section full viewport height.
+- Made Forespørgsel section full viewport height.
+- Added smooth scrolling and vertical scroll snap to exact full-screen sections.
+- Production build tested successfully.
