@@ -244,3 +244,17 @@ Production build tested successfully.
 - Contact footer moved clear of floating current-request pill.
 - Booking date/time and moving date inputs use mobile-safe scaling.
 - Kundeinformation is a single card, not a card inside a card.
+
+
+## v24 frontend tight cards / scale
+
+- Landing title and subtitle made smaller with tighter letter spacing.
+- "Kvalitet · Omhu · Tillid" forced to one line.
+- Removed landing contact/book pills.
+- Bliv ringet op and Gratis flyttetilbud are expandable cards, not normal standalone forms.
+- Replaced circled +/− card toggles with chevron-style indicators.
+- Changed booking task card title to "Send forespørgsel".
+- Changed Kunde/Kundeinformation copy to Registrer/Kundeinformation.
+- Tightened line/letter spacing on booking cards and add-task button.
+- Hardened Flyttedato and Dato/Tid mobile input scaling.
+- Production build tested successfully.

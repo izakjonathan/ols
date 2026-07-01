@@ -269,7 +269,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
   const [callbackName, setCallbackName] = useState("");
   const [callbackPhone, setCallbackPhone] = useState("");
   const [callbackNote, setCallbackNote] = useState("");
-  const [showCallbackModal, setShowCallbackModal] = useState(false);
+  const [callbackExpanded, setCallbackExpanded] = useState(false);
   const [quoteExpanded, setQuoteExpanded] = useState(false);
   const [quoteFiles, setQuoteFiles] = useState<string[]>([]);
   const [customerInfoOpen, setCustomerInfoOpen] = useState(false);
@@ -536,7 +536,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
     setCallbackName("");
     setCallbackPhone("");
     setCallbackNote("");
-    setShowCallbackModal(false);
+    setCallbackExpanded(false);
   }
 
   function submitMovingQuote(event: React.FormEvent<HTMLFormElement>) {
@@ -880,60 +880,75 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
       <div className="pt-24 sm:pt-24">
       {!isBackend && <>
       <section id="top" className="relative grid min-h-[calc(100svh-5.75rem)] place-items-center px-5 text-center sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-6xl">
-          <h1 className="text-5xl font-black uppercase leading-[1.02] tracking-[0.12em] text-white sm:text-7xl lg:text-8xl">Transport og logistik i sikre hænder</h1>
-          <p className="mt-8 text-2xl font-black uppercase tracking-[0.28em] text-white sm:text-4xl">Kvalitet · Omhu · Tillid</p>
+        <div className="mx-auto max-w-5xl">
+          <h1 className="text-[1.95rem] font-black uppercase leading-[1.03] tracking-[0.035em] text-white sm:text-6xl lg:text-7xl">Transport og logistik i sikre hænder</h1>
+          <p className="mt-6 whitespace-nowrap text-[0.78rem] font-black uppercase tracking-[0.065em] text-white sm:text-2xl sm:tracking-[0.22em]">Kvalitet · Omhu · Tillid</p>
         </div>
       </section>
 
       <section id="kontakt" className="px-5 py-8 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           {submittedId && <div className="mb-6 rounded-2xl border border-white/40 bg-white/[0.08] p-4 text-sm text-stone-100">Forespørgsel <strong className="text-white">{submittedId}</strong> er oprettet i backend.</div>}
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-4">
             <a href="tel:+4526848789" className="gold-button w-full">Ring til Øland Service</a>
-            <button type="button" className="outline-button w-full" onClick={() => setShowCallbackModal(true)}>Bliv ringet op af Øland Service</button>
-            <button type="button" className={quoteExpanded ? "gold-button w-full" : "outline-button w-full"} onClick={() => setQuoteExpanded((open) => !open)}>Gratis flyttetilbud</button>
+
+            <article className="panel p-5 sm:p-6">
+              <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setCallbackExpanded((open) => !open)}>
+                <div><p className="eyebrow tight-card-kicker">Kontakt</p><h3 className="mt-2 text-2xl font-black uppercase tight-card-title text-white">Bliv ringet op af Øland Service</h3></div>
+                <span className={`chevron-toggle ${callbackExpanded ? "is-open" : ""}`}>›</span>
+              </button>
+              {callbackExpanded && <form onSubmit={submitCallback} className="mt-5 grid gap-4">
+                <Field label="Navn"><TextInput value={callbackName} onChange={(event) => setCallbackName(event.target.value)} placeholder="Fulde navn" required /></Field>
+                <Field label="Telefon"><TextInput inputMode="tel" value={callbackPhone} onChange={(event) => setCallbackPhone(event.target.value)} placeholder="26848789" required /></Field>
+                <Field label="Note"><TextArea value={callbackNote} onChange={(event) => setCallbackNote(event.target.value)} placeholder="Hvornår skal vi ringe? Hvad handler det om?" /></Field>
+                <button type="submit" className="gold-button w-full">Bliv ringet op</button>
+              </form>}
+            </article>
+
+            <article className="panel p-5 sm:p-6">
+              <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setQuoteExpanded((open) => !open)}>
+                <div><p className="eyebrow tight-card-kicker">Flytning</p><h3 className="mt-2 text-2xl font-black uppercase tight-card-title text-white">Gratis flyttetilbud</h3></div>
+                <span className={`chevron-toggle ${quoteExpanded ? "is-open" : ""}`}>›</span>
+              </button>
+              {quoteExpanded && <form onSubmit={submitMovingQuote} className="mt-5 grid gap-4">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Field label="Navn"><TextInput value={quoteForm.name} onChange={(event) => setQuoteForm({ ...quoteForm, name: event.target.value })} required /></Field>
+                  <Field label="Telefon"><TextInput inputMode="tel" value={quoteForm.phone} onChange={(event) => setQuoteForm({ ...quoteForm, phone: event.target.value })} required /></Field>
+                </div>
+                <Field label="Email"><TextInput type="email" value={quoteForm.email} onChange={(event) => setQuoteForm({ ...quoteForm, email: event.target.value })} required /></Field>
+
+                <div className="rounded-2xl border border-white/15 bg-white/[0.03] p-4">
+                  <div className="grid gap-3">
+                    <Field label="Fra adresse"><TextInput value={quoteForm.fromAddress} onChange={(event) => setQuoteForm({ ...quoteForm, fromAddress: event.target.value })} required /></Field>
+                    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3"><Field label="Postnr"><TextInput value={quoteForm.fromPostcode} onChange={(event) => setQuoteForm({ ...quoteForm, fromPostcode: event.target.value })} /></Field><Field label="By"><TextInput value={quoteForm.fromCity} onChange={(event) => setQuoteForm({ ...quoteForm, fromCity: event.target.value })} /></Field></div>
+                    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3"><Field label="Etage"><TextInput value={quoteForm.fromFloor} onChange={(event) => setQuoteForm({ ...quoteForm, fromFloor: event.target.value })} placeholder="fx 3. sal" /></Field><Field label="Elevator"><Select value={quoteForm.fromElevator} onChange={(event) => setQuoteForm({ ...quoteForm, fromElevator: event.target.value })}><option>Nej</option><option>Ja</option></Select></Field></div>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-white/15 bg-white/[0.03] p-4">
+                  <div className="grid gap-3">
+                    <Field label="Til adresse"><TextInput value={quoteForm.toAddress} onChange={(event) => setQuoteForm({ ...quoteForm, toAddress: event.target.value })} required /></Field>
+                    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3"><Field label="Postnr"><TextInput value={quoteForm.toPostcode} onChange={(event) => setQuoteForm({ ...quoteForm, toPostcode: event.target.value })} /></Field><Field label="By"><TextInput value={quoteForm.toCity} onChange={(event) => setQuoteForm({ ...quoteForm, toCity: event.target.value })} /></Field></div>
+                    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3"><Field label="Etage"><TextInput value={quoteForm.toFloor} onChange={(event) => setQuoteForm({ ...quoteForm, toFloor: event.target.value })} placeholder="fx st." /></Field><Field label="Elevator"><Select value={quoteForm.toElevator} onChange={(event) => setQuoteForm({ ...quoteForm, toElevator: event.target.value })}><option>Nej</option><option>Ja</option></Select></Field></div>
+                  </div>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+                  <Field label="Flyttedato"><TextInput type="date" className="move-date-input" value={quoteForm.moveDate} onChange={(event) => setQuoteForm({ ...quoteForm, moveDate: event.target.value })} /></Field>
+                  <Field label="Bolig m2"><TextInput inputMode="numeric" value={quoteForm.homeSize} onChange={(event) => setQuoteForm({ ...quoteForm, homeSize: event.target.value })} placeholder="fx 75" required /></Field>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+                  <Field label="Nedpakning"><Select value={quoteForm.packing} onChange={(event) => setQuoteForm({ ...quoteForm, packing: event.target.value })}><option>Nej</option><option>Ja</option></Select></Field>
+                  <Field label="Opbevaring"><Select value={quoteForm.storage} onChange={(event) => setQuoteForm({ ...quoteForm, storage: event.target.value })}><option>Nej</option><option>Ja</option></Select></Field>
+                </div>
+                <Field label="Type af flytning"><Select value={quoteForm.moveType} onChange={(event) => setQuoteForm({ ...quoteForm, moveType: event.target.value })}><option>Komplet flytning</option><option>Flyttekasser, få møbler</option><option>Kun flyttekasser</option><option>Klaver</option><option>Andet</option></Select></Field>
+                <Field label="Upload billeder"><input type="file" multiple accept="image/*" className="form-input min-w-0 pt-3" onChange={(event) => setQuoteFiles(Array.from(event.target.files ?? []).map((file) => file.name))} /></Field>
+                {quoteFiles.length > 0 && <p className="text-sm text-stone-300/70">{fileNameSummary(quoteFiles)}</p>}
+                <Field label="Kommentar"><TextArea value={quoteForm.comment} onChange={(event) => setQuoteForm({ ...quoteForm, comment: event.target.value })} placeholder="Særlige forhold, adgang, parkering, tidsrum..." /></Field>
+                <button type="submit" className="gold-button w-full">Send gratis flyttetilbud</button>
+              </form>}
+            </article>
           </div>
-          {quoteExpanded && <article className="panel mx-auto mt-5 max-w-4xl p-5 sm:p-6">
-            <h3 className="panel-title">Gratis flyttetilbud</h3>
-            <form onSubmit={submitMovingQuote} className="mt-5 grid gap-4">
-              <div className="grid gap-3 sm:grid-cols-2">
-                <Field label="Navn"><TextInput value={quoteForm.name} onChange={(event) => setQuoteForm({ ...quoteForm, name: event.target.value })} required /></Field>
-                <Field label="Telefon"><TextInput inputMode="tel" value={quoteForm.phone} onChange={(event) => setQuoteForm({ ...quoteForm, phone: event.target.value })} required /></Field>
-              </div>
-              <Field label="Email"><TextInput type="email" value={quoteForm.email} onChange={(event) => setQuoteForm({ ...quoteForm, email: event.target.value })} required /></Field>
-
-              <div className="rounded-2xl border border-white/15 bg-white/[0.03] p-4">
-                <div className="grid gap-3">
-                  <Field label="Fra adresse"><TextInput value={quoteForm.fromAddress} onChange={(event) => setQuoteForm({ ...quoteForm, fromAddress: event.target.value })} required /></Field>
-                  <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3"><Field label="Postnr"><TextInput value={quoteForm.fromPostcode} onChange={(event) => setQuoteForm({ ...quoteForm, fromPostcode: event.target.value })} /></Field><Field label="By"><TextInput value={quoteForm.fromCity} onChange={(event) => setQuoteForm({ ...quoteForm, fromCity: event.target.value })} /></Field></div>
-                  <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3"><Field label="Etage"><TextInput value={quoteForm.fromFloor} onChange={(event) => setQuoteForm({ ...quoteForm, fromFloor: event.target.value })} placeholder="fx 3. sal" /></Field><Field label="Elevator"><Select value={quoteForm.fromElevator} onChange={(event) => setQuoteForm({ ...quoteForm, fromElevator: event.target.value })}><option>Nej</option><option>Ja</option></Select></Field></div>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-white/15 bg-white/[0.03] p-4">
-                <div className="grid gap-3">
-                  <Field label="Til adresse"><TextInput value={quoteForm.toAddress} onChange={(event) => setQuoteForm({ ...quoteForm, toAddress: event.target.value })} required /></Field>
-                  <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3"><Field label="Postnr"><TextInput value={quoteForm.toPostcode} onChange={(event) => setQuoteForm({ ...quoteForm, toPostcode: event.target.value })} /></Field><Field label="By"><TextInput value={quoteForm.toCity} onChange={(event) => setQuoteForm({ ...quoteForm, toCity: event.target.value })} /></Field></div>
-                  <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3"><Field label="Etage"><TextInput value={quoteForm.toFloor} onChange={(event) => setQuoteForm({ ...quoteForm, toFloor: event.target.value })} placeholder="fx st." /></Field><Field label="Elevator"><Select value={quoteForm.toElevator} onChange={(event) => setQuoteForm({ ...quoteForm, toElevator: event.target.value })}><option>Nej</option><option>Ja</option></Select></Field></div>
-                </div>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-                <Field label="Flyttedato"><TextInput type="date" className="booking-date-time-input" value={quoteForm.moveDate} onChange={(event) => setQuoteForm({ ...quoteForm, moveDate: event.target.value })} /></Field>
-                <Field label="Bolig m2"><TextInput inputMode="numeric" value={quoteForm.homeSize} onChange={(event) => setQuoteForm({ ...quoteForm, homeSize: event.target.value })} placeholder="fx 75" required /></Field>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-                <Field label="Nedpakning"><Select value={quoteForm.packing} onChange={(event) => setQuoteForm({ ...quoteForm, packing: event.target.value })}><option>Nej</option><option>Ja</option></Select></Field>
-                <Field label="Opbevaring"><Select value={quoteForm.storage} onChange={(event) => setQuoteForm({ ...quoteForm, storage: event.target.value })}><option>Nej</option><option>Ja</option></Select></Field>
-              </div>
-              <Field label="Type af flytning"><Select value={quoteForm.moveType} onChange={(event) => setQuoteForm({ ...quoteForm, moveType: event.target.value })}><option>Komplet flytning</option><option>Flyttekasser, få møbler</option><option>Kun flyttekasser</option><option>Klaver</option><option>Andet</option></Select></Field>
-              <Field label="Upload billeder"><input type="file" multiple accept="image/*" className="form-input min-w-0 pt-3" onChange={(event) => setQuoteFiles(Array.from(event.target.files ?? []).map((file) => file.name))} /></Field>
-              {quoteFiles.length > 0 && <p className="text-sm text-stone-300/70">{fileNameSummary(quoteFiles)}</p>}
-              <Field label="Kommentar"><TextArea value={quoteForm.comment} onChange={(event) => setQuoteForm({ ...quoteForm, comment: event.target.value })} placeholder="Særlige forhold, adgang, parkering, tidsrum..." /></Field>
-              <button type="submit" className="gold-button w-full">Send gratis flyttetilbud</button>
-            </form>
-          </article>}
         </div>
       </section>
 
@@ -945,20 +960,20 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
                 const open = Boolean(openCarIds[car.id]);
                 return <article key={car.id} className="panel p-5 sm:p-6">
                   <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setOpenCarIds((current) => ({ ...current, [car.id]: !current[car.id] }))}>
-                    <div><p className="eyebrow">Opgave {index + 1}</p><h3 className="mt-2 text-2xl font-black uppercase tracking-[0.14em] text-white">Vælg transport</h3></div>
-                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-white/30 text-white">{open ? "−" : "+"}</span>
+                    <div><h3 className="text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Send forespørgsel</h3></div>
+                    <span className={`chevron-toggle ${open ? "is-open" : ""}`}>›</span>
                   </button>
                   {open && <><div className="mt-5"><CarEditor car={car} preferredDate={preferredDate} preferredTime={preferredTime} onDateChange={setPreferredDate} onTimeChange={setPreferredTime} onPatch={(patch) => updateCar(car.id, patch)} onToggle={(key, itemId) => toggleCarArray(car.id, key, itemId)} /></div><div className="mt-5 rounded-2xl border border-white/25 bg-black/35 p-4 text-right text-sm uppercase tracking-[0.16em] text-stone-300/80">Opgave {index + 1} total <strong className="ml-3 text-xl text-white">{kr(carTotal(car))}</strong></div></>}
                   {cars.length > 1 && <button type="button" className="small-danger mt-4" onClick={() => { setCars((current) => current.filter((item) => item.id !== car.id)); setOpenCarIds((current) => { const next = { ...current }; delete next[car.id]; return next; }); }}>Fjern</button>}
                 </article>;
               })}
-              <button type="button" className="outline-button w-full" onClick={() => { const next = makeCar(); setCars((current) => [...current, next]); }}>+ Tilføj endnu en opgave</button>
+              <button type="button" className="outline-button w-full !tracking-[0.08em] !leading-tight" onClick={() => { const next = makeCar(); setCars((current) => [...current, next]); }}>Tilføj endnu en opgave</button>
             </div>
             <aside className="grid content-start gap-5">
               <section className="panel p-5 sm:p-6">
                 <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setCustomerInfoOpen((open) => !open)}>
-                  <div><p className="eyebrow">Kunde</p><h3 className="mt-2 text-2xl font-black uppercase tracking-[0.14em] text-white">Kundeinformation</h3></div>
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-white/30 text-white">{customerInfoOpen ? "−" : "+"}</span>
+                  <div><p className="eyebrow tight-card-kicker">Registrer</p><h3 className="mt-1 text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Kundeinformation</h3></div>
+                  <span className={`chevron-toggle ${customerInfoOpen ? "is-open" : ""}`}>›</span>
                 </button>
                 {customerInfoOpen && <div className="mt-5 grid gap-4">
                   <Field label="Navn"><TextInput required value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} placeholder="Fulde navn" /></Field>
@@ -1001,20 +1016,6 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
       </div>
       {!isBackend && draftStarted && <DraftOrderFooter cars={cars} customer={customer} invoice={invoice} preferredDate={preferredDate} preferredTime={preferredTime} customerMessage={customerMessage} total={draftTotal} isOpen={draftSummaryOpen} onToggle={() => setDraftSummaryOpen((open) => !open)} />}
       {!isBackend && draftStarted && <div className={draftSummaryOpen ? "h-[32rem] sm:h-80" : "h-36"} aria-hidden="true" />}
-      {!isBackend && showCallbackModal && <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 px-4 py-8 backdrop-blur-sm" onClick={() => setShowCallbackModal(false)}>
-        <div className="panel w-full max-w-lg p-5 sm:p-6" onClick={(event) => event.stopPropagation()}>
-          <h3 className="panel-title">Bliv ringet op af Øland Service</h3>
-          <form onSubmit={submitCallback} className="mt-5 grid gap-4">
-            <Field label="Navn"><TextInput value={callbackName} onChange={(event) => setCallbackName(event.target.value)} placeholder="Fulde navn" required /></Field>
-            <Field label="Telefon"><TextInput inputMode="tel" value={callbackPhone} onChange={(event) => setCallbackPhone(event.target.value)} placeholder="26848789" required /></Field>
-            <Field label="Note"><TextArea value={callbackNote} onChange={(event) => setCallbackNote(event.target.value)} placeholder="Hvornår skal vi ringe? Hvad handler det om?" /></Field>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <button type="submit" className="gold-button w-full">Bliv ringet op</button>
-              <button type="button" className="outline-button w-full" onClick={() => setShowCallbackModal(false)}>Luk</button>
-            </div>
-          </form>
-        </div>
-      </div>}
       {!isBackend && (
         <footer className="px-5 pb-48 pt-6 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-7xl rounded-2xl border border-white/25 bg-black/55 px-5 py-6 text-center sm:px-7">
