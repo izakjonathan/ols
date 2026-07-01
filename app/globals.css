@@ -1214,13 +1214,14 @@ textarea.form-input {
   margin-top: 0 !important;
 }
 
-/* v33 smooth manual snap / unified chevrons / section cleanup */
+/* v34 chevron edge spacing / smooth snap cleanup */
 :root {
   --fixed-nav-height: 5.05rem;
+  --chevron-edge-gap: 1.15rem;
   --section-top-clearance: calc(env(safe-area-inset-top) + var(--fixed-nav-height));
-  --section-bottom-clearance: calc(env(safe-area-inset-bottom) + 5.25rem);
-  --section-chevron-top: calc(env(safe-area-inset-top) + 5.05rem);
-  --section-chevron-bottom: calc(env(safe-area-inset-bottom) + 5.05rem);
+  --section-bottom-clearance: calc(env(safe-area-inset-bottom) + 4.25rem);
+  --section-chevron-top: calc(env(safe-area-inset-top) + var(--fixed-nav-height) + var(--chevron-edge-gap));
+  --section-chevron-bottom: calc(env(safe-area-inset-bottom) + var(--chevron-edge-gap));
   --section-chevron-size: 2.38rem;
 }
 
@@ -1329,6 +1330,8 @@ body {
   color: rgba(255,255,255,.62) !important;
 }
 
+/* Top chevron top edge is the same gap from the bottom of the fixed navbar
+   as the bottom chevron bottom edge is from the bottom of the viewport. */
 .section-chevron {
   position: absolute !important;
   left: 50% !important;
@@ -1406,9 +1409,8 @@ body {
 @media (max-width: 430px) {
   :root {
     --fixed-nav-height: 4.85rem;
-    --section-bottom-clearance: calc(env(safe-area-inset-bottom) + 5rem);
-    --section-chevron-top: calc(env(safe-area-inset-top) + 4.85rem);
-    --section-chevron-bottom: calc(env(safe-area-inset-bottom) + 4.85rem);
+    --chevron-edge-gap: 1rem;
+    --section-bottom-clearance: calc(env(safe-area-inset-bottom) + 4.05rem);
     --section-chevron-size: 2.28rem;
   }
 

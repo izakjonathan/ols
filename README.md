@@ -365,3 +365,14 @@ Production build tested successfully.
 - Removed duplicate v29/v30/v31/v32 snap/chevron CSS layers and replaced them with one v33 layer.
 - Preserved smooth scroll, snap scrolling, safe-area handling and black background.
 - Production build tested successfully.
+
+
+## v34 chevron edge spacing
+
+- Replaced the v33 section/chevron CSS layer with a v34 layer.
+- Added one shared `--chevron-edge-gap` value.
+- Bottom chevrons now sit close to the bottom of the viewport using that gap.
+- Top chevrons now sit the same gap below the fixed navbar.
+- Top and bottom positions are consistent across every section.
+- Smooth manual snapping from v33 is preserved.
+- Production build tested successfully.
