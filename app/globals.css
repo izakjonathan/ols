@@ -833,7 +833,7 @@ body {
 }
 
 section[id] {
-  scroll-margin-top: 5.4rem;
+  scroll-margin-top: 0 !important;
 }
 
 /* Header */
@@ -1443,4 +1443,25 @@ body {
   html {
     scroll-behavior: auto !important;
   }
+}
+
+
+/* v35 root-cause fix: remove snap target offset */
+section[id],
+.snap-section,
+[data-snap-section] {
+  scroll-margin-top: 0 !important;
+  scroll-margin-bottom: 0 !important;
+}
+
+/* Anchor and JS scrollIntoView must align each snap section exactly to viewport start. */
+html {
+  scroll-padding-top: 0 !important;
+  scroll-padding-bottom: 0 !important;
+}
+
+/* Keep chevrons inside their own section only; no neighbour section bleed. */
+.snap-section {
+  isolation: isolate;
+  contain: layout paint;
 }

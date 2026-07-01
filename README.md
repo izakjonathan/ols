@@ -376,3 +376,19 @@ Production build tested successfully.
 - Top and bottom positions are consistent across every section.
 - Smooth manual snapping from v33 is preserved.
 - Production build tested successfully.
+
+
+## v35 scroll-position root fix
+
+Root cause found:
+- An older global CSS rule was still active: `section[id] { scroll-margin-top: 5.4rem; }`.
+- Browser anchor navigation and `scrollIntoView()` respect `scroll-margin-top`.
+- That meant each full-screen snap section stopped 5.4rem too low.
+- Because the active section was shifted down, the previous section's bottom chevron remained visible under the navbar and the current section's top chevron was pushed too far down.
+
+Fix:
+- Changed `section[id]` scroll margin to `0`.
+- Added final hard overrides for `section[id]`, `.snap-section`, and `[data-snap-section]`.
+- Kept `scroll-padding-top: 0`.
+- Added section containment/isolation to prevent visual bleed between neighboring snap sections.
+- Production build tested successfully.
