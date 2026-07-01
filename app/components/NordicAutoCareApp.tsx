@@ -269,7 +269,6 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
   const [quoteFiles, setQuoteFiles] = useState<string[]>([]);
   const [customerInfoOpen, setCustomerInfoOpen] = useState(false);
   const [openCarIds, setOpenCarIds] = useState<Record<string, boolean>>({});
-  const [activeSnapSection, setActiveSnapSection] = useState("top");
   const [quoteForm, setQuoteForm] = useState({
     name: "",
     phone: "",
@@ -447,22 +446,6 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
   }, [orders, invoices, serviceDrafts, companyInfo, employees, timeEntries, dataLoaded]);
 
   const draftTotal = useMemo(() => orderTotal({ cars }), [cars]);
-
-  useEffect(() => {
-    if (isBackend) return;
-    const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-snap-section]"));
-    if (!sections.length) return;
-
-    const observer = new IntersectionObserver((entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (visible?.target?.id) setActiveSnapSection(visible.target.id);
-    }, { threshold: [0.55, 0.7, 0.85] });
-
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
-  }, [isBackend]);
   const draftStarted = useMemo(() => {
     if (isBackend) return false;
     const hasCustomerInfo = Object.values(customer).some((value) => value.trim());
@@ -901,7 +884,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
           </h1>
           <p className="landing-subtitle">Kvalitet . Omhu . Tillid</p>
         </div>
-        <a href="#services-overview" className="section-chevron" aria-label="Gå til services"><span>⌄</span></a>
+        <a href="#services-overview" className="section-chevron section-chevron-bottom" aria-label="Gå til services"><span>⌄</span></a>
       </section>
 
       <section id="services-overview" data-snap-section className="snap-section section-panel px-5 sm:px-8 lg:px-12">
@@ -925,7 +908,8 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
             </article>
           </div>
         </div>
-        <a href={activeSnapSection === "services-overview" ? "#top" : "#action"} className={activeSnapSection === "services-overview" ? "section-chevron points-up" : "section-chevron"} aria-label={activeSnapSection === "services-overview" ? "Gå til landing" : "Gå til kontakt"}><span>⌄</span></a>
+        <a href="#top" className="section-chevron section-chevron-top points-up" aria-label="Gå til landing"><span>⌄</span></a>
+        <a href="#action" className="section-chevron section-chevron-bottom" aria-label="Gå til kontakt"><span>⌄</span></a>
       </section>
 
       <section id="action" data-snap-section className="snap-section action-section section-panel px-5 sm:px-8 lg:px-12">
@@ -1027,10 +1011,11 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
             <button type="submit" className="gold-button w-full">Send</button>
           </form>
         </div>
-        <a href={activeSnapSection === "action" ? "#services-overview" : "#priser"} className={activeSnapSection === "action" ? "section-chevron points-up" : "section-chevron"} aria-label={activeSnapSection === "action" ? "Gå til services" : "Gå til næste sektion"}><span>⌄</span></a>
+        <a href="#services-overview" className="section-chevron section-chevron-top points-up" aria-label="Gå til services"><span>⌄</span></a>
+        <a href="#priser" className="section-chevron section-chevron-bottom" aria-label="Gå til næste sektion"><span>⌄</span></a>
       </section>
 
-      <section id="priser" data-snap-section className="snap-section relative px-5 py-10 sm:px-8 lg:px-12"><div className="mx-auto max-w-7xl"><div className="mb-8 text-center"><p className="eyebrow">Ydelser</p><h2 className="mt-2 text-3xl font-semibold uppercase tracking-[0.22em] text-white sm:text-5xl">Transport og logistik</h2></div><div className="grid gap-7 lg:grid-cols-[.9fr_1.1fr]"><div className="panel p-4 sm:p-5"><h3 className="panel-title">Enkeltydelser</h3><div className="divide-y divide-white/18">{services.map((row) => <div key={row.id} className="flex items-start justify-between gap-5 py-2.5 text-[0.94rem] leading-tight sm:text-base"><span className="text-stone-100/90">{row.name}</span><span className="shrink-0 text-right font-medium tracking-wide text-stone-100/90">{kr(row.price)}</span></div>)}</div><p className="mt-6 text-sm leading-6 text-white/86">Priserne er fra-priser og kan variere afhængigt af opgavens omfang og afstand.</p><div className="mt-9"><h3 className="panel-title">Tillæg</h3><div className="divide-y divide-white/18">{extras.map((row) => <div key={row.id} className="flex items-start justify-between gap-5 py-2.5 text-[0.94rem] leading-tight sm:text-base"><span className="text-stone-100/90">{row.name}</span><span className="shrink-0 text-right font-medium tracking-wide text-stone-100/90">{row.note ?? kr(row.price)}</span></div>)}</div></div></div><div id="pakker" className="grid gap-4"><h3 className="panel-title mb-0">Pakkeløsninger</h3>{packages.map((pack) => <article key={pack.title} className="package-card"><div className="flex items-center gap-5"><Icon name={pack.icon} className="h-16 w-16 shrink-0 text-white sm:h-20 sm:w-20" /><div className="min-w-0 flex-1"><div className="flex flex-wrap items-baseline justify-between gap-2"><h4 className="text-xl font-semibold uppercase tracking-[0.14em] text-white sm:text-2xl">{pack.title}</h4><p className="text-2xl font-bold tracking-wide text-white sm:text-3xl">{kr(pack.price)}</p></div><ul className="mt-3 grid gap-1.5 text-sm leading-5 text-stone-100/86 sm:text-base">{pack.items.map((item) => <li key={item} className="flex gap-2"><span className="text-white">•</span><span>{item}</span></li>)}</ul></div></div></article>)}</div></div></div></section>
+      <section id="priser" data-snap-section className="snap-section relative px-5 py-10 sm:px-8 lg:px-12"><a href="#action" className="section-chevron section-chevron-top points-up" aria-label="Gå til forespørgsel"><span>⌄</span></a><div className="mx-auto max-w-7xl"><div className="mb-8 text-center"><p className="eyebrow">Ydelser</p><h2 className="mt-2 text-3xl font-semibold uppercase tracking-[0.22em] text-white sm:text-5xl">Transport og logistik</h2></div><div className="grid gap-7 lg:grid-cols-[.9fr_1.1fr]"><div className="panel p-4 sm:p-5"><h3 className="panel-title">Enkeltydelser</h3><div className="divide-y divide-white/18">{services.map((row) => <div key={row.id} className="flex items-start justify-between gap-5 py-2.5 text-[0.94rem] leading-tight sm:text-base"><span className="text-stone-100/90">{row.name}</span><span className="shrink-0 text-right font-medium tracking-wide text-stone-100/90">{kr(row.price)}</span></div>)}</div><p className="mt-6 text-sm leading-6 text-white/86">Priserne er fra-priser og kan variere afhængigt af opgavens omfang og afstand.</p><div className="mt-9"><h3 className="panel-title">Tillæg</h3><div className="divide-y divide-white/18">{extras.map((row) => <div key={row.id} className="flex items-start justify-between gap-5 py-2.5 text-[0.94rem] leading-tight sm:text-base"><span className="text-stone-100/90">{row.name}</span><span className="shrink-0 text-right font-medium tracking-wide text-stone-100/90">{row.note ?? kr(row.price)}</span></div>)}</div></div></div><div id="pakker" className="grid gap-4"><h3 className="panel-title mb-0">Pakkeløsninger</h3>{packages.map((pack) => <article key={pack.title} className="package-card"><div className="flex items-center gap-5"><Icon name={pack.icon} className="h-16 w-16 shrink-0 text-white sm:h-20 sm:w-20" /><div className="min-w-0 flex-1"><div className="flex flex-wrap items-baseline justify-between gap-2"><h4 className="text-xl font-semibold uppercase tracking-[0.14em] text-white sm:text-2xl">{pack.title}</h4><p className="text-2xl font-bold tracking-wide text-white sm:text-3xl">{kr(pack.price)}</p></div><ul className="mt-3 grid gap-1.5 text-sm leading-5 text-stone-100/86 sm:text-base">{pack.items.map((item) => <li key={item} className="flex gap-2"><span className="text-white">•</span><span>{item}</span></li>)}</ul></div></div></article>)}</div></div></div></section>
       </>}
 
       {isBackend && <section id="admin" className="backend-safe-bottom px-5 pt-6 sm:px-8 lg:px-12"><div className="mx-auto max-w-7xl">

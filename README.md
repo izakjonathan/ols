@@ -330,3 +330,13 @@ Production build tested successfully.
 - Combined the old CTA section and booking/forespørgsel section into one full-screen Action section.
 - Kept smooth scroll and scroll snap between full-screen sections.
 - Production build tested successfully.
+
+
+## v31 corrected chevron behavior
+
+- Bottom chevrons always point down and scroll to the section below.
+- Top chevrons on sections after landing point up and scroll to the section above.
+- Top chevrons are positioned below the fixed nav bar, not behind it.
+- Removed unused active-section chevron switching logic.
+- Kept smooth scrolling and scroll snap.
+- Production build tested successfully.
