@@ -912,142 +912,271 @@ select.time-control-input {
   }
 }
 
+/* v49 frontend CSS audit/fix
+   Root cause found: v47 appended a second :root plus front-end overrides after the consolidated CSS.
+   Those duplicate variables and action-section padding rules made chevrons/labels collide with content.
+   This layer replaces the conflicting frontend layout behavior with one predictable section system. */
 
-/* v47 layout pass: keep Apple-like type, fix snap-section spatial rhythm */
+/* Single visual rhythm for frontend full-screen sections */
 :root {
-  --nav-h: 76px;
-  --section-side: clamp(20px, 5.2vw, 32px);
-  --snap-top-clearance: calc(env(safe-area-inset-top) + var(--nav-h));
-  --snap-bottom-clearance: calc(env(safe-area-inset-bottom) + 74px);
-  --snap-content-top-pad: 72px;
-  --snap-content-bottom-pad: 90px;
-  --chevron-gap: 20px;
-  --chevron-top: calc(env(safe-area-inset-top) + var(--nav-h) + 14px);
-  --chevron-bottom: calc(env(safe-area-inset-bottom) + 30px);
-  --card-gap: 14px;
-  --card-pad: 18px;
-  --card-min: 72px;
-  --control-h: 48px;
-  --backend-top: calc(env(safe-area-inset-top) + 60px);
-  --dock-clearance: max(132px, calc(env(safe-area-inset-bottom) + 118px));
+  --frontend-side: clamp(22px, 5.2vw, 34px);
+  --frontend-nav-height: 76px;
+  --frontend-top-safe: calc(env(safe-area-inset-top) + var(--frontend-nav-height));
+  --frontend-section-top: calc(var(--frontend-top-safe) + 104px);
+  --frontend-section-bottom: calc(env(safe-area-inset-bottom) + 116px);
+  --frontend-landing-bottom: calc(env(safe-area-inset-bottom) + 92px);
+  --frontend-chevron-top: calc(var(--frontend-top-safe) + 18px);
+  --frontend-chevron-bottom: calc(env(safe-area-inset-bottom) + 42px);
+  --frontend-card-gap: 14px;
+  --frontend-card-pad: 16px;
+  --frontend-card-min: 62px;
 }
 
-/* Page-level section rhythm */
+/* Full screen sections should reserve fixed zones for navbar and chevrons.
+   Content is centered in the remaining middle zone instead of using h-full. */
 .snap-section {
-  padding-left: var(--section-side) !important;
-  padding-right: var(--section-side) !important;
+  display: flex !important;
+  min-height: 100svh !important;
+  height: 100svh !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  padding-left: var(--frontend-side) !important;
+  padding-right: var(--frontend-side) !important;
+  scroll-snap-align: start !important;
+  scroll-snap-stop: always !important;
 }
 
-.landing-section,
+.landing-section {
+  padding-top: var(--frontend-top-safe) !important;
+  padding-bottom: var(--frontend-landing-bottom) !important;
+}
+
 .section-panel,
 #priser {
-  padding-top: var(--snap-top-clearance) !important;
-  padding-bottom: var(--snap-bottom-clearance) !important;
+  padding-top: var(--frontend-section-top) !important;
+  padding-bottom: var(--frontend-section-bottom) !important;
 }
 
+.landing-section > div,
 #services-overview > div,
 #action > div,
 #priser > div {
-  box-sizing: border-box !important;
-  max-height: calc(100svh - var(--snap-top-clearance) - var(--snap-bottom-clearance)) !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: calc(100svh - var(--frontend-section-top) - var(--frontend-section-bottom)) !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  scrollbar-width: none !important;
 }
 
-/* Reserve actual space for top/bottom chevrons so they do not collide with content. */
-#services-overview > div,
-#action > div {
-  padding-top: var(--snap-content-top-pad) !important;
-  padding-bottom: var(--snap-content-bottom-pad) !important;
+.landing-section > div {
+  max-height: calc(100svh - var(--frontend-top-safe) - var(--frontend-landing-bottom)) !important;
+  overflow: visible !important;
+}
+
+#services-overview > div::-webkit-scrollbar,
+#action > div::-webkit-scrollbar,
+#priser > div::-webkit-scrollbar {
+  display: none;
+}
+
+/* Chevrons: fixed edge positions, never inside card flow */
+.section-chevron {
+  position: absolute !important;
+  left: 50% !important;
+  z-index: 40 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  gap: 5px !important;
+  padding: 0 !important;
+  transform: translateX(-50%) !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--c-text-tertiary) !important;
+  text-decoration: none !important;
+  font-size: 0 !important;
+  line-height: 1 !important;
+}
+
+.section-chevron-top {
+  top: var(--frontend-chevron-top) !important;
+  bottom: auto !important;
+  flex-direction: column !important;
+}
+
+.section-chevron-bottom {
+  top: auto !important;
+  bottom: var(--frontend-chevron-bottom) !important;
+  flex-direction: column !important;
+}
+
+.section-chevron-label {
+  display: block !important;
+  color: var(--c-text-tertiary) !important;
+  font-size: 12px !important;
+  font-weight: var(--fw-medium) !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  white-space: nowrap !important;
+}
+
+.chevron {
+  display: inline-block !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: var(--c-text-tertiary) !important;
+  font-size: 18px !important;
+}
+
+.chevron::before {
+  border-style: solid !important;
+  border-width: 2px 2px 0 0 !important;
+  content: "" !important;
+  display: inline-block !important;
+  height: 7px !important;
+  left: 4px !important;
+  position: relative !important;
+  top: 3px !important;
+  transform: rotate(-45deg) !important;
+  vertical-align: top !important;
+  width: 7px !important;
+}
+
+.chevron.bottom::before {
+  top: 1px !important;
+  transform: rotate(135deg) !important;
+}
+
+/* Landing */
+.landing-title {
+  display: grid !important;
+  gap: .03em !important;
+  color: var(--c-text) !important;
+  font-size: clamp(3rem, 13vw, 6.2rem) !important;
+  font-weight: 700 !important;
+  line-height: .94 !important;
+  letter-spacing: -0.06em !important;
+  text-align: center !important;
+  text-transform: none !important;
+}
+
+.landing-subtitle {
+  margin-top: 24px !important;
+  color: var(--c-text-secondary) !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0 !important;
+  text-align: center !important;
+  text-transform: none !important;
+  white-space: nowrap !important;
+}
+
+/* Services section */
+#services-overview > div {
+  display: grid !important;
   align-content: center !important;
+  gap: 22px !important;
 }
 
+#services-overview .section-title {
+  max-width: 720px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  color: var(--c-text) !important;
+  font-size: clamp(30px, 7.3vw, 48px) !important;
+  font-weight: 650 !important;
+  line-height: 1.04 !important;
+  letter-spacing: -0.045em !important;
+  text-align: center !important;
+  text-transform: none !important;
+}
+
+#services-overview .service-intro-card {
+  padding: 16px !important;
+  border-radius: 18px !important;
+}
+
+.service-intro-card h3 {
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+.service-intro-card p {
+  margin-top: 6px !important;
+  font-size: 15px !important;
+  line-height: 1.35 !important;
+}
+
+/* Action/request section */
 #action > div {
-  gap: var(--card-gap) !important;
+  display: grid !important;
+  align-content: center !important;
+  gap: var(--frontend-card-gap) !important;
+  max-width: 44rem !important;
 }
 
 #action > div > .grid,
 .action-section form,
 .action-section .grid.gap-3 {
-  gap: var(--card-gap) !important;
+  gap: var(--frontend-card-gap) !important;
 }
 
-/* Chevron navigation: clearer, less intrusive, consistently positioned. */
-.section-chevron {
-  gap: 6px !important;
-  z-index: 35 !important;
-}
-
-.section-chevron-top {
-  top: var(--chevron-top) !important;
-}
-
-.section-chevron-bottom {
-  bottom: var(--chevron-bottom) !important;
-}
-
-.section-chevron-label {
-  color: var(--c-text-tertiary) !important;
-  font-size: 12px !important;
-  font-weight: var(--fw-medium) !important;
-  line-height: 1 !important;
-}
-
-.chevron {
-  width: 16px !important;
-  height: 16px !important;
-  font-size: 18px !important;
-  color: var(--c-text-tertiary) !important;
-}
-
-.chevron::before {
-  border-width: 2px 2px 0 0 !important;
-  height: 7px !important;
-  width: 7px !important;
-  left: 4px !important;
-  top: 3px !important;
-}
-
-.chevron.bottom::before {
-  top: 1px !important;
-}
-
-/* Frontend cards/forms: one rhythm, fewer oversized headings. */
 .action-section .panel,
 .action-section .cta-card {
   border-radius: 18px !important;
 }
 
 .action-section .panel {
-  padding: var(--card-pad) !important;
+  padding: var(--frontend-card-pad) !important;
 }
 
 .action-section .cta-card,
 .action-section article > button {
-  min-height: var(--card-min) !important;
+  min-height: var(--frontend-card-min) !important;
 }
 
 .action-section h3,
 .tight-card-title {
-  font-size: clamp(22px, 6vw, 28px) !important;
-  font-weight: var(--fw-semibold) !important;
+  color: var(--c-text) !important;
+  font-size: clamp(24px, 6.4vw, 30px) !important;
+  font-weight: 600 !important;
   line-height: 1.08 !important;
-  letter-spacing: -0.028em !important;
+  letter-spacing: -0.04em !important;
+  text-transform: none !important;
 }
 
 .action-section .eyebrow,
 .tight-card-kicker {
-  font-size: 15px !important;
-  font-weight: var(--fw-medium) !important;
   color: var(--c-text-secondary) !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
   line-height: 1.15 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
 }
 
-.action-section .outline-button,
 .action-section .primary-button,
+.action-section .outline-button,
 .action-section .small-danger {
-  min-height: var(--control-h) !important;
-  font-size: 17px !important;
-  font-weight: var(--fw-semibold) !important;
+  min-height: 48px !important;
   border-radius: var(--radius-pill) !important;
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
 }
 
 .action-section .form-input,
@@ -1056,91 +1185,70 @@ select.time-control-input {
 .employee-page .time-control-input,
 #admin .form-input,
 #admin .time-control-input {
-  min-height: var(--control-h) !important;
-  font-size: 17px !important;
+  min-height: 48px !important;
   border-radius: 12px !important;
+  font-size: 17px !important;
+  letter-spacing: 0 !important;
 }
 
 .request-total-row {
-  margin-top: 12px;
-  border: 1px solid var(--c-separator-soft);
-  border-radius: 16px;
-  background: rgba(255,255,255,.025);
-  padding: 12px 14px;
-  color: var(--c-text-secondary);
-  font-size: 15px;
-  font-weight: var(--fw-medium);
-  line-height: 1.2;
-  text-align: right;
+  margin-top: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  border: 1px solid var(--c-separator-soft) !important;
+  border-radius: 16px !important;
+  background: rgba(255,255,255,.025) !important;
+  padding: 12px 14px !important;
+  color: var(--c-text-secondary) !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+  text-align: left !important;
 }
 
 .request-total-row strong {
-  margin-left: 10px;
-  color: var(--c-text);
-  font-size: 20px;
-  font-weight: var(--fw-semibold);
+  margin-left: 0 !important;
+  color: var(--c-text) !important;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
 }
 
 .chevron-toggle {
+  width: 28px !important;
+  height: 28px !important;
   color: var(--c-text-secondary) !important;
   font-size: 22px !important;
+  line-height: 1 !important;
 }
 
-/* Services section balancing */
-#services-overview .section-title {
-  max-width: 720px;
-  margin-left: auto;
-  margin-right: auto;
-  font-size: clamp(30px, 8vw, 50px) !important;
-  line-height: 1.02 !important;
+/* Prices section: remove old oversized letter-spaced utility look */
+#priser > div {
+  display: grid !important;
+  align-content: center !important;
 }
 
-#services-overview .service-intro-card {
-  padding: 18px !important;
+#priser h2 {
+  color: var(--c-text) !important;
+  font-size: clamp(30px, 8vw, 48px) !important;
+  font-weight: 650 !important;
+  line-height: 1.04 !important;
+  letter-spacing: -0.045em !important;
+  text-transform: none !important;
 }
 
-/* Backend/employee: shared vertical rhythm and dock clearance. */
+#priser h3,
+#priser h4 {
+  letter-spacing: -0.02em !important;
+  text-transform: none !important;
+}
+
+/* Keep backend/employee spacing from v48 stable */
 .backend-screen,
 #admin {
   padding-top: var(--backend-top) !important;
-}
-
-.backend-module,
-#admin .grid.gap-4,
-#admin .grid.gap-5,
-#admin .grid.gap-6,
-#admin .grid.gap-8,
-.employee-page .grid.gap-4,
-.employee-page .grid.gap-5,
-.employee-page .grid.gap-6 {
-  gap: var(--card-gap) !important;
-}
-
-#admin .panel,
-#admin .backend-card,
-.employee-page .panel {
-  padding: 16px !important;
-  border-radius: 18px !important;
-}
-
-.admin-module-header {
-  margin-bottom: 14px !important;
-}
-
-.admin-screen-title {
-  font-size: clamp(24px, 6.6vw, 34px) !important;
-  font-weight: var(--fw-medium) !important;
-  line-height: 1.08 !important;
-}
-
-.admin-stat-grid {
-  gap: 12px !important;
-  margin-bottom: 16px !important;
-}
-
-.admin-stat-card {
-  border-radius: 16px !important;
-  padding: 14px !important;
 }
 
 .backend-safe-bottom,
@@ -1150,55 +1258,48 @@ select.time-control-input {
 
 @media (max-width: 430px) {
   :root {
-    --section-side: 22px;
-    --snap-content-top-pad: 62px;
-    --snap-content-bottom-pad: 86px;
-    --chevron-top: calc(env(safe-area-inset-top) + var(--nav-h) + 12px);
-    --chevron-bottom: calc(env(safe-area-inset-bottom) + 34px);
-    --card-gap: 14px;
-    --card-pad: 18px;
-    --card-min: 72px;
-    --backend-top: calc(env(safe-area-inset-top) + 58px);
+    --frontend-nav-height: 76px;
+    --frontend-side: 22px;
+    --frontend-section-top: calc(var(--frontend-top-safe) + 104px);
+    --frontend-section-bottom: calc(env(safe-area-inset-bottom) + 112px);
+    --frontend-chevron-top: calc(var(--frontend-top-safe) + 16px);
+    --frontend-chevron-bottom: calc(env(safe-area-inset-bottom) + 38px);
+    --frontend-card-gap: 14px;
+    --frontend-card-pad: 16px;
+    --frontend-card-min: 64px;
   }
 
   .nav-pill {
     font-size: 17px !important;
-    font-weight: var(--fw-medium) !important;
+    font-weight: 500 !important;
+  }
+
+  #services-overview .section-title {
+    font-size: clamp(30px, 7.5vw, 40px) !important;
   }
 
   .action-section h3,
   .tight-card-title {
-    font-size: clamp(23px, 7vw, 30px) !important;
-  }
-
-  .action-section .panel {
-    padding: 18px !important;
-  }
-
-  .primary-button,
-  .outline-button,
-  .small-danger {
-    min-height: 48px !important;
+    font-size: clamp(24px, 6.5vw, 30px) !important;
   }
 }
 
 @media (max-height: 760px) and (max-width: 430px) {
   :root {
-    --snap-content-top-pad: 48px;
-    --snap-content-bottom-pad: 70px;
-    --card-gap: 10px;
-    --card-pad: 15px;
-    --card-min: 62px;
+    --frontend-section-top: calc(var(--frontend-top-safe) + 82px);
+    --frontend-section-bottom: calc(env(safe-area-inset-bottom) + 94px);
+    --frontend-chevron-bottom: calc(env(safe-area-inset-bottom) + 28px);
+    --frontend-card-gap: 10px;
+    --frontend-card-pad: 14px;
+    --frontend-card-min: 58px;
   }
 
   .action-section h3,
   .tight-card-title {
-    font-size: clamp(21px, 6vw, 26px) !important;
+    font-size: clamp(21px, 5.8vw, 26px) !important;
   }
 
-  .action-section .panel,
-  .action-section .cta-card,
-  .action-section article > button {
-    min-height: var(--card-min) !important;
+  .section-chevron-label {
+    font-size: 11px !important;
   }
 }

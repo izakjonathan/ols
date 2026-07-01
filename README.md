@@ -138,3 +138,22 @@ Use this file as the testing baseline:
 ```txt
 oland-service-system-v48-temporary-final-test-build.zip
 ```
+
+
+## v49 frontend CSS audit / layout fix
+
+Root cause found:
+- v47 appended a second frontend `:root` and a large override layer after the consolidated CSS.
+- That created contradictory spacing variables and section rules.
+- The action section used `h-full` + internal padding/max-height overrides, causing top chevron labels to collide visually with the first CTA card.
+- Old Tailwind uppercase/tracking utilities were still fighting the Apple-style typography in some frontend headings.
+
+Fix:
+- Removed the conflicting v47 override layer.
+- Added one clean v49 frontend layout layer.
+- Full-screen sections now reserve fixed zones for navbar, chevrons and browser bottom area.
+- Section content is centered only in the safe middle zone.
+- Top/bottom chevrons sit outside content flow and no longer overlap cards.
+- Frontend CTA cards, services cards, request forms and prices section now share one spacing/typography rhythm.
+- Backend and employee spacing from v48 remains preserved.
+- Production build tested successfully.
