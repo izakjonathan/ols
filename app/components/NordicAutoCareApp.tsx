@@ -143,9 +143,9 @@ const statuses: OrderStatus[] = ["Ny", "Bekræftet", "Planlagt", "I gang", "Udf�
 const paymentStatuses: PaymentStatus[] = ["Ikke faktureret", "Faktura sendt", "Betalt", "Forfalden"];
 const priorities: Priority[] = ["Normal", "Haster", "VIP"];
 const qualities = [
-  { title: "Kvalitet i topklasse", icon: "badge" },
-  { title: "Detaljer der gør forskellen", icon: "spark" },
-  { title: "Personlig service", icon: "handshake" }
+  { title: "Kvalitet", icon: "badge" },
+  { title: "Detaljer", icon: "spark" },
+  { title: "Service", icon: "handshake" }
 ];
 const adminViews: Array<{ id: AdminView; label: string; icon: string }> = [
   { id: "newOrders", label: "Nye", icon: "＋" },
@@ -844,7 +844,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
         <div className="splash-screen" aria-hidden="true"><Image src="/images/nordic-logo-splash.jpeg" alt="" fill priority sizes="100vw" className="object-cover" /></div>
         <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_-10%,rgba(255,255,255,.25),transparent_34%),linear-gradient(180deg,#0b0a09_0%,#030303_100%)]" />
         <div className="noise fixed inset-0 -z-10 opacity-35" />
-        <nav className="fixed inset-x-0 top-0 z-50 bg-black/96 px-4 pb-3 backdrop-blur-xl sm:px-8" style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.7rem)" }}>
+        <nav className="fixed inset-x-0 top-0 z-50 bg-black px-4 pb-3 sm:px-8" style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.75rem)" }}>
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
             <a href="/" className="relative block h-8 w-28 shrink-0 overflow-hidden sm:h-9 sm:w-36"><Image src="/images/oland-service-top-logo.jpeg" alt="Øland Service" fill sizes="144px" className="object-contain object-left" /></a>
             <a className="nav-pill" href="/">Kundeside</a>
@@ -868,7 +868,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_-10%,rgba(255,255,255,.25),transparent_34%),linear-gradient(180deg,#0b0a09_0%,#030303_100%)]" />
       <div className="noise fixed inset-0 -z-10 opacity-35" />
 
-      <nav className="fixed inset-x-0 top-0 z-50 bg-black/96 px-4 pb-3 backdrop-blur-xl sm:px-8" style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.7rem)" }}>
+      <nav className="fixed inset-x-0 top-0 z-50 bg-black px-4 pb-3 sm:px-8" style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.75rem)" }}>
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
           <a href="#top" className="relative block h-8 w-28 shrink-0 overflow-hidden sm:h-9 sm:w-36"><Image src="/images/oland-service-top-logo.jpeg" alt="Øland Service" fill sizes="144px" className="object-contain object-left" /></a>
           <div className="flex gap-4 overflow-x-auto text-[0.62rem] font-black uppercase tracking-[0.18em] text-stone-200/80 sm:text-[0.68rem]">
@@ -879,25 +879,20 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
 
       <div className="pt-24 sm:pt-24">
       {!isBackend && <>
-      <section id="top" className="relative px-5 pb-14 pt-16 text-center sm:px-8 lg:px-12 lg:pt-24">
-        <div className="absolute inset-x-0 top-0 h-[36rem] bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,.18),transparent_58%)]" aria-hidden="true" />
-        <div className="mx-auto max-w-5xl">
-          <p className="mx-auto max-w-4xl text-4xl font-semibold uppercase leading-[1.1] tracking-[0.18em] text-white sm:text-6xl lg:text-7xl">Transport og logistik i sikre hænder</p>
-          <p className="mt-5 text-sm uppercase tracking-[0.42em] text-stone-200 sm:text-base">Kvalitet · Omhu · Tillid</p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-            <a href="#kontakt" className="gold-button">Kontakt os</a>
-            <a href="#booking" className="outline-button">Book</a>
-          </div>
+      <section id="top" className="relative grid min-h-[calc(100svh-5.75rem)] place-items-center px-5 text-center sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-6xl">
+          <h1 className="text-5xl font-black uppercase leading-[1.02] tracking-[0.12em] text-white sm:text-7xl lg:text-8xl">Transport og logistik i sikre hænder</h1>
+          <p className="mt-8 text-2xl font-black uppercase tracking-[0.28em] text-white sm:text-4xl">Kvalitet · Omhu · Tillid</p>
         </div>
       </section>
 
       <section id="kontakt" className="px-5 py-8 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           {submittedId && <div className="mb-6 rounded-2xl border border-white/40 bg-white/[0.08] p-4 text-sm text-stone-100">Forespørgsel <strong className="text-white">{submittedId}</strong> er oprettet i backend.</div>}
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <a href="tel:+4526848789" className="gold-button">Ring til Øland Service</a>
-            <button type="button" className="outline-button" onClick={() => setShowCallbackModal(true)}>Bliv ringet op af Øland Service</button>
-            <button type="button" className={quoteExpanded ? "gold-button" : "outline-button"} onClick={() => setQuoteExpanded((open) => !open)}>Gratis flyttetilbud</button>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <a href="tel:+4526848789" className="gold-button w-full">Ring til Øland Service</a>
+            <button type="button" className="outline-button w-full" onClick={() => setShowCallbackModal(true)}>Bliv ringet op af Øland Service</button>
+            <button type="button" className={quoteExpanded ? "gold-button w-full" : "outline-button w-full"} onClick={() => setQuoteExpanded((open) => !open)}>Gratis flyttetilbud</button>
           </div>
           {quoteExpanded && <article className="panel mx-auto mt-5 max-w-4xl p-5 sm:p-6">
             <h3 className="panel-title">Gratis flyttetilbud</h3>
@@ -925,7 +920,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
               </div>
 
               <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-                <Field label="Flyttedato"><TextInput type="date" className="min-w-0" value={quoteForm.moveDate} onChange={(event) => setQuoteForm({ ...quoteForm, moveDate: event.target.value })} /></Field>
+                <Field label="Flyttedato"><TextInput type="date" className="booking-date-time-input" value={quoteForm.moveDate} onChange={(event) => setQuoteForm({ ...quoteForm, moveDate: event.target.value })} /></Field>
                 <Field label="Bolig m2"><TextInput inputMode="numeric" value={quoteForm.homeSize} onChange={(event) => setQuoteForm({ ...quoteForm, homeSize: event.target.value })} placeholder="fx 75" required /></Field>
               </div>
               <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
@@ -961,8 +956,8 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
             </div>
             <aside className="grid content-start gap-5">
               <section className="panel p-5 sm:p-6">
-                <button type="button" className="flex w-full items-center justify-between gap-4 text-left" onClick={() => setCustomerInfoOpen((open) => !open)}>
-                  <h3 className="panel-title mb-0 flex-1">Kundeinformation</h3>
+                <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setCustomerInfoOpen((open) => !open)}>
+                  <div><p className="eyebrow">Kunde</p><h3 className="mt-2 text-2xl font-black uppercase tracking-[0.14em] text-white">Kundeinformation</h3></div>
                   <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-white/30 text-white">{customerInfoOpen ? "−" : "+"}</span>
                 </button>
                 {customerInfoOpen && <div className="mt-5 grid gap-4">
@@ -1021,7 +1016,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
         </div>
       </div>}
       {!isBackend && (
-        <footer className="px-5 pb-8 pt-6 sm:px-8 lg:px-12">
+        <footer className="px-5 pb-48 pt-6 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-7xl rounded-2xl border border-white/25 bg-black/55 px-5 py-6 text-center sm:px-7">
             <p className="eyebrow">Kontakt os i dag</p>
             <h2 className="mt-3 text-4xl font-semibold uppercase tracking-[0.16em] text-white sm:text-5xl">Ølands Service</h2>
@@ -1299,7 +1294,7 @@ function DraftOrderFooter({ cars, customer, invoice, preferredDate, preferredTim
 
 function CarEditor({ car, preferredDate = "", preferredTime = "", onDateChange, onTimeChange, onPatch, onToggle }: { car: CarEntry; preferredDate?: string; preferredTime?: string; onDateChange?: (value: string) => void; onTimeChange?: (value: string) => void; onPatch: (patch: Partial<CarEntry>) => void; onToggle: (key: "services" | "extras", itemId: string) => void }) {
   const showDateTime = Boolean(onDateChange && onTimeChange);
-  return <><div className={showDateTime ? "grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]" : "grid gap-4"}><Field label="Opgavetype"><Select value={car.type} onChange={(e) => onPatch({ type: e.target.value })}><option>Flytning</option><option>Transport</option><option>Opbevaring</option></Select></Field>{showDateTime && <Field label="Dato & tid"><div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3"><TextInput required type="date" className="min-w-0" value={preferredDate} onChange={(e) => onDateChange?.(e.target.value)} /><TextInput required type="time" className="min-w-0" value={preferredTime} onChange={(e) => onTimeChange?.(e.target.value)} /></div></Field>}</div><div className="mt-6 grid gap-3 sm:grid-cols-2">{packages.map((pack) => <button key={pack.id} type="button" onClick={() => onPatch({ packageId: pack.id })} className={car.packageId === pack.id ? "choice-card is-selected items-start" : "choice-card items-start"}><span><Icon name={pack.icon} className="h-9 w-9 text-white" /></span><span className="min-w-0"><span className="flex flex-wrap items-baseline justify-between gap-2"><strong>{pack.title}</strong><em>{kr(pack.price)}</em></span><span className="mt-3 grid gap-1 text-left text-[0.72rem] font-medium normal-case leading-4 tracking-normal text-stone-200/70">{pack.items.map((item) => <span key={item} className="flex gap-1.5"><b className="font-black text-white">•</b><span>{item}</span></span>)}</span></span></button>)}</div><div className="mt-6 grid gap-5 lg:grid-cols-2"><div><h4 className="mini-title">Ekstra enkelt ydelser</h4><div className="mt-3 grid gap-2">{services.map((service) => <label key={service.id} className="check-row"><input type="checkbox" checked={car.services.includes(service.id)} onChange={() => onToggle("services", service.id)} /><span>{service.name}</span><strong>{kr(service.price)}</strong></label>)}</div></div><div><h4 className="mini-title">Tillæg</h4><div className="mt-3 grid gap-2">{extras.map((extra) => <label key={extra.id} className="check-row"><input type="checkbox" checked={car.extras.includes(extra.id)} onChange={() => onToggle("extras", extra.id)} /><span>{extra.name}</span><strong>{extra.note ?? kr(extra.price)}</strong></label>)}</div></div></div><div className="mt-6 grid gap-4"><Field label="Beskriv opgaven"><TextArea value={car.notes} onChange={(e) => onPatch({ notes: e.target.value })} placeholder="Beskriv opgaven, afhentning, levering, adgang eller særlige forhold." /></Field><Field label="Upload billeder"><input type="file" multiple accept="image/*" className="form-input min-w-0 pt-3" onChange={(e) => onPatch({ uploads: Array.from(e.target.files ?? []).map((file) => file.name) })} /></Field>{car.uploads.length > 0 && <p className="text-sm text-stone-300/70">{fileNameSummary(car.uploads)}</p>}</div></>;
+  return <><div className={showDateTime ? "grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]" : "grid gap-4"}><Field label="Opgavetype"><Select value={car.type} onChange={(e) => onPatch({ type: e.target.value })}><option>Flytning</option><option>Transport</option><option>Opbevaring</option></Select></Field>{showDateTime && <Field label="Dato & tid"><div className="booking-date-time-grid"><TextInput required type="date" className="booking-date-time-input" value={preferredDate} onChange={(e) => onDateChange?.(e.target.value)} /><TextInput required type="time" className="booking-date-time-input" value={preferredTime} onChange={(e) => onTimeChange?.(e.target.value)} /></div></Field>}</div><div className="mt-6 grid gap-3 sm:grid-cols-2">{packages.map((pack) => <button key={pack.id} type="button" onClick={() => onPatch({ packageId: pack.id })} className={car.packageId === pack.id ? "choice-card is-selected items-start" : "choice-card items-start"}><span><Icon name={pack.icon} className="h-9 w-9 text-white" /></span><span className="min-w-0"><span className="flex flex-wrap items-baseline justify-between gap-2"><strong>{pack.title}</strong><em>{kr(pack.price)}</em></span><span className="mt-3 grid gap-1 text-left text-[0.72rem] font-medium normal-case leading-4 tracking-normal text-stone-200/70">{pack.items.map((item) => <span key={item} className="flex gap-1.5"><b className="font-black text-white">•</b><span>{item}</span></span>)}</span></span></button>)}</div><div className="mt-6 grid gap-5 lg:grid-cols-2"><div><h4 className="mini-title">Ekstra enkelt ydelser</h4><div className="mt-3 grid gap-2">{services.map((service) => <label key={service.id} className="check-row"><input type="checkbox" checked={car.services.includes(service.id)} onChange={() => onToggle("services", service.id)} /><span>{service.name}</span><strong>{kr(service.price)}</strong></label>)}</div></div><div><h4 className="mini-title">Tillæg</h4><div className="mt-3 grid gap-2">{extras.map((extra) => <label key={extra.id} className="check-row"><input type="checkbox" checked={car.extras.includes(extra.id)} onChange={() => onToggle("extras", extra.id)} /><span>{extra.name}</span><strong>{extra.note ?? kr(extra.price)}</strong></label>)}</div></div></div><div className="mt-6 grid gap-4"><Field label="Beskriv opgaven"><TextArea value={car.notes} onChange={(e) => onPatch({ notes: e.target.value })} placeholder="Beskriv opgaven, afhentning, levering, adgang eller særlige forhold." /></Field><Field label="Upload billeder"><input type="file" multiple accept="image/*" className="form-input min-w-0 pt-3" onChange={(e) => onPatch({ uploads: Array.from(e.target.files ?? []).map((file) => file.name) })} /></Field>{car.uploads.length > 0 && <p className="text-sm text-stone-300/70">{fileNameSummary(car.uploads)}</p>}</div></>;
 }
 
 function OrderList({ orders, selectedId, onSelect }: { orders: Order[]; selectedId?: string; onSelect: (id: string) => void }) {

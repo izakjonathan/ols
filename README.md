@@ -231,3 +231,16 @@ contact details, from/to address, floor/elevator, moving date, packing, m2, move
 
 Callback and moving quote submissions create new backend orders.
 Production build tested successfully.
+
+
+## v23 frontend redo
+
+- Landing section fills first screen and only shows the landing statement plus secondary statement.
+- Removed Kontakt os / Book pills under landing.
+- Nav links are text-only, smaller, no pill borders, Services text used.
+- Header is solid black to the top safe area and has no white bottom border.
+- CTA pills: call link, callback popup, collapsible free moving quote.
+- Site background forced black.
+- Contact footer moved clear of floating current-request pill.
+- Booking date/time and moving date inputs use mobile-safe scaling.
+- Kundeinformation is a single card, not a card inside a card.
