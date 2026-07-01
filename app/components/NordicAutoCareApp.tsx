@@ -300,6 +300,8 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
   const importRef = useRef<HTMLInputElement>(null);
   const isBackend = mode === "backend";
   const isEmployee = mode === "employee";
+  const snapScrollLockRef = useRef(false);
+  const snapTouchStartRef = useRef<{ y: number; target: EventTarget | null } | null>(null);
   const [adminPin, setAdminPin] = useState("");
   const [adminUnlocked, setAdminUnlocked] = useState(false);
   const [draftSummaryOpen, setDraftSummaryOpen] = useState(false);
@@ -454,6 +456,113 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
     const hasCarInfo = cars.some((car) => car.services.length || car.extras.length || car.notes.trim() || car.packageId !== "basis" || car.type !== "Transport" || car.uploads.length) || cars.length > 1;
     return draftTotal > 0 || hasCustomerInfo || hasInvoiceInfo || hasTimeInfo || hasCarInfo;
   }, [cars, customer, customerMessage, draftTotal, invoice, isBackend, preferredDate, preferredTime]);
+
+  useEffect(() => {
+    if (isBackend || isEmployee) return;
+
+    const getSections = () => Array.from(document.querySelectorAll<HTMLElement>("[data-snap-section]"));
+
+    const getCurrentIndex = (sections: HTMLElement[]) => {
+      const viewportCenter = window.scrollY + window.innerHeight / 2;
+      let currentIndex = 0;
+      let smallestDistance = Number.POSITIVE_INFINITY;
+
+      sections.forEach((section, index) => {
+        const center = section.offsetTop + section.offsetHeight / 2;
+        const distance = Math.abs(center - viewportCenter);
+        if (distance < smallestDistance) {
+          smallestDistance = distance;
+          currentIndex = index;
+        }
+      });
+
+      return currentIndex;
+    };
+
+    const canScrollInside = (target: EventTarget | null, deltaY: number) => {
+      let node = target instanceof HTMLElement ? target : null;
+
+      while (node && node !== document.body) {
+        const style = window.getComputedStyle(node);
+        const canScroll = /(auto|scroll)/.test(style.overflowY) && node.scrollHeight > node.clientHeight + 2;
+        if (canScroll) {
+          const atTop = node.scrollTop <= 2;
+          const atBottom = node.scrollTop + node.clientHeight >= node.scrollHeight - 2;
+          if ((deltaY < 0 && !atTop) || (deltaY > 0 && !atBottom)) return true;
+        }
+        node = node.parentElement;
+      }
+
+      return false;
+    };
+
+    const scrollToSection = (direction: 1 | -1) => {
+      if (snapScrollLockRef.current) return;
+      const sections = getSections();
+      if (!sections.length) return;
+
+      const currentIndex = getCurrentIndex(sections);
+      const nextIndex = Math.max(0, Math.min(sections.length - 1, currentIndex + direction));
+      if (nextIndex === currentIndex) return;
+
+      snapScrollLockRef.current = true;
+      sections[nextIndex].scrollIntoView({ behavior: "smooth", block: "start" });
+      window.setTimeout(() => { snapScrollLockRef.current = false; }, 780);
+    };
+
+    const onWheel = (event: WheelEvent) => {
+      if (Math.abs(event.deltaY) < 18) return;
+      if (canScrollInside(event.target, event.deltaY)) return;
+      event.preventDefault();
+      scrollToSection(event.deltaY > 0 ? 1 : -1);
+    };
+
+    const onTouchStart = (event: TouchEvent) => {
+      snapTouchStartRef.current = { y: event.touches[0]?.clientY ?? 0, target: event.target };
+    };
+
+    const onTouchEnd = (event: TouchEvent) => {
+      const start = snapTouchStartRef.current;
+      snapTouchStartRef.current = null;
+      if (!start) return;
+
+      const endY = event.changedTouches[0]?.clientY ?? start.y;
+      const deltaY = start.y - endY;
+      if (Math.abs(deltaY) < 48) return;
+      if (canScrollInside(start.target, deltaY)) return;
+
+      event.preventDefault();
+      scrollToSection(deltaY > 0 ? 1 : -1);
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      const active = document.activeElement;
+      if (active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement || active instanceof HTMLSelectElement) return;
+
+      if (["ArrowDown", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        scrollToSection(1);
+      }
+
+      if (["ArrowUp", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        scrollToSection(-1);
+      }
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: false });
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isBackend, isEmployee]);
+
   const searchedOrders = useMemo(() => {
     const needle = searchTerm.trim().toLowerCase();
     const byStatus = activeStatus === "Alle" ? orders : orders.filter((order) => order.status === activeStatus);

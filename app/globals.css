@@ -1214,223 +1214,176 @@ textarea.form-input {
   margin-top: 0 !important;
 }
 
+/* v33 smooth manual snap / unified chevrons / section cleanup */
+:root {
+  --fixed-nav-height: 5.05rem;
+  --section-top-clearance: calc(env(safe-area-inset-top) + var(--fixed-nav-height));
+  --section-bottom-clearance: calc(env(safe-area-inset-bottom) + 5.25rem);
+  --section-chevron-top: calc(env(safe-area-inset-top) + 5.05rem);
+  --section-chevron-bottom: calc(env(safe-area-inset-bottom) + 5.05rem);
+  --section-chevron-size: 2.38rem;
+}
 
-/* v29 full-screen snap sections */
 html {
+  background: #000 !important;
   scroll-behavior: smooth;
   scroll-snap-type: y mandatory;
-  background: #000 !important;
+  scroll-padding-top: 0 !important;
+  overscroll-behavior-y: none;
 }
 
 body {
   background: #000 !important;
+  overscroll-behavior-y: none;
 }
 
 .snap-section {
-  position: relative;
-  min-height: calc(100svh - 5.35rem);
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  position: relative !important;
+  min-height: 100svh !important;
+  height: 100svh !important;
+  scroll-snap-align: start !important;
+  scroll-snap-stop: always !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
 }
 
-.section-panel {
-  display: grid;
-  align-items: center;
-}
-
-.landing-section {
-  background: #000;
-}
-
-.landing-title {
-  display: grid;
-  gap: 0.04em;
-  font-size: clamp(3.45rem, 15.5vw, 9rem);
-  font-weight: 950;
-  line-height: 0.86;
-  letter-spacing: -0.055em;
-  text-transform: uppercase;
-}
-
-.landing-title span {
-  display: block;
-}
-
-.landing-subtitle {
-  margin-top: clamp(1.25rem, 4.8vw, 2.6rem);
-  white-space: nowrap;
-  font-size: clamp(0.92rem, 3.2vw, 2rem);
-  font-weight: 950;
-  line-height: 1;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #fff;
-}
-
-.section-title {
-  font-size: clamp(1.75rem, 8vw, 4.6rem);
-  font-weight: 950;
-  line-height: 0.96;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
-  color: #fff;
-}
-
-.service-intro-card {
-  border: 1px solid rgba(255,255,255,.22);
-  border-radius: 1.1rem;
-  padding: 1rem;
-  background: rgba(255,255,255,.018);
-  text-align: left;
-}
-
-.service-intro-card h3 {
-  font-size: 0.86rem;
-  font-weight: 950;
-  line-height: 1;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #fff;
-}
-
-.service-intro-card p {
-  margin-top: 0.65rem;
-  font-size: 0.85rem;
-  line-height: 1.35;
-  color: rgba(255,255,255,.62);
-}
-
-.section-chevron {
-  position: absolute;
-  left: 50%;
-  bottom: calc(env(safe-area-inset-bottom) + 1.05rem);
-  z-index: 3;
-  display: grid;
-  width: 2.65rem;
-  height: 2.65rem;
-  transform: translateX(-50%);
-  place-items: center;
-  border: 1px solid rgba(255,255,255,.42);
-  border-radius: 999px;
-  color: #fff;
-  text-decoration: none;
-  font-size: 1.4rem;
-  line-height: 1;
-  background: rgba(0,0,0,.45);
-}
-
-.section-chevron:hover {
-  background: rgba(255,255,255,.08);
-  border-color: rgba(255,255,255,.72);
-}
-
-#kontakt,
-#booking {
-  padding-top: 1rem !important;
-  padding-bottom: 4.5rem !important;
-}
-
-#kontakt .panel,
-#booking .panel {
-  max-width: 100%;
-}
-
-#kontakt .grid,
-#booking .grid {
-  min-width: 0;
-}
-
-#kontakt form,
-#booking form {
-  min-width: 0;
-}
-
-#kontakt .max-h-\[50svh\],
-#booking .max-h-\[50svh\] {
-  overscroll-behavior: contain;
-}
-
+.landing-section,
+.section-panel,
 #priser {
-  min-height: calc(100svh - 5.35rem);
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  padding-top: var(--section-top-clearance) !important;
+  padding-bottom: var(--section-bottom-clearance) !important;
+  box-sizing: border-box !important;
 }
 
-@media (max-width: 430px) {
-  .landing-title {
-    font-size: clamp(3.15rem, 16.3vw, 4.7rem);
-    letter-spacing: -0.06em;
-  }
-
-  .landing-subtitle {
-    font-size: 0.82rem;
-    letter-spacing: 0.055em;
-  }
-
-  .section-chevron {
-    width: 2.35rem;
-    height: 2.35rem;
-    font-size: 1.22rem;
-  }
-
-  .service-intro-card {
-    padding: 0.82rem;
-  }
-
-  #services-overview .grid.sm\:grid-cols-3 {
-    grid-template-columns: 1fr;
-  }
+#services-overview > div,
+#action > div,
+#priser > div {
+  min-height: 0 !important;
+  max-height: calc(100svh - var(--section-top-clearance) - var(--section-bottom-clearance)) !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  scrollbar-width: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-    scroll-snap-type: none;
-  }
+#services-overview > div::-webkit-scrollbar,
+#action > div::-webkit-scrollbar,
+#priser > div::-webkit-scrollbar {
+  display: none;
 }
 
-
-/* v30 landing size / chevron / combined action section */
 .landing-title {
+  display: grid !important;
+  gap: 0.04em !important;
   font-size: clamp(2.8rem, 13.2vw, 7.4rem) !important;
   font-weight: 880 !important;
   line-height: 0.9 !important;
   letter-spacing: -0.045em !important;
+  text-transform: uppercase !important;
+}
+
+.landing-title span {
+  display: block !important;
 }
 
 .landing-subtitle {
+  margin-top: clamp(1.25rem, 4.8vw, 2.6rem) !important;
+  white-space: nowrap !important;
+  font-size: clamp(0.92rem, 3.2vw, 2rem) !important;
   font-weight: 850 !important;
+  line-height: 1 !important;
   letter-spacing: 0.075em !important;
+  text-transform: uppercase !important;
+  color: #fff !important;
+}
+
+.section-title {
+  font-size: clamp(1.75rem, 8vw, 4.6rem) !important;
+  font-weight: 950 !important;
+  line-height: 0.96 !important;
+  letter-spacing: -0.03em !important;
+  text-transform: uppercase !important;
+  color: #fff !important;
+}
+
+.service-intro-card {
+  border: 1px solid rgba(255,255,255,.22) !important;
+  border-radius: 1.1rem !important;
+  padding: 1rem !important;
+  background: rgba(255,255,255,.018) !important;
+  text-align: left !important;
+}
+
+.service-intro-card h3 {
+  font-size: 0.86rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: #fff !important;
+}
+
+.service-intro-card p {
+  margin-top: 0.65rem !important;
+  font-size: 0.85rem !important;
+  line-height: 1.35 !important;
+  color: rgba(255,255,255,.62) !important;
 }
 
 .section-chevron {
+  position: absolute !important;
+  left: 50% !important;
+  z-index: 30 !important;
   display: flex !important;
+  width: var(--section-chevron-size) !important;
+  height: var(--section-chevron-size) !important;
   align-items: center !important;
   justify-content: center !important;
-  width: 2.62rem !important;
-  height: 2.62rem !important;
   padding: 0 !important;
-  line-height: 1 !important;
+  transform: translateX(-50%) !important;
+  border: 1px solid rgba(255,255,255,.42) !important;
+  border-radius: 999px !important;
+  background: rgba(0,0,0,.68) !important;
+  color: #fff !important;
+  text-decoration: none !important;
   font-size: 0 !important;
-  transition: transform 260ms ease, background 220ms ease, border-color 220ms ease !important;
+  line-height: 1 !important;
+  transition: background 220ms ease, border-color 220ms ease !important;
+}
+
+.section-chevron-top {
+  top: var(--section-chevron-top) !important;
+  bottom: auto !important;
+}
+
+.section-chevron-bottom {
+  top: auto !important;
+  bottom: var(--section-chevron-bottom) !important;
 }
 
 .section-chevron span {
-  display: block;
-  position: relative;
-  top: -0.03rem;
-  font-size: 1.46rem;
-  line-height: 1;
-  transform-origin: 50% 52%;
-  transition: transform 260ms ease;
+  display: block !important;
+  position: relative !important;
+  top: -0.02rem !important;
+  font-size: 1.26rem !important;
+  line-height: 1 !important;
+  transform-origin: 50% 52% !important;
 }
 
 .section-chevron.points-up span {
-  transform: rotate(180deg);
+  transform: rotate(180deg) !important;
+}
+
+.section-chevron-bottom span {
+  transform: rotate(0deg) !important;
+}
+
+.section-chevron:hover {
+  background: rgba(255,255,255,.08) !important;
+  border-color: rgba(255,255,255,.72) !important;
 }
 
 .action-section > div {
-  transform: translateY(-0.15rem);
+  transform: none !important;
 }
 
 .action-section .panel {
@@ -1451,6 +1404,14 @@ body {
 }
 
 @media (max-width: 430px) {
+  :root {
+    --fixed-nav-height: 4.85rem;
+    --section-bottom-clearance: calc(env(safe-area-inset-bottom) + 5rem);
+    --section-chevron-top: calc(env(safe-area-inset-top) + 4.85rem);
+    --section-chevron-bottom: calc(env(safe-area-inset-bottom) + 4.85rem);
+    --section-chevron-size: 2.28rem;
+  }
+
   .landing-title {
     font-size: clamp(2.65rem, 13.7vw, 4.05rem) !important;
     font-weight: 860 !important;
@@ -1462,14 +1423,9 @@ body {
     letter-spacing: 0.055em !important;
   }
 
-  .section-chevron {
-    width: 2.38rem !important;
-    height: 2.38rem !important;
-  }
-
   .section-chevron span {
-    top: -0.025rem;
-    font-size: 1.32rem;
+    top: -0.025rem !important;
+    font-size: 1.16rem !important;
   }
 
   .action-section .panel {
@@ -1481,197 +1437,8 @@ body {
   }
 }
 
-
-/* v31 corrected chevron behaviour */
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 0px;
-}
-
-.snap-section {
-  min-height: 100svh !important;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-}
-
-.section-chevron {
-  left: 50% !important;
-  z-index: 20 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 2.62rem !important;
-  height: 2.62rem !important;
-  padding: 0 !important;
-  border-radius: 999px !important;
-  line-height: 1 !important;
-  font-size: 0 !important;
-  transform: translateX(-50%) !important;
-  transition: background 220ms ease, border-color 220ms ease !important;
-}
-
-.section-chevron-bottom {
-  position: absolute !important;
-  top: auto !important;
-  bottom: calc(env(safe-area-inset-bottom) + 1.05rem) !important;
-}
-
-.section-chevron-top {
-  position: absolute !important;
-  top: calc(env(safe-area-inset-top) + 6.35rem) !important;
-  bottom: auto !important;
-}
-
-.section-chevron span {
-  display: block !important;
-  position: relative !important;
-  top: -0.03rem !important;
-  font-size: 1.46rem !important;
-  line-height: 1 !important;
-  transform-origin: 50% 52% !important;
-}
-
-.section-chevron.points-up span {
-  transform: rotate(180deg) !important;
-}
-
-.section-chevron-bottom span {
-  transform: rotate(0deg) !important;
-}
-
-.section-chevron:hover {
-  background: rgba(255,255,255,.08) !important;
-  border-color: rgba(255,255,255,.72) !important;
-}
-
-@media (max-width: 430px) {
-  .section-chevron {
-    width: 2.38rem !important;
-    height: 2.38rem !important;
-  }
-
-  .section-chevron-top {
-    top: calc(env(safe-area-inset-top) + 6rem) !important;
-  }
-
-  .section-chevron span {
-    top: -0.025rem !important;
-    font-size: 1.32rem !important;
-  }
-}
-
-
-/* v32 section position / chevron visibility fix */
-html {
-  scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
-  scroll-padding-top: 0 !important;
-  background: #000 !important;
-}
-
-body {
-  background: #000 !important;
-  overscroll-behavior-y: none;
-}
-
-.snap-section {
-  position: relative !important;
-  min-height: 100svh !important;
-  height: 100svh !important;
-  scroll-snap-align: start !important;
-  scroll-snap-stop: always !important;
-  overflow: hidden !important;
-}
-
-/* Keep section content clear of fixed nav and mobile browser controls. */
-.landing-section,
-.section-panel {
-  padding-top: calc(env(safe-area-inset-top) + 5.65rem) !important;
-  padding-bottom: calc(env(safe-area-inset-bottom) + 5.75rem) !important;
-  box-sizing: border-box !important;
-}
-
-/* Services/pricing content can scroll internally if it ever becomes too tall. */
-#services-overview > div,
-#action > div,
-#priser > div {
-  min-height: 0 !important;
-  max-height: calc(100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 11.4rem) !important;
-  overflow-y: auto !important;
-  overscroll-behavior: contain !important;
-  scrollbar-width: none;
-}
-
-#services-overview > div::-webkit-scrollbar,
-#action > div::-webkit-scrollbar,
-#priser > div::-webkit-scrollbar {
-  display: none;
-}
-
-/* Always keep top chevrons below the fixed nav, never behind it. */
-.section-chevron-top {
-  position: absolute !important;
-  top: calc(env(safe-area-inset-top) + 5.15rem) !important;
-  bottom: auto !important;
-}
-
-/* Bottom chevrons remain visible above the iPhone browser/address controls. */
-.section-chevron-bottom {
-  position: absolute !important;
-  top: auto !important;
-  bottom: calc(env(safe-area-inset-bottom) + 5.15rem) !important;
-}
-
-.section-chevron {
-  left: 50% !important;
-  z-index: 30 !important;
-  width: 2.42rem !important;
-  height: 2.42rem !important;
-  transform: translateX(-50%) !important;
-  background: rgba(0,0,0,.68) !important;
-  border-color: rgba(255,255,255,.42) !important;
-}
-
-.section-chevron span {
-  top: -0.02rem !important;
-  font-size: 1.28rem !important;
-}
-
-.section-chevron.points-up span {
-  transform: rotate(180deg) !important;
-}
-
-.section-chevron-bottom span {
-  transform: rotate(0deg) !important;
-}
-
-@media (max-width: 430px) {
-  .landing-section,
-  .section-panel {
-    padding-top: calc(env(safe-area-inset-top) + 5.3rem) !important;
-    padding-bottom: calc(env(safe-area-inset-bottom) + 5.4rem) !important;
-  }
-
-  #services-overview > div,
-  #action > div,
-  #priser > div {
-    max-height: calc(100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 10.8rem) !important;
-  }
-
-  .section-chevron-top {
-    top: calc(env(safe-area-inset-top) + 5rem) !important;
-  }
-
-  .section-chevron-bottom {
-    bottom: calc(env(safe-area-inset-bottom) + 5rem) !important;
-  }
-
-  .section-chevron {
-    width: 2.28rem !important;
-    height: 2.28rem !important;
-  }
-
-  .section-chevron span {
-    font-size: 1.18rem !important;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
   }
 }

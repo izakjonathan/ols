@@ -352,3 +352,16 @@ Production build tested successfully.
 - Section content can internally scroll if expanded content becomes too tall.
 - Smooth scroll and snap behavior preserved.
 - Production build tested successfully.
+
+
+## v33 smooth snap / chevron consistency / cleanup
+
+- Added manual wheel/touch/keyboard smooth scroll controller for frontend snap sections.
+- Manual scrolling now moves smoothly to the next/previous exact full-screen section instead of only anchors being smooth.
+- Internal scroll areas still work when expanded forms/content are taller than the viewport.
+- Unified all section chevron positions using shared CSS variables.
+- Top chevrons now have the same top distance on all sections.
+- Bottom chevrons now have the same bottom distance on all sections.
+- Removed duplicate v29/v30/v31/v32 snap/chevron CSS layers and replaced them with one v33 layer.
+- Preserved smooth scroll, snap scrolling, safe-area handling and black background.
+- Production build tested successfully.
