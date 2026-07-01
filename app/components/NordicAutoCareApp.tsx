@@ -945,7 +945,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
   if (isBackend && !adminUnlocked) {
     return (
       <main className="relative min-h-screen overflow-hidden bg-black text-stone-50">
-        <div className="splash-screen" aria-hidden="true"><Image src="/images/nordic-logo-splash.jpeg" alt="" fill priority sizes="100vw" className="object-cover" /></div>
+        <div className="splash-screen" aria-hidden="true"><Image src="/images/oland-service-logo.png" alt="" width={1931} height={778} priority sizes="70vw" className="splash-logo" /></div>
         <div className="fixed inset-0 -z-10 bg-black" />
         <div className="noise fixed inset-0 -z-10 opacity-35" />
         <nav className="fixed inset-x-0 top-0 z-50 bg-black px-4 pb-2.5 sm:px-8" style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.75rem)" }}>
@@ -968,7 +968,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-stone-50">
-      <div className="splash-screen" aria-hidden="true"><Image src="/images/nordic-logo-splash.jpeg" alt="" fill priority sizes="100vw" className="object-cover" /></div>
+      <div className="splash-screen" aria-hidden="true"><Image src="/images/oland-service-logo.png" alt="" width={1931} height={778} priority sizes="70vw" className="splash-logo" /></div>
       <div className="fixed inset-0 -z-10 bg-black" />
       <div className="noise fixed inset-0 -z-10 opacity-35" />
 

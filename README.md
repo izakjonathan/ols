@@ -423,3 +423,18 @@ Fix:
 - Increased splash logo size on mobile and desktop.
 - Kept the logo centered on the black splash screen.
 - Production build tested successfully.
+
+
+## v39 splash actual-logo fix
+
+Root cause:
+- The splash screen was using the full portrait splash image as a `fill`/`object-cover` image.
+- That source image contains a large black canvas around the logo, so CSS scaling changed the canvas rather than reliably controlling the logo size.
+- The v38 CSS also targeted `.splash-screen img`, but Next/Image `fill` applies absolute positioning and object-cover styles that fought the intended scaling.
+
+Fix:
+- Replaced the splash image source with the cropped `oland-service-logo.png` logo asset.
+- Removed `fill`/`object-cover` for the splash image.
+- Added a dedicated `.splash-logo` class with explicit width and mobile sizing.
+- Splash remains centered on the black screen.
+- Production build tested successfully.
