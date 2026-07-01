@@ -284,3 +284,16 @@ Production build tested successfully.
 - Hardened Dato/Tid and Flyttedato scaling again.
 - Reduced excessive card, button, label, package and checkbox spacing.
 - Site background remains black.
+
+
+## v27 professional layout cleanup
+
+- Ring CTA now matches the other CTA cards, without chevron/expand behavior.
+- Frontend card hierarchy reduced: less shouting, smaller headings, tighter gaps.
+- Floating request pill reduced so it is less disruptive.
+- Added more clearance before Services and footer content.
+- Backend module typography/spacing tightened.
+- Employee page typography/spacing tightened.
+- Removed old v26 final CSS layer and replaced it with one v27 layer.
+- Date/time and Flyttedato mobile scaling hardened again.
+- Production build tested successfully.

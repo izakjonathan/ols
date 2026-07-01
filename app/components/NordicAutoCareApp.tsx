@@ -698,7 +698,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
   }
   function updateOrderCustomer(id: string, patch: Partial<CustomerInfo>) {
     const order = orders.find((item) => item.id === id); if (!order) return;
-    updateOrder(id, { customer: { ...order.customer, ...patch } }, "Kundeinformation opdateret");
+    updateOrder(id, { customer: { ...order.customer, ...patch } }, "Kundeinfo opdateret");
   }
   function updateOrderInvoice(id: string, patch: Partial<InvoiceInfo>) {
     const order = orders.find((item) => item.id === id); if (!order) return;
@@ -882,16 +882,16 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
       </section>
 
       <section id="kontakt" className="px-5 py-5 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-3xl">
           {submittedId && <div className="mb-6 rounded-2xl border border-white/40 bg-white/[0.08] p-4 text-sm text-stone-100">Forespørgsel <strong className="text-white">{submittedId}</strong> er oprettet i backend.</div>}
           <div className="grid gap-3">
             <a href="tel:+4526848789" className="panel cta-card block p-4 sm:p-5">
-              <div><p className="eyebrow tight-card-kicker">Ring direkte</p><h3 className="mt-1 text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Ring til Øland Service</h3></div>
+              <div><p className="eyebrow tight-card-kicker">Ring</p><h3 className="mt-1 text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Ring til Øland</h3></div>
             </a>
 
             <article className="panel p-4 sm:p-5">
               <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setCallbackExpanded((open) => !open)}>
-                <div><p className="eyebrow tight-card-kicker">Kontakt</p><h3 className="mt-1 text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Bliv ringet op af Øland Service</h3></div>
+                <div><p className="eyebrow tight-card-kicker">Kontakt</p><h3 className="mt-1 text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Bliv ringet op</h3></div>
                 <span className={`chevron-toggle ${callbackExpanded ? "is-open" : ""}`}>›</span>
               </button>
               {callbackExpanded && <form onSubmit={submitCallback} className="mt-4 grid gap-3">
@@ -949,27 +949,27 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
         </div>
       </section>
 
-      <section id="booking" className="px-5 py-6 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-7xl">
+      <section id="booking" className="px-5 py-6 pb-36 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-3xl">
           <form id="booking-form" onSubmit={submitRequest} className="grid gap-4 lg:grid-cols-[1.1fr_.9fr]">
             <div className="grid gap-4">
               {cars.map((car, index) => {
                 const open = Boolean(openCarIds[car.id]);
                 return <article key={car.id} className="panel p-4 sm:p-5">
                   <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setOpenCarIds((current) => ({ ...current, [car.id]: !current[car.id] }))}>
-                    <div><h3 className="text-[1.18rem] font-black uppercase tight-card-title text-white sm:text-2xl">Send forespørgsel</h3></div>
+                    <div><h3 className="text-[1.18rem] font-black uppercase tight-card-title text-white sm:text-2xl">Forespørgsel</h3></div>
                     <span className={`chevron-toggle ${open ? "is-open" : ""}`}>›</span>
                   </button>
                   {open && <><div className="mt-4"><CarEditor car={car} preferredDate={preferredDate} preferredTime={preferredTime} onDateChange={setPreferredDate} onTimeChange={setPreferredTime} onPatch={(patch) => updateCar(car.id, patch)} onToggle={(key, itemId) => toggleCarArray(car.id, key, itemId)} /></div><div className="mt-4 rounded-2xl border border-white/25 bg-black/35 p-4 text-right text-sm uppercase tracking-[0.16em] text-stone-300/80">Opgave {index + 1} total <strong className="ml-3 text-xl text-white">{kr(carTotal(car))}</strong></div></>}
                   {cars.length > 1 && <button type="button" className="small-danger mt-4" onClick={() => { setCars((current) => current.filter((item) => item.id !== car.id)); setOpenCarIds((current) => { const next = { ...current }; delete next[car.id]; return next; }); }}>Fjern</button>}
                 </article>;
               })}
-              <button type="button" className="outline-button w-full !tracking-[0.08em] !leading-tight" onClick={() => { const next = makeCar(); setCars((current) => [...current, next]); }}>Tilføj opgave</button>
+              <button type="button" className="outline-button w-full !tracking-[0.08em] !leading-tight" onClick={() => { const next = makeCar(); setCars((current) => [...current, next]); }}>+ Tilføj opgave</button>
             </div>
             <aside className="grid content-start gap-5">
               <section className="panel p-4 sm:p-5">
                 <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setCustomerInfoOpen((open) => !open)}>
-                  <div><p className="eyebrow tight-card-kicker">Registrer</p><h3 className="mt-1 text-[1.18rem] font-black uppercase tight-card-title text-white sm:text-2xl">Kundeinformation</h3></div>
+                  <div><p className="eyebrow tight-card-kicker">Registrer</p><h3 className="mt-1 text-[1.18rem] font-black uppercase tight-card-title text-white sm:text-2xl">Kundeinfo</h3></div>
                   <span className={`chevron-toggle ${customerInfoOpen ? "is-open" : ""}`}>›</span>
                 </button>
                 {customerInfoOpen && <div className="mt-4 grid gap-3">
@@ -982,7 +982,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
                   <Field label="Faktura email"><TextInput type="email" value={invoice.invoiceEmail} onChange={(e) => setInvoice({ ...invoice, invoiceEmail: e.target.value })} placeholder="Hvis anden end kontakt email" /></Field>
                 </div>}
               </section>
-              <button type="submit" className="gold-button w-full">Send opgave</button>
+              <button type="submit" className="gold-button w-full">Send</button>
             </aside>
           </form>
         </div>
@@ -1014,7 +1014,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
       {!isBackend && draftStarted && <DraftOrderFooter cars={cars} customer={customer} invoice={invoice} preferredDate={preferredDate} preferredTime={preferredTime} customerMessage={customerMessage} total={draftTotal} isOpen={draftSummaryOpen} onToggle={() => setDraftSummaryOpen((open) => !open)} />}
       {!isBackend && draftStarted && <div className={draftSummaryOpen ? "h-[32rem] sm:h-80" : "h-36"} aria-hidden="true" />}
       {!isBackend && (
-        <footer className="px-5 pb-44 pt-4 sm:px-8 lg:px-12">
+        <footer className="px-5 pb-56 pt-8 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-7xl rounded-2xl border border-white/25 bg-black/55 px-5 py-6 text-center sm:px-7">
             <p className="eyebrow">Kontakt os i dag</p>
             <h2 className="mt-3 text-4xl font-semibold uppercase tracking-[0.16em] text-white sm:text-5xl">Ølands Service</h2>
@@ -1282,7 +1282,7 @@ function DraftOrderFooter({ cars, customer, invoice, preferredDate, preferredTim
             <div><p className="text-[0.62rem] font-black uppercase tracking-[0.22em] text-stone-400">Dato & tid</p><p className="mt-1">{dateLine || "Mangler"}</p>{customerMessage && <p className="mt-1 text-stone-300/70">{customerMessage}</p>}</div>
             <div><p className="text-[0.62rem] font-black uppercase tracking-[0.22em] text-stone-400">Faktura</p><p className="mt-1">{invoice.invoiceType}</p>{invoice.company && <p>{invoice.company} · CVR {invoice.cvr || "mangler"}</p>}<p>{invoice.invoiceEmail || customer.email || "Email mangler"}</p><p>{invoice.invoiceAddress || customer.address || "Fakturaadresse mangler"}</p></div>
             <div className="rounded-2xl border border-white/28 bg-white/[0.07] p-4 text-right"><p className="text-xs uppercase tracking-[0.2em] text-stone-300/70">Estimeret total</p><p className="text-3xl font-black text-white">{kr(total)}</p></div>
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1"><a href="#booking" className="outline-button w-full">Rediger</a><button type="submit" form="booking-form" className="gold-button w-full">Send opgave</button></div>
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1"><a href="#booking" className="outline-button w-full">Rediger</a><button type="submit" form="booking-form" className="gold-button w-full">Send</button></div>
           </aside>
         </div>
       </div>}

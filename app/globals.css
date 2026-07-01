@@ -807,178 +807,135 @@ body {
 }
 
 
-/* v26 full layout / typography / cleanup pass */
+/* v27 professional layout pass */
 :root {
-  --font-body-size: 16px;
-  --panel-radius: 1.28rem;
-  --panel-pad: clamp(0.92rem, 3.4vw, 1.35rem);
-  --letter-tight: 0.035em;
-  --letter-title: 0.045em;
-  --letter-label: 0.085em;
-  --letter-nav: 0.11em;
+  --v27-border: rgba(255,255,255,.24);
+  --v27-border-strong: rgba(255,255,255,.34);
+  --v27-muted: rgba(255,255,255,.58);
+  --v27-card-bg: rgba(255,255,255,.018);
+  --v27-card-bg-hover: rgba(255,255,255,.04);
+  --v27-radius: 1.15rem;
 }
 
 html,
-body {
-  background: #000000 !important;
-  max-width: 100%;
+body,
+main {
+  background: #000 !important;
   overflow-x: hidden;
 }
 
 body {
-  font-size: var(--font-body-size);
-  line-height: 1.45;
-  color: rgba(255,255,255,.94);
-  text-rendering: geometricPrecision;
+  font-size: 16px;
+  line-height: 1.42;
+  letter-spacing: 0;
   -webkit-font-smoothing: antialiased;
-}
-
-main {
-  background: #000000 !important;
+  text-rendering: geometricPrecision;
 }
 
 section[id] {
-  scroll-margin-top: 5.75rem;
+  scroll-margin-top: 5.4rem;
 }
 
-.panel,
-.detail-box {
-  min-width: 0;
-  border-radius: var(--panel-radius) !important;
-}
-
-.panel {
-  padding: var(--panel-pad);
-  background: rgba(0,0,0,.72);
-  border-color: rgba(255,255,255,.32);
-  box-shadow: 0 18px 62px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.035);
-}
-
-.cta-card {
-  color: inherit;
-  text-decoration: none;
-  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
-}
-
-.cta-card:hover {
-  transform: translateY(-1px);
-  border-color: rgba(255,255,255,.62);
-  background: rgba(255,255,255,.055);
-}
-
-.panel-title {
-  margin-bottom: 0;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  text-align: left;
-  font-size: clamp(1.02rem, 4.4vw, 1.45rem);
-  font-weight: 900;
-  line-height: 1.06;
-  letter-spacing: var(--letter-title);
-  text-transform: uppercase;
-  color: #fff;
-}
-
-.admin-section-heading {
-  font-size: clamp(1.35rem, 6.4vw, 2.65rem) !important;
-  line-height: 1.04 !important;
-  letter-spacing: 0.045em !important;
-}
-
-.eyebrow,
-.mini-title,
-label.grid > span {
-  font-size: 0.62rem !important;
-  line-height: 1.06 !important;
-  letter-spacing: var(--letter-label) !important;
-  font-weight: 900 !important;
+/* Header */
+nav.fixed {
+  background: #000 !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,.06);
 }
 
 .nav-pill {
-  font-size: 0.58rem !important;
-  line-height: 1 !important;
-  letter-spacing: var(--letter-nav) !important;
+  border: 0 !important;
+  background: transparent !important;
   padding: 0 !important;
+  font-size: .58rem !important;
+  line-height: 1 !important;
+  letter-spacing: .095em !important;
+  color: rgba(255,255,255,.74) !important;
 }
 
-.gold-button,
-.outline-button,
-.small-danger,
-.filter-pill {
-  min-height: 2.55rem !important;
-  padding: 0.62rem 0.92rem !important;
-  font-size: 0.61rem !important;
-  line-height: 1.04 !important;
-  letter-spacing: 0.08em !important;
-  border-radius: 999px !important;
-}
-
-.form-input {
-  min-height: 2.85rem !important;
-  height: auto;
-  border-radius: 0.84rem !important;
-  padding: 0.64rem 0.72rem !important;
-  font-size: 0.9rem !important;
-  line-height: 1.16 !important;
-  letter-spacing: 0 !important;
-}
-
-textarea.form-input {
-  min-height: 6rem !important;
-  line-height: 1.32 !important;
-}
-
-.choice-card {
-  min-height: auto !important;
-  gap: 0.72rem !important;
-  border-radius: 1rem !important;
-  padding: 0.72rem !important;
-}
-
-.choice-card strong {
-  font-size: 0.73rem !important;
-  line-height: 1.04 !important;
-  letter-spacing: 0.055em !important;
-}
-
-.choice-card em {
-  margin-top: 0.18rem !important;
-  font-size: 0.9rem !important;
+/* Global type system */
+.eyebrow,
+.mini-title,
+label.grid > span {
+  font-size: .58rem !important;
   line-height: 1.05 !important;
-}
-
-.check-row {
-  gap: 0.58rem !important;
-  border-radius: 0.78rem !important;
-  padding: 0.58rem 0.64rem !important;
-  font-size: 0.82rem !important;
-  line-height: 1.16 !important;
-}
-
-.check-row strong {
-  font-size: 0.72rem !important;
+  letter-spacing: .075em !important;
+  font-weight: 900 !important;
+  color: rgba(255,255,255,.78) !important;
 }
 
 .tight-card-kicker {
-  letter-spacing: 0.075em !important;
-  line-height: 1 !important;
+  font-size: .58rem !important;
+  letter-spacing: .075em !important;
+  color: rgba(255,255,255,.72) !important;
 }
 
-.tight-card-title {
-  letter-spacing: 0.034em !important;
+.tight-card-title,
+.panel-title,
+.admin-section-heading {
+  line-height: 1.04 !important;
+  letter-spacing: .025em !important;
+  color: #fff !important;
+}
+
+/* Cards */
+.panel {
+  border: 1px solid var(--v27-border) !important;
+  border-radius: var(--v27-radius) !important;
+  background: var(--v27-card-bg) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  padding: 1rem !important;
+}
+
+#kontakt .panel,
+#booking .panel {
+  padding: .95rem 1rem !important;
+}
+
+.cta-card {
+  text-decoration: none;
+  color: inherit;
+  min-height: 4.65rem;
+  display: flex !important;
+  align-items: center;
+}
+
+.cta-card:hover,
+#kontakt .panel:hover,
+#booking .panel:hover {
+  background: var(--v27-card-bg-hover) !important;
+  border-color: var(--v27-border-strong) !important;
+}
+
+#kontakt article button,
+#booking article button,
+#booking aside button {
+  align-items: center !important;
+}
+
+#kontakt h3,
+#booking h3 {
+  font-size: clamp(1.02rem, 6.2vw, 1.55rem) !important;
   line-height: 1.02 !important;
+  letter-spacing: .02em !important;
+  max-width: 14.5em;
+}
+
+#kontakt .grid.gap-3,
+#booking .grid.gap-4,
+#booking .grid.gap-3 {
+  gap: .72rem !important;
+}
+
+#booking form {
+  gap: .75rem !important;
 }
 
 .chevron-toggle {
-  display: grid;
-  width: 2rem;
-  height: 2rem;
-  place-items: center;
-  flex-shrink: 0;
-  color: #fff;
-  font-size: 1.34rem;
-  line-height: 1;
+  width: 1.65rem !important;
+  height: 1.65rem !important;
+  font-size: 1.1rem !important;
+  color: rgba(255,255,255,.78) !important;
   transform: rotate(90deg);
 }
 
@@ -986,184 +943,251 @@ textarea.form-input {
   transform: rotate(-90deg);
 }
 
+/* Buttons */
+.gold-button,
+.outline-button,
+.small-danger,
+.filter-pill {
+  min-height: 2.55rem !important;
+  padding: .64rem .9rem !important;
+  border-radius: 999px !important;
+  font-size: .58rem !important;
+  letter-spacing: .085em !important;
+  line-height: 1 !important;
+}
+
+.gold-button {
+  border-color: rgba(255,255,255,.82) !important;
+  background: linear-gradient(180deg,#fff,#d9d9d9) !important;
+  color: #050505 !important;
+  box-shadow: 0 12px 42px rgba(255,255,255,.1) !important;
+}
+
+.outline-button {
+  border-color: var(--v27-border) !important;
+  background: transparent !important;
+  color: rgba(255,255,255,.88) !important;
+}
+
+/* Forms */
+.form-input {
+  min-height: 2.8rem !important;
+  border-radius: .78rem !important;
+  border-color: rgba(255,255,255,.2) !important;
+  background: rgba(0,0,0,.34) !important;
+  padding: .62rem .68rem !important;
+  font-size: .88rem !important;
+  line-height: 1.12 !important;
+}
+
+textarea.form-input {
+  min-height: 5.4rem !important;
+  line-height: 1.3 !important;
+}
+
+/* Package/task editor */
+.choice-card {
+  gap: .68rem !important;
+  padding: .68rem !important;
+  border-radius: .95rem !important;
+  border-color: rgba(255,255,255,.2) !important;
+  background: rgba(255,255,255,.018) !important;
+}
+
+.choice-card strong {
+  font-size: .7rem !important;
+  letter-spacing: .04em !important;
+}
+
+.choice-card em {
+  font-size: .86rem !important;
+}
+
+.check-row {
+  border-radius: .74rem !important;
+  padding: .56rem .6rem !important;
+  font-size: .78rem !important;
+  line-height: 1.15 !important;
+  border-color: rgba(255,255,255,.16) !important;
+}
+
+.check-row strong {
+  font-size: .68rem !important;
+}
+
+/* Date/time mobile scaling */
 .booking-date-time-grid {
-  display: grid;
-  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
-  gap: 0.45rem !important;
-  width: 100%;
-  min-width: 0;
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important;
+  gap: .42rem !important;
+  min-width: 0 !important;
+  width: 100% !important;
 }
 
 .booking-date-time-input,
 .move-date-input {
-  box-sizing: border-box;
+  box-sizing: border-box !important;
   min-width: 0 !important;
   width: 100% !important;
   max-width: 100% !important;
+  height: 2.65rem !important;
   min-height: 0 !important;
-  height: 2.82rem !important;
-  border-radius: 0.78rem !important;
-  padding: 0.48rem 0.34rem !important;
-  font-size: 0.56rem !important;
+  border-radius: .72rem !important;
+  padding: .44rem .28rem !important;
+  font-size: .48rem !important;
+  letter-spacing: -.05em !important;
   line-height: 1 !important;
-  letter-spacing: -0.05em !important;
   overflow: hidden !important;
-  -webkit-appearance: none;
-  appearance: none;
+  -webkit-appearance: none !important;
+  appearance: none !important;
 }
 
 .booking-date-time-input::-webkit-date-and-time-value,
 .move-date-input::-webkit-date-and-time-value {
-  min-width: 0;
-  padding: 0;
-  text-align: left;
+  min-width: 0 !important;
+  text-align: left !important;
 }
 
 .booking-date-time-input::-webkit-calendar-picker-indicator,
 .move-date-input::-webkit-calendar-picker-indicator {
-  width: 0.72rem;
-  height: 0.72rem;
-  margin: 0;
-  padding: 0;
-  opacity: 0.48;
+  width: .68rem !important;
+  height: .68rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: .45 !important;
 }
 
-/* Frontend rhythm */
-#kontakt > div,
-#booking > div,
-#priser > div {
-  max-width: 960px;
+/* Floating request pill: smaller and less disruptive */
+[aria-label="Aktuel ordreoversigt"] {
+  padding-inline: .78rem !important;
 }
 
-#kontakt .grid.gap-3,
-#booking .grid.gap-4 {
-  gap: 0.8rem;
-}
-
-/* Floating request pill */
-[aria-label="Aktuel ordreoversigt"] > div {
-  border-radius: 1.18rem !important;
+[aria-label="Aktuel ordreoversigt"] > div,
+[aria-label="Aktuel ordreoversigt"] button {
+  border-radius: 1rem !important;
 }
 
 [aria-label="Aktuel ordreoversigt"] button {
-  padding-block: 0.65rem !important;
+  padding: .62rem .78rem !important;
+  min-height: 3.7rem !important;
+}
+
+[aria-label="Aktuel ordreoversigt"] p:first-child {
+  font-size: .56rem !important;
+  letter-spacing: .085em !important;
+}
+
+[aria-label="Aktuel ordreoversigt"] p,
+[aria-label="Aktuel ordreoversigt"] span {
+  line-height: 1.1 !important;
+}
+
+/* Services section should not hide under floating pill */
+#priser {
+  padding-top: 8rem !important;
 }
 
 /* Backend modules */
 #admin {
-  padding-top: 1rem !important;
+  padding-top: .85rem !important;
 }
 
 .backend-module {
-  gap: 0.85rem !important;
+  gap: .82rem !important;
 }
 
 #admin .panel {
-  padding: clamp(0.82rem, 3vw, 1.15rem) !important;
-  border-radius: 1.12rem !important;
-}
-
-#admin details.panel,
-#admin details.rounded-2xl {
-  overflow: hidden;
+  padding: .9rem !important;
+  border-radius: 1rem !important;
 }
 
 #admin summary {
-  padding: 0.86rem !important;
+  padding: .8rem !important;
 }
 
-#admin summary h4,
-#admin summary h5,
-#admin strong,
-#admin b {
-  letter-spacing: 0.04em;
-  line-height: 1.08;
+#admin .admin-section-heading {
+  font-size: clamp(1.28rem, 6vw, 2.4rem) !important;
 }
 
-#admin .grid.gap-4 {
-  gap: 0.8rem !important;
-}
-
+#admin .grid.gap-4,
 #admin .grid.gap-6,
 #admin .grid.gap-8 {
-  gap: 1rem !important;
+  gap: .82rem !important;
+}
+
+#admin .gold-button,
+#admin .outline-button {
+  min-height: 2.45rem !important;
 }
 
 #admin .admin-dock {
-  padding: 0.55rem !important;
-  gap: 0.35rem !important;
+  padding: .48rem !important;
+  gap: .3rem !important;
 }
 
 #admin .admin-dock button {
-  min-width: 4.15rem;
-  padding: 0.48rem 0.42rem !important;
-  font-size: 0.58rem !important;
-  letter-spacing: 0.08em !important;
+  min-width: 4rem !important;
+  padding: .44rem .36rem !important;
+  font-size: .54rem !important;
+  letter-spacing: .075em !important;
 }
 
 /* Employee pages */
 .employee-page .panel {
-  padding: clamp(0.9rem, 3.2vw, 1.25rem) !important;
-  border-radius: 1.15rem !important;
+  padding: .92rem !important;
+  border-radius: 1rem !important;
+}
+
+.employee-page .grid.gap-5,
+.employee-page .grid.gap-6,
+.employee-page .grid.gap-4 {
+  gap: .78rem !important;
 }
 
 .employee-page .panel-title,
 .employee-page h1,
 .employee-page h2,
 .employee-page h3 {
-  letter-spacing: 0.045em !important;
+  letter-spacing: .035em !important;
   line-height: 1.05 !important;
 }
 
-.employee-page .grid.gap-5,
-.employee-page .grid.gap-6 {
-  gap: 0.85rem !important;
-}
-
 .employee-page .form-input {
-  min-height: 2.72rem !important;
+  min-height: 2.65rem !important;
 }
 
 @media (max-width: 430px) {
-  :root {
-    --panel-radius: 1.2rem;
-    --panel-pad: 0.88rem;
+  #kontakt,
+  #booking,
+  #priser {
+    padding-inline: 1rem !important;
   }
 
-  .panel-title {
-    font-size: clamp(0.96rem, 4.1vw, 1.25rem);
+  #kontakt h3,
+  #booking h3 {
+    font-size: 1.42rem !important;
+    letter-spacing: .018em !important;
   }
 
-  .nav-pill {
-    font-size: 0.54rem !important;
-    letter-spacing: 0.095em !important;
+  .panel {
+    border-radius: 1rem !important;
   }
 
   .gold-button,
   .outline-button {
-    min-height: 2.48rem !important;
-    font-size: 0.58rem !important;
-    letter-spacing: 0.075em !important;
-  }
-
-  .booking-date-time-grid {
-    grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important;
+    min-height: 2.45rem !important;
+    font-size: .55rem !important;
   }
 
   .booking-date-time-input,
   .move-date-input {
-    height: 2.7rem !important;
-    font-size: 0.5rem !important;
-    padding-inline: 0.26rem !important;
-  }
-
-  #kontakt .panel,
-  #booking .panel {
-    border-radius: 1.18rem !important;
+    height: 2.55rem !important;
+    font-size: .44rem !important;
+    padding-inline: .22rem !important;
   }
 }
 
-@media (max-width: 355px) {
+@media (max-width: 360px) {
   .booking-date-time-grid {
     grid-template-columns: 1fr !important;
   }
