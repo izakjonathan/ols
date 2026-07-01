@@ -911,3 +911,294 @@ select.time-control-input {
     scroll-behavior: auto !important;
   }
 }
+
+
+/* v47 layout pass: keep Apple-like type, fix snap-section spatial rhythm */
+:root {
+  --nav-h: 76px;
+  --section-side: clamp(20px, 5.2vw, 32px);
+  --snap-top-clearance: calc(env(safe-area-inset-top) + var(--nav-h));
+  --snap-bottom-clearance: calc(env(safe-area-inset-bottom) + 74px);
+  --snap-content-top-pad: 72px;
+  --snap-content-bottom-pad: 90px;
+  --chevron-gap: 20px;
+  --chevron-top: calc(env(safe-area-inset-top) + var(--nav-h) + 14px);
+  --chevron-bottom: calc(env(safe-area-inset-bottom) + 30px);
+  --card-gap: 14px;
+  --card-pad: 18px;
+  --card-min: 72px;
+  --control-h: 48px;
+  --backend-top: calc(env(safe-area-inset-top) + 60px);
+  --dock-clearance: max(132px, calc(env(safe-area-inset-bottom) + 118px));
+}
+
+/* Page-level section rhythm */
+.snap-section {
+  padding-left: var(--section-side) !important;
+  padding-right: var(--section-side) !important;
+}
+
+.landing-section,
+.section-panel,
+#priser {
+  padding-top: var(--snap-top-clearance) !important;
+  padding-bottom: var(--snap-bottom-clearance) !important;
+}
+
+#services-overview > div,
+#action > div,
+#priser > div {
+  box-sizing: border-box !important;
+  max-height: calc(100svh - var(--snap-top-clearance) - var(--snap-bottom-clearance)) !important;
+}
+
+/* Reserve actual space for top/bottom chevrons so they do not collide with content. */
+#services-overview > div,
+#action > div {
+  padding-top: var(--snap-content-top-pad) !important;
+  padding-bottom: var(--snap-content-bottom-pad) !important;
+  align-content: center !important;
+}
+
+#action > div {
+  gap: var(--card-gap) !important;
+}
+
+#action > div > .grid,
+.action-section form,
+.action-section .grid.gap-3 {
+  gap: var(--card-gap) !important;
+}
+
+/* Chevron navigation: clearer, less intrusive, consistently positioned. */
+.section-chevron {
+  gap: 6px !important;
+  z-index: 35 !important;
+}
+
+.section-chevron-top {
+  top: var(--chevron-top) !important;
+}
+
+.section-chevron-bottom {
+  bottom: var(--chevron-bottom) !important;
+}
+
+.section-chevron-label {
+  color: var(--c-text-tertiary) !important;
+  font-size: 12px !important;
+  font-weight: var(--fw-medium) !important;
+  line-height: 1 !important;
+}
+
+.chevron {
+  width: 16px !important;
+  height: 16px !important;
+  font-size: 18px !important;
+  color: var(--c-text-tertiary) !important;
+}
+
+.chevron::before {
+  border-width: 2px 2px 0 0 !important;
+  height: 7px !important;
+  width: 7px !important;
+  left: 4px !important;
+  top: 3px !important;
+}
+
+.chevron.bottom::before {
+  top: 1px !important;
+}
+
+/* Frontend cards/forms: one rhythm, fewer oversized headings. */
+.action-section .panel,
+.action-section .cta-card {
+  border-radius: 18px !important;
+}
+
+.action-section .panel {
+  padding: var(--card-pad) !important;
+}
+
+.action-section .cta-card,
+.action-section article > button {
+  min-height: var(--card-min) !important;
+}
+
+.action-section h3,
+.tight-card-title {
+  font-size: clamp(22px, 6vw, 28px) !important;
+  font-weight: var(--fw-semibold) !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.028em !important;
+}
+
+.action-section .eyebrow,
+.tight-card-kicker {
+  font-size: 15px !important;
+  font-weight: var(--fw-medium) !important;
+  color: var(--c-text-secondary) !important;
+  line-height: 1.15 !important;
+}
+
+.action-section .outline-button,
+.action-section .primary-button,
+.action-section .small-danger {
+  min-height: var(--control-h) !important;
+  font-size: 17px !important;
+  font-weight: var(--fw-semibold) !important;
+  border-radius: var(--radius-pill) !important;
+}
+
+.action-section .form-input,
+.action-section .time-control-input,
+.employee-page .form-input,
+.employee-page .time-control-input,
+#admin .form-input,
+#admin .time-control-input {
+  min-height: var(--control-h) !important;
+  font-size: 17px !important;
+  border-radius: 12px !important;
+}
+
+.request-total-row {
+  margin-top: 12px;
+  border: 1px solid var(--c-separator-soft);
+  border-radius: 16px;
+  background: rgba(255,255,255,.025);
+  padding: 12px 14px;
+  color: var(--c-text-secondary);
+  font-size: 15px;
+  font-weight: var(--fw-medium);
+  line-height: 1.2;
+  text-align: right;
+}
+
+.request-total-row strong {
+  margin-left: 10px;
+  color: var(--c-text);
+  font-size: 20px;
+  font-weight: var(--fw-semibold);
+}
+
+.chevron-toggle {
+  color: var(--c-text-secondary) !important;
+  font-size: 22px !important;
+}
+
+/* Services section balancing */
+#services-overview .section-title {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: clamp(30px, 8vw, 50px) !important;
+  line-height: 1.02 !important;
+}
+
+#services-overview .service-intro-card {
+  padding: 18px !important;
+}
+
+/* Backend/employee: shared vertical rhythm and dock clearance. */
+.backend-screen,
+#admin {
+  padding-top: var(--backend-top) !important;
+}
+
+.backend-module,
+#admin .grid.gap-4,
+#admin .grid.gap-5,
+#admin .grid.gap-6,
+#admin .grid.gap-8,
+.employee-page .grid.gap-4,
+.employee-page .grid.gap-5,
+.employee-page .grid.gap-6 {
+  gap: var(--card-gap) !important;
+}
+
+#admin .panel,
+#admin .backend-card,
+.employee-page .panel {
+  padding: 16px !important;
+  border-radius: 18px !important;
+}
+
+.admin-module-header {
+  margin-bottom: 14px !important;
+}
+
+.admin-screen-title {
+  font-size: clamp(24px, 6.6vw, 34px) !important;
+  font-weight: var(--fw-medium) !important;
+  line-height: 1.08 !important;
+}
+
+.admin-stat-grid {
+  gap: 12px !important;
+  margin-bottom: 16px !important;
+}
+
+.admin-stat-card {
+  border-radius: 16px !important;
+  padding: 14px !important;
+}
+
+.backend-safe-bottom,
+.employee-page {
+  padding-bottom: var(--dock-clearance) !important;
+}
+
+@media (max-width: 430px) {
+  :root {
+    --section-side: 22px;
+    --snap-content-top-pad: 62px;
+    --snap-content-bottom-pad: 86px;
+    --chevron-top: calc(env(safe-area-inset-top) + var(--nav-h) + 12px);
+    --chevron-bottom: calc(env(safe-area-inset-bottom) + 34px);
+    --card-gap: 14px;
+    --card-pad: 18px;
+    --card-min: 72px;
+    --backend-top: calc(env(safe-area-inset-top) + 58px);
+  }
+
+  .nav-pill {
+    font-size: 17px !important;
+    font-weight: var(--fw-medium) !important;
+  }
+
+  .action-section h3,
+  .tight-card-title {
+    font-size: clamp(23px, 7vw, 30px) !important;
+  }
+
+  .action-section .panel {
+    padding: 18px !important;
+  }
+
+  .primary-button,
+  .outline-button,
+  .small-danger {
+    min-height: 48px !important;
+  }
+}
+
+@media (max-height: 760px) and (max-width: 430px) {
+  :root {
+    --snap-content-top-pad: 48px;
+    --snap-content-bottom-pad: 70px;
+    --card-gap: 10px;
+    --card-pad: 15px;
+    --card-min: 62px;
+  }
+
+  .action-section h3,
+  .tight-card-title {
+    font-size: clamp(21px, 6vw, 26px) !important;
+  }
+
+  .action-section .panel,
+  .action-section .cta-card,
+  .action-section article > button {
+    min-height: var(--card-min) !important;
+  }
+}

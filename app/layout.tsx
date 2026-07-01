@@ -2,12 +2,12 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Ølands Service",
-  applicationName: "Ølands Service",
-  description: "Professionel service, service, opgaver og personlig hjælp hos Ølands Service.",
+  title: "Øland Service",
+  applicationName: "Øland Service",
+  description: "Transport, flytning og praktisk logistik hos Øland Service.",
   appleWebApp: {
     capable: true,
-    title: "Ølands Service",
+    title: "Øland Service",
     statusBarStyle: "black-translucent",
   },
   formatDetection: {
@@ -52,7 +52,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png" />
         <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-title" content="Ølands Service" />
+        <meta name="apple-mobile-web-app-title" content="Øland Service" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="theme-color" content="#000000" />
       </head>

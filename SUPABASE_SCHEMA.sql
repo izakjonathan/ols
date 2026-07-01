@@ -1,4 +1,4 @@
--- Ølands Service Supabase schema
+-- Øland Service Supabase schema
 -- Run this in the SQL editor of the Supabase project you want to reuse.
 
 create table if not exists public.oland_service_state (

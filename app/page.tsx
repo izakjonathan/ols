@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import OlandServiceApp from "./components/OlandServiceApp";
 
 export const metadata: Metadata = {
-  title: "Ølands Service",
-  applicationName: "Ølands Service",
+  title: "Øland Service",
+  applicationName: "Øland Service",
   manifest: "/site.webmanifest",
   appleWebApp: {
     capable: true,
-    title: "Ølands Service",
+    title: "Øland Service",
     statusBarStyle: "black-translucent",
   },
 };

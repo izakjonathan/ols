@@ -166,7 +166,7 @@ const adminViewTitles: Record<AdminView, { eyebrow: string; title: string }> = {
 
 const emptyCustomer: CustomerInfo = { name: "", phone: "", email: "", address: "" };
 const emptyInvoice: InvoiceInfo = { invoiceType: "", company: "", cvr: "", invoiceEmail: "", invoiceAddress: "", paymentMethod: "Faktura", customerType: "" };
-const defaultCompanyInfo: CompanyInfo = { name: "Ølands Service", phone: "26848789", email: "kontakt@olandservice.dk", openingHours: "Åben 8-20 hver dag", address: "", invoiceName: "Ølands Service", cvr: "", invoiceEmail: "kontakt@olandservice.dk", invoiceAddress: "", paymentTerms: "8 dage", bankInfo: "" };
+const defaultCompanyInfo: CompanyInfo = { name: "Øland Service", phone: "26848789", email: "kontakt@olandservice.dk", openingHours: "Åben 8-20 hver dag", address: "", invoiceName: "Øland Service", cvr: "", invoiceEmail: "kontakt@olandservice.dk", invoiceAddress: "", paymentTerms: "8 dage", bankInfo: "" };
 const makeCar = (): CarEntry => ({ id: cryptoId(), type: "Transport", makeModel: "", reg: "", packageId: "basis", services: [], extras: [], notes: "", uploads: [] });
 
 function cryptoId() {
@@ -196,7 +196,7 @@ function invoiceTotal(invoice: Pick<InvoiceRecord, "lines">) {
 
 function invoiceEmailBody(invoice: InvoiceRecord) {
   const lines = invoice.lines.map((line) => `${line.text} - ${line.qty} x ${kr(line.price)} = ${kr(line.qty * line.price)}`).join("\n");
-  return [`Hej ${invoice.customerName || ""}`, "", `Her er faktura ${invoice.invoiceNo} fra Ølands Service.`, "", lines, "", `Total: ${kr(invoiceTotal(invoice))}`, `Forfaldsdato: ${invoice.dueDate || "ikke sat"}`, "", invoice.note || "Tak for din ordre.", "", "Med venlig hilsen", "Ølands Service"].join("\n");
+  return [`Hej ${invoice.customerName || ""}`, "", `Her er faktura ${invoice.invoiceNo} fra Øland Service.`, "", lines, "", `Total: ${kr(invoiceTotal(invoice))}`, `Forfaldsdato: ${invoice.dueDate || "ikke sat"}`, "", invoice.note || "Tak for din ordre.", "", "Med venlig hilsen", "Øland Service"].join("\n");
 }
 
 function normaliseInvoice(invoice: InvoiceRecord): InvoiceRecord {
@@ -868,7 +868,7 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
       cvr: order.invoice.cvr,
       status: "Kladde",
       lines,
-      note: "Tak for din ordre hos Ølands Service."
+      note: "Tak for din ordre hos Øland Service."
     };
     setInvoices((current) => [invoice, ...current]);
     setSelectedInvoiceId(invoice.id);
@@ -883,7 +883,7 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
   function sendInvoice(id: string) {
     const invoice = invoices.find((item) => item.id === id);
     if (!invoice) return;
-    const subject = encodeURIComponent(`Faktura ${invoice.invoiceNo} fra Ølands Service`);
+    const subject = encodeURIComponent(`Faktura ${invoice.invoiceNo} fra Øland Service`);
     const body = encodeURIComponent(invoiceEmailBody(invoice));
     if (invoice.email) window.location.href = `mailto:${invoice.email}?subject=${subject}&body=${body}`;
     updateInvoice(id, { status: "Sendt", sentAt: new Date().toISOString() });
@@ -910,7 +910,7 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
       const extraNames = selectedNames(car.extras, extras);
       return [`Opgave ${index + 1}: ${car.type}`, car.makeModel ? `Beskrivelse: ${car.makeModel}` : "", car.reg ? `Reference: ${car.reg}` : "", pack ? `Pakke: ${pack.title} (${kr(pack.price)})` : "", serviceNames ? `Ydelser: ${serviceNames}` : "", extraNames ? `Tillæg: ${extraNames}` : "", car.notes ? `Noter: ${car.notes}` : ""].filter(Boolean).join("\n");
     }).join("\n\n");
-    return [`Hej ${order.customer.name || ""}`, "", "Vi har gennemgået og bekræftet din forespørgsel hos Ølands Service.", "", `Ordre: ${order.id}`, `Dato/tid: ${order.adminDate || order.preferredDate || "aftales"} ${order.adminTime || order.preferredTime || ""}`.trim(), "", carLines, "", `Estimeret total: ${kr(orderTotal(order))}`, "", "Svar gerne på denne mail, hvis noget skal ændres.", "", "Med venlig hilsen", companyInfo.name].join("\n");
+    return [`Hej ${order.customer.name || ""}`, "", "Vi har gennemgået og bekræftet din forespørgsel hos Øland Service.", "", `Ordre: ${order.id}`, `Dato/tid: ${order.adminDate || order.preferredDate || "aftales"} ${order.adminTime || order.preferredTime || ""}`.trim(), "", carLines, "", `Estimeret total: ${kr(orderTotal(order))}`, "", "Svar gerne på denne mail, hvis noget skal ændres.", "", "Med venlig hilsen", companyInfo.name].join("\n");
   }
 
   function acceptOrder(id: string) {
@@ -1038,7 +1038,7 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
           {submittedId && <div className="rounded-2xl border border-white/40 bg-white/[0.08] p-3 text-xs text-stone-100">Forespørgsel <strong className="text-white">{submittedId}</strong> er oprettet i backend.</div>}
           <div className="grid gap-3">
             <a href="tel:+4526848789" className="panel cta-card block p-4 sm:p-5">
-              <div><h3 className="text-xl uppercase tight-card-title text-white sm:text-2xl">Ring til Øland</h3></div>
+              <div><h3 className="text-xl uppercase tight-card-title text-white sm:text-2xl">Ring til Øland Service</h3></div>
             </a>
 
             <article className="panel p-4 sm:p-5">
@@ -1108,7 +1108,7 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
                     <div><h3 className="text-[1.18rem] uppercase tight-card-title text-white sm:text-2xl">Forespørgsel</h3></div>
                     <span className={`chevron-toggle ${open ? "is-open" : ""}`}>›</span>
                   </button>
-                  {open && <><div className="mt-3 max-h-[36svh] overflow-y-auto pr-1"><CarEditor car={car} preferredDate={preferredDate} preferredTime={preferredTime} onDateChange={setPreferredDate} onTimeChange={setPreferredTime} onPatch={(patch) => updateCar(car.id, patch)} onToggle={(key, itemId) => toggleCarArray(car.id, key, itemId)} /></div><div className="mt-3 rounded-2xl border border-white/25 bg-black/35 p-3 text-right text-xs uppercase tracking-[0.12em] text-stone-300/80">Opgave {index + 1} total <strong className="ml-3 text-lg text-white">{kr(carTotal(car))}</strong></div></>}
+                  {open && <><div className="mt-3 max-h-[36svh] overflow-y-auto pr-1"><CarEditor car={car} preferredDate={preferredDate} preferredTime={preferredTime} onDateChange={setPreferredDate} onTimeChange={setPreferredTime} onPatch={(patch) => updateCar(car.id, patch)} onToggle={(key, itemId) => toggleCarArray(car.id, key, itemId)} /></div><div className="request-total-row">Opgave {index + 1} total <strong className="ml-3 text-lg text-white">{kr(carTotal(car))}</strong></div></>}
                   {cars.length > 1 && <button type="button" className="small-danger mt-3" onClick={() => { setCars((current) => current.filter((item) => item.id !== car.id)); setOpenCarIds((current) => { const next = { ...current }; delete next[car.id]; return next; }); }}>Fjern</button>}
                 </article>;
               })}
@@ -1166,7 +1166,7 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
         <footer className="snap-section px-5 pb-12 pt-8 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-7xl rounded-2xl border border-white/25 bg-black/55 px-5 py-6 text-center sm:px-7">
             <p className="eyebrow">Kontakt os i dag</p>
-            <h2 className="mt-3 text-4xl font-semibold uppercase tracking-[0.16em] text-white sm:text-5xl">Ølands Service</h2>
+            <h2 className="mt-3 text-4xl font-semibold uppercase tracking-[0.16em] text-white sm:text-5xl">Øland Service</h2>
             <p className="mt-4 text-base leading-7 text-stone-200/82">Transport, flytning og praktisk logistik med enkel booking, tydelige priser og personlig service.</p>
             <div className="mt-6 grid gap-3 sm:grid-cols-3">
               <a href="tel:+4526848789" className="contact-card justify-center"><Icon name="phone" className="h-5 w-5 text-white" /><span>26848789</span></a>
@@ -1208,13 +1208,13 @@ function EmployeeHourPage({ employee, entries, onAddEntry, dataLoaded, syncStatu
   }
 
   if (!employee) {
-    return <main className="employee-page min-h-screen bg-black px-4 py-5 text-stone-50"><section className="panel mx-auto max-w-xl p-5"><p className="eyebrow">Ølands Service</p><h1 className="mt-3 text-3xl font-black uppercase tracking-[0.16em] text-white">Link ikke aktivt</h1><p className="mt-4 text-stone-300/75">Dette medarbejderlink findes ikke eller er deaktiveret. Kontakt admin for et nyt link.</p></section></main>;
+    return <main className="employee-page min-h-screen bg-black px-4 py-5 text-stone-50"><section className="panel mx-auto max-w-xl p-5"><p className="eyebrow">Øland Service</p><h1 className="mt-3 text-3xl font-black uppercase tracking-[0.16em] text-white">Link ikke aktivt</h1><p className="mt-4 text-stone-300/75">Dette medarbejderlink findes ikke eller er deaktiveret. Kontakt admin for et nyt link.</p></section></main>;
   }
 
   return <main className="min-h-screen bg-black px-4 pb-10 pt-5 text-stone-50">
     <section className="mx-auto grid max-w-3xl gap-4">
       <div className="panel p-5">
-        <p className="eyebrow">Ølands Service</p>
+        <p className="eyebrow">Øland Service</p>
         <h1 className="mt-2 text-xl uppercase tracking-[0.14em] text-white">Timekontrol</h1>
         <p className="mt-2 text-stone-300/75">Medarbejder: <span className="font-bold text-white">{employee.name}</span></p>
         <p className="mt-1 text-xs text-stone-400">{syncStatus}</p>

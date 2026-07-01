@@ -1,7 +1,7 @@
 {
-  "name": "Øland Service Backend",
-  "short_name": "Øland Admin",
-  "description": "Ølands Service booking og administration.",
+  "name": "Øland Service Admin",
+  "short_name": "ØS Admin",
+  "description": "Øland Service administration.",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",

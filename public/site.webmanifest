@@ -1,7 +1,7 @@
 {
   "name": "Øland Service",
   "short_name": "Øland",
-  "description": "Ølands Service booking og administration.",
+  "description": "Transport, flytning og praktisk logistik.",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
