@@ -912,50 +912,46 @@ select.time-control-input {
   }
 }
 
-/* v49 frontend CSS audit/fix
-   Root cause found: v47 appended a second :root plus front-end overrides after the consolidated CSS.
-   Those duplicate variables and action-section padding rules made chevrons/labels collide with content.
-   This layer replaces the conflicting frontend layout behavior with one predictable section system. */
+/* v50 frontend stable layout fix
+   Reason: full-screen + overflow-hidden + inner max-height created clipped price content and black dead zones around chevrons.
+   New approach: keep dark Apple-like style, but use normal document flow with min-height sections.
+   No section hides overflowing content. Chevrons are small transparent controls and never create large black blocks. */
 
-/* Single visual rhythm for frontend full-screen sections */
-:root {
-  --frontend-side: clamp(22px, 5.2vw, 34px);
-  --frontend-nav-height: 76px;
-  --frontend-top-safe: calc(env(safe-area-inset-top) + var(--frontend-nav-height));
-  --frontend-section-top: calc(var(--frontend-top-safe) + 104px);
-  --frontend-section-bottom: calc(env(safe-area-inset-bottom) + 116px);
-  --frontend-landing-bottom: calc(env(safe-area-inset-bottom) + 92px);
-  --frontend-chevron-top: calc(var(--frontend-top-safe) + 18px);
-  --frontend-chevron-bottom: calc(env(safe-area-inset-bottom) + 42px);
-  --frontend-card-gap: 14px;
-  --frontend-card-pad: 16px;
-  --frontend-card-min: 62px;
+html {
+  scroll-snap-type: none !important;
+  scroll-behavior: smooth !important;
 }
 
-/* Full screen sections should reserve fixed zones for navbar and chevrons.
-   Content is centered in the remaining middle zone instead of using h-full. */
+:root {
+  --front-side: clamp(22px, 5.2vw, 34px);
+  --front-top: calc(env(safe-area-inset-top) + var(--nav-h) + 28px);
+  --front-bottom: calc(env(safe-area-inset-bottom) + 76px);
+  --front-gap: 14px;
+  --front-card-pad: 16px;
+  --front-card-min: 64px;
+}
+
+/* Stable frontend section model */
 .snap-section {
+  position: relative !important;
   display: flex !important;
   min-height: 100svh !important;
-  height: 100svh !important;
+  height: auto !important;
   align-items: center !important;
   justify-content: center !important;
-  overflow: hidden !important;
-  padding-left: var(--frontend-side) !important;
-  padding-right: var(--frontend-side) !important;
-  scroll-snap-align: start !important;
-  scroll-snap-stop: always !important;
+  overflow: visible !important;
+  padding-left: var(--front-side) !important;
+  padding-right: var(--front-side) !important;
+  padding-top: var(--front-top) !important;
+  padding-bottom: var(--front-bottom) !important;
+  scroll-snap-align: none !important;
+  scroll-snap-stop: normal !important;
 }
 
 .landing-section {
-  padding-top: var(--frontend-top-safe) !important;
-  padding-bottom: var(--frontend-landing-bottom) !important;
-}
-
-.section-panel,
-#priser {
-  padding-top: var(--frontend-section-top) !important;
-  padding-bottom: var(--frontend-section-bottom) !important;
+  min-height: 100svh !important;
+  padding-top: calc(env(safe-area-inset-top) + var(--nav-h)) !important;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 86px) !important;
 }
 
 .landing-section > div,
@@ -965,39 +961,27 @@ select.time-control-input {
   width: 100% !important;
   height: auto !important;
   min-height: 0 !important;
-  max-height: calc(100svh - var(--frontend-section-top) - var(--frontend-section-bottom)) !important;
-  overflow-y: auto !important;
-  overscroll-behavior: contain !important;
-  scrollbar-width: none !important;
-}
-
-.landing-section > div {
-  max-height: calc(100svh - var(--frontend-top-safe) - var(--frontend-landing-bottom)) !important;
+  max-height: none !important;
   overflow: visible !important;
 }
 
-#services-overview > div::-webkit-scrollbar,
-#action > div::-webkit-scrollbar,
-#priser > div::-webkit-scrollbar {
-  display: none;
-}
-
-/* Chevrons: fixed edge positions, never inside card flow */
+/* Chevrons: transparent inline navigation, no boxes, no clipping zones */
 .section-chevron {
   position: absolute !important;
   left: 50% !important;
-  z-index: 40 !important;
+  z-index: 30 !important;
   display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
   width: auto !important;
   height: auto !important;
   min-width: 0 !important;
   min-height: 0 !important;
-  gap: 5px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
   padding: 0 !important;
   transform: translateX(-50%) !important;
   border: 0 !important;
+  border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
   color: var(--c-text-tertiary) !important;
@@ -1007,14 +991,14 @@ select.time-control-input {
 }
 
 .section-chevron-top {
-  top: var(--frontend-chevron-top) !important;
+  top: calc(env(safe-area-inset-top) + var(--nav-h) + 12px) !important;
   bottom: auto !important;
   flex-direction: column !important;
 }
 
 .section-chevron-bottom {
   top: auto !important;
-  bottom: var(--frontend-chevron-bottom) !important;
+  bottom: calc(env(safe-area-inset-bottom) + 30px) !important;
   flex-direction: column !important;
 }
 
@@ -1035,6 +1019,7 @@ select.time-control-input {
   height: 16px !important;
   color: var(--c-text-tertiary) !important;
   font-size: 18px !important;
+  line-height: 1 !important;
 }
 
 .chevron::before {
@@ -1056,7 +1041,7 @@ select.time-control-input {
   transform: rotate(135deg) !important;
 }
 
-/* Landing */
+/* Frontend typography rhythm */
 .landing-title {
   display: grid !important;
   gap: .03em !important;
@@ -1081,7 +1066,17 @@ select.time-control-input {
   white-space: nowrap !important;
 }
 
-/* Services section */
+.section-title {
+  color: var(--c-text) !important;
+  font-size: clamp(30px, 7.3vw, 48px) !important;
+  font-weight: 650 !important;
+  line-height: 1.04 !important;
+  letter-spacing: -0.045em !important;
+  text-align: center !important;
+  text-transform: none !important;
+}
+
+/* Services */
 #services-overview > div {
   display: grid !important;
   align-content: center !important;
@@ -1092,21 +1087,15 @@ select.time-control-input {
   max-width: 720px !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  color: var(--c-text) !important;
-  font-size: clamp(30px, 7.3vw, 48px) !important;
-  font-weight: 650 !important;
-  line-height: 1.04 !important;
-  letter-spacing: -0.045em !important;
-  text-align: center !important;
-  text-transform: none !important;
 }
 
-#services-overview .service-intro-card {
+.service-intro-card {
   padding: 16px !important;
   border-radius: 18px !important;
 }
 
 .service-intro-card h3 {
+  color: var(--c-text) !important;
   font-size: 17px !important;
   font-weight: 600 !important;
   line-height: 1.2 !important;
@@ -1116,22 +1105,23 @@ select.time-control-input {
 
 .service-intro-card p {
   margin-top: 6px !important;
+  color: var(--c-text-secondary) !important;
   font-size: 15px !important;
   line-height: 1.35 !important;
 }
 
-/* Action/request section */
+/* Action/request */
 #action > div {
   display: grid !important;
   align-content: center !important;
-  gap: var(--frontend-card-gap) !important;
+  gap: var(--front-gap) !important;
   max-width: 44rem !important;
 }
 
 #action > div > .grid,
 .action-section form,
 .action-section .grid.gap-3 {
-  gap: var(--frontend-card-gap) !important;
+  gap: var(--front-gap) !important;
 }
 
 .action-section .panel,
@@ -1140,12 +1130,12 @@ select.time-control-input {
 }
 
 .action-section .panel {
-  padding: var(--frontend-card-pad) !important;
+  padding: var(--front-card-pad) !important;
 }
 
 .action-section .cta-card,
 .action-section article > button {
-  min-height: var(--frontend-card-min) !important;
+  min-height: var(--front-card-min) !important;
 }
 
 .action-section h3,
@@ -1155,16 +1145,6 @@ select.time-control-input {
   font-weight: 600 !important;
   line-height: 1.08 !important;
   letter-spacing: -0.04em !important;
-  text-transform: none !important;
-}
-
-.action-section .eyebrow,
-.tight-card-kicker {
-  color: var(--c-text-secondary) !important;
-  font-size: 15px !important;
-  font-weight: 500 !important;
-  line-height: 1.15 !important;
-  letter-spacing: 0 !important;
   text-transform: none !important;
 }
 
@@ -1224,12 +1204,29 @@ select.time-control-input {
   line-height: 1 !important;
 }
 
-/* Prices section: remove old oversized letter-spaced utility look */
-#priser > div {
-  display: grid !important;
-  align-content: center !important;
+/* Prices: this section has more content than one screen, so it must scroll normally */
+.prices-section {
+  display: block !important;
+  min-height: 100svh !important;
+  align-items: initial !important;
+  justify-content: initial !important;
+  padding-top: calc(env(safe-area-inset-top) + var(--nav-h) + 74px) !important;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 118px) !important;
+  overflow: visible !important;
 }
 
+.prices-inner {
+  display: block !important;
+  width: 100% !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.prices-heading {
+  margin-bottom: 24px !important;
+}
+
+.prices-heading .section-title,
 #priser h2 {
   color: var(--c-text) !important;
   font-size: clamp(30px, 8vw, 48px) !important;
@@ -1239,13 +1236,69 @@ select.time-control-input {
   text-transform: none !important;
 }
 
-#priser h3,
-#priser h4 {
-  letter-spacing: -0.02em !important;
+.prices-grid {
+  display: grid !important;
+  gap: 24px !important;
+}
+
+#priser .panel {
+  padding: 18px !important;
+  border-radius: 18px !important;
+}
+
+#priser .panel-title {
+  color: var(--c-text) !important;
+  font-size: clamp(22px, 6vw, 30px) !important;
+  font-weight: 600 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.04em !important;
   text-transform: none !important;
 }
 
-/* Keep backend/employee spacing from v48 stable */
+.packages-list {
+  display: grid !important;
+  gap: 18px !important;
+}
+
+.package-card {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  color: var(--c-text) !important;
+}
+
+.package-card + .package-card {
+  margin-top: 16px !important;
+}
+
+.package-title {
+  color: var(--c-text) !important;
+  font-size: clamp(22px, 6vw, 30px) !important;
+  font-weight: 600 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.04em !important;
+  text-transform: none !important;
+}
+
+.package-price {
+  color: var(--c-text) !important;
+  font-size: clamp(28px, 8vw, 42px) !important;
+  font-weight: 650 !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.045em !important;
+}
+
+.package-items {
+  margin-top: 10px !important;
+  display: grid !important;
+  gap: 6px !important;
+  color: var(--c-text-secondary) !important;
+  font-size: 17px !important;
+  line-height: 1.28 !important;
+}
+
+/* Keep backend/employee behavior from the current baseline */
 .backend-screen,
 #admin {
   padding-top: var(--backend-top) !important;
@@ -1256,17 +1309,20 @@ select.time-control-input {
   padding-bottom: var(--dock-clearance) !important;
 }
 
+@media (min-width: 900px) {
+  .prices-grid {
+    grid-template-columns: .9fr 1.1fr !important;
+    align-items: start !important;
+  }
+}
+
 @media (max-width: 430px) {
   :root {
-    --frontend-nav-height: 76px;
-    --frontend-side: 22px;
-    --frontend-section-top: calc(var(--frontend-top-safe) + 104px);
-    --frontend-section-bottom: calc(env(safe-area-inset-bottom) + 112px);
-    --frontend-chevron-top: calc(var(--frontend-top-safe) + 16px);
-    --frontend-chevron-bottom: calc(env(safe-area-inset-bottom) + 38px);
-    --frontend-card-gap: 14px;
-    --frontend-card-pad: 16px;
-    --frontend-card-min: 64px;
+    --front-side: 22px;
+    --front-top: calc(env(safe-area-inset-top) + var(--nav-h) + 26px);
+    --front-bottom: calc(env(safe-area-inset-bottom) + 78px);
+    --front-card-min: 64px;
+    --front-card-pad: 16px;
   }
 
   .nav-pill {
@@ -1274,32 +1330,35 @@ select.time-control-input {
     font-weight: 500 !important;
   }
 
-  #services-overview .section-title {
-    font-size: clamp(30px, 7.5vw, 40px) !important;
+  .prices-section {
+    padding-top: calc(env(safe-area-inset-top) + var(--nav-h) + 76px) !important;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 120px) !important;
   }
 
-  .action-section h3,
-  .tight-card-title {
-    font-size: clamp(24px, 6.5vw, 30px) !important;
+  .package-card .flex.items-center {
+    align-items: flex-start !important;
+    gap: 18px !important;
+  }
+
+  .package-card svg {
+    width: 58px !important;
+    height: 58px !important;
   }
 }
 
 @media (max-height: 760px) and (max-width: 430px) {
   :root {
-    --frontend-section-top: calc(var(--frontend-top-safe) + 82px);
-    --frontend-section-bottom: calc(env(safe-area-inset-bottom) + 94px);
-    --frontend-chevron-bottom: calc(env(safe-area-inset-bottom) + 28px);
-    --frontend-card-gap: 10px;
-    --frontend-card-pad: 14px;
-    --frontend-card-min: 58px;
+    --front-gap: 10px;
+    --front-card-pad: 14px;
+    --front-card-min: 58px;
+  }
+
+  .section-chevron-label {
+    font-size: 11px !important;
   }
 
   .action-section h3,
   .tight-card-title {
     font-size: clamp(21px, 5.8vw, 26px) !important;
-  }
-
-  .section-chevron-label {
-    font-size: 11px !important;
   }
 }

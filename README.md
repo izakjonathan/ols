@@ -157,3 +157,21 @@ Fix:
 - Frontend CTA cards, services cards, request forms and prices section now share one spacing/typography rhythm.
 - Backend and employee spacing from v48 remains preserved.
 - Production build tested successfully.
+
+
+## v50 frontend stable layout fix
+
+Problem fixed:
+- Full-screen snap sections with `overflow:hidden` and internal max-height scrolling caused price content to be clipped.
+- Chevron safe zones created large black dead areas that looked like black squares behind chevrons.
+- The price section has more content than one mobile viewport, so forcing it into one hidden full-screen section was the wrong approach.
+
+Fix:
+- Removed the v49 frontend layout layer.
+- Added a simpler v50 frontend section model.
+- Frontend sections use normal document flow with `min-height: 100svh` instead of clipping content.
+- Price section now scrolls normally and can show all services/packages/add-ons.
+- Chevrons are transparent small controls outside the content flow, with no box/background.
+- CTA, services, request and prices typography/spacing are normalized.
+- Backend and employee page behavior is preserved.
+- Production build tested successfully.
