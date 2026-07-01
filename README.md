@@ -510,3 +510,17 @@ Fix:
 - Aligned typography/spacing controls across frontend, backend and employee pages.
 - Preserved v39 splash fix, v40 heading weight reduction, v43 backend consolidation and v44 backend top spacing behavior inside the new clean CSS system.
 - Production build tested successfully.
+
+
+## v46 Apple-style typography / spacing pass
+
+- Rebuilt `app/globals.css` around a single Apple-style token system.
+- Uses the Apple system font stack (`-apple-system`, `BlinkMacSystemFont`, SF Pro fallbacks).
+- Preserves the black/dark Øland theme.
+- Centralizes typography sizes, weights, line heights, spacing, radius, nav height, backend top spacing, dock clearance and snap-section spacing.
+- Reduces old heavy all-caps/letter-spaced utility styling globally without changing the app content.
+- Aligns buttons to Apple-like minimum touch height and system typography.
+- Aligns inputs to readable iOS-style body typography and control sizing.
+- Aligns frontend, backend and employee-link pages with the same font, spacing, card, input and button controls.
+- Preserves splash, smooth snap, backend top spacing and dock clearance behavior.
+- Production build tested successfully.
