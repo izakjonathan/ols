@@ -142,11 +142,6 @@ let packages: CarePackage[] = [
 const statuses: OrderStatus[] = ["Ny", "Bekræftet", "Planlagt", "I gang", "Udført", "Faktura sendt", "Betaling modtaget", "Annulleret"];
 const paymentStatuses: PaymentStatus[] = ["Ikke faktureret", "Faktura sendt", "Betalt", "Forfalden"];
 const priorities: Priority[] = ["Normal", "Haster", "VIP"];
-const qualities = [
-  { title: "Kvalitet", icon: "badge" },
-  { title: "Detaljer", icon: "spark" },
-  { title: "Service", icon: "handshake" }
-];
 const adminViews: Array<{ id: AdminView; label: string; icon: string }> = [
   { id: "newOrders", label: "Nye", icon: "＋" },
   { id: "calendar", label: "Kalender", icon: "◷" },
@@ -842,7 +837,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
     return (
       <main className="relative min-h-screen overflow-hidden bg-black text-stone-50">
         <div className="splash-screen" aria-hidden="true"><Image src="/images/nordic-logo-splash.jpeg" alt="" fill priority sizes="100vw" className="object-cover" /></div>
-        <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_-10%,rgba(255,255,255,.25),transparent_34%),linear-gradient(180deg,#0b0a09_0%,#030303_100%)]" />
+        <div className="fixed inset-0 -z-10 bg-black" />
         <div className="noise fixed inset-0 -z-10 opacity-35" />
         <nav className="fixed inset-x-0 top-0 z-50 bg-black px-4 pb-2.5 sm:px-8" style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.75rem)" }}>
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
@@ -865,7 +860,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-stone-50">
       <div className="splash-screen" aria-hidden="true"><Image src="/images/nordic-logo-splash.jpeg" alt="" fill priority sizes="100vw" className="object-cover" /></div>
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_-10%,rgba(255,255,255,.25),transparent_34%),linear-gradient(180deg,#0b0a09_0%,#030303_100%)]" />
+      <div className="fixed inset-0 -z-10 bg-black" />
       <div className="noise fixed inset-0 -z-10 opacity-35" />
 
       <nav className="fixed inset-x-0 top-0 z-50 bg-black px-4 pb-2.5 sm:px-8" style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.75rem)" }}>
@@ -886,18 +881,20 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
         </div>
       </section>
 
-      <section id="kontakt" className="px-5 py-6 sm:px-8 lg:px-12">
+      <section id="kontakt" className="px-5 py-5 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           {submittedId && <div className="mb-6 rounded-2xl border border-white/40 bg-white/[0.08] p-4 text-sm text-stone-100">Forespørgsel <strong className="text-white">{submittedId}</strong> er oprettet i backend.</div>}
-          <div className="grid gap-4">
-            <a href="tel:+4526848789" className="gold-button w-full">Ring til Øland Service</a>
+          <div className="grid gap-3">
+            <a href="tel:+4526848789" className="panel cta-card block p-4 sm:p-5">
+              <div><p className="eyebrow tight-card-kicker">Ring direkte</p><h3 className="mt-1 text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Ring til Øland Service</h3></div>
+            </a>
 
             <article className="panel p-4 sm:p-5">
               <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setCallbackExpanded((open) => !open)}>
                 <div><p className="eyebrow tight-card-kicker">Kontakt</p><h3 className="mt-1 text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Bliv ringet op af Øland Service</h3></div>
                 <span className={`chevron-toggle ${callbackExpanded ? "is-open" : ""}`}>›</span>
               </button>
-              {callbackExpanded && <form onSubmit={submitCallback} className="mt-5 grid gap-4">
+              {callbackExpanded && <form onSubmit={submitCallback} className="mt-4 grid gap-3">
                 <Field label="Navn"><TextInput value={callbackName} onChange={(event) => setCallbackName(event.target.value)} placeholder="Fulde navn" required /></Field>
                 <Field label="Telefon"><TextInput inputMode="tel" value={callbackPhone} onChange={(event) => setCallbackPhone(event.target.value)} placeholder="26848789" required /></Field>
                 <Field label="Note"><TextArea value={callbackNote} onChange={(event) => setCallbackNote(event.target.value)} placeholder="Hvornår skal vi ringe? Hvad handler det om?" /></Field>
@@ -910,7 +907,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
                 <div><p className="eyebrow tight-card-kicker">Flytning</p><h3 className="mt-1 text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Gratis flyttetilbud</h3></div>
                 <span className={`chevron-toggle ${quoteExpanded ? "is-open" : ""}`}>›</span>
               </button>
-              {quoteExpanded && <form onSubmit={submitMovingQuote} className="mt-5 grid gap-4">
+              {quoteExpanded && <form onSubmit={submitMovingQuote} className="mt-4 grid gap-3">
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Field label="Navn"><TextInput value={quoteForm.name} onChange={(event) => setQuoteForm({ ...quoteForm, name: event.target.value })} required /></Field>
                   <Field label="Telefon"><TextInput inputMode="tel" value={quoteForm.phone} onChange={(event) => setQuoteForm({ ...quoteForm, phone: event.target.value })} required /></Field>
@@ -952,18 +949,18 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
         </div>
       </section>
 
-      <section id="booking" className="px-5 py-7 sm:px-8 lg:px-12">
+      <section id="booking" className="px-5 py-6 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
-          <form id="booking-form" onSubmit={submitRequest} className="grid gap-6 lg:grid-cols-[1.1fr_.9fr]">
-            <div className="grid gap-5">
+          <form id="booking-form" onSubmit={submitRequest} className="grid gap-4 lg:grid-cols-[1.1fr_.9fr]">
+            <div className="grid gap-4">
               {cars.map((car, index) => {
                 const open = Boolean(openCarIds[car.id]);
                 return <article key={car.id} className="panel p-4 sm:p-5">
                   <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setOpenCarIds((current) => ({ ...current, [car.id]: !current[car.id] }))}>
-                    <div><h3 className="text-[1.35rem] font-black uppercase tight-card-title text-white sm:text-2xl">Send forespørgsel</h3></div>
+                    <div><h3 className="text-[1.18rem] font-black uppercase tight-card-title text-white sm:text-2xl">Send forespørgsel</h3></div>
                     <span className={`chevron-toggle ${open ? "is-open" : ""}`}>›</span>
                   </button>
-                  {open && <><div className="mt-5"><CarEditor car={car} preferredDate={preferredDate} preferredTime={preferredTime} onDateChange={setPreferredDate} onTimeChange={setPreferredTime} onPatch={(patch) => updateCar(car.id, patch)} onToggle={(key, itemId) => toggleCarArray(car.id, key, itemId)} /></div><div className="mt-5 rounded-2xl border border-white/25 bg-black/35 p-4 text-right text-sm uppercase tracking-[0.16em] text-stone-300/80">Opgave {index + 1} total <strong className="ml-3 text-xl text-white">{kr(carTotal(car))}</strong></div></>}
+                  {open && <><div className="mt-4"><CarEditor car={car} preferredDate={preferredDate} preferredTime={preferredTime} onDateChange={setPreferredDate} onTimeChange={setPreferredTime} onPatch={(patch) => updateCar(car.id, patch)} onToggle={(key, itemId) => toggleCarArray(car.id, key, itemId)} /></div><div className="mt-4 rounded-2xl border border-white/25 bg-black/35 p-4 text-right text-sm uppercase tracking-[0.16em] text-stone-300/80">Opgave {index + 1} total <strong className="ml-3 text-xl text-white">{kr(carTotal(car))}</strong></div></>}
                   {cars.length > 1 && <button type="button" className="small-danger mt-4" onClick={() => { setCars((current) => current.filter((item) => item.id !== car.id)); setOpenCarIds((current) => { const next = { ...current }; delete next[car.id]; return next; }); }}>Fjern</button>}
                 </article>;
               })}
@@ -972,10 +969,10 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
             <aside className="grid content-start gap-5">
               <section className="panel p-4 sm:p-5">
                 <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setCustomerInfoOpen((open) => !open)}>
-                  <div><p className="eyebrow tight-card-kicker">Registrer</p><h3 className="mt-1 text-[1.35rem] font-black uppercase tight-card-title text-white sm:text-2xl">Kundeinformation</h3></div>
+                  <div><p className="eyebrow tight-card-kicker">Registrer</p><h3 className="mt-1 text-[1.18rem] font-black uppercase tight-card-title text-white sm:text-2xl">Kundeinformation</h3></div>
                   <span className={`chevron-toggle ${customerInfoOpen ? "is-open" : ""}`}>›</span>
                 </button>
-                {customerInfoOpen && <div className="mt-5 grid gap-4">
+                {customerInfoOpen && <div className="mt-4 grid gap-3">
                   <Field label="Navn"><TextInput required value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} placeholder="Fulde navn" /></Field>
                   <Field label="Telefon"><TextInput required value={customer.phone} onChange={(e) => setCustomer({ ...customer, phone: e.target.value })} placeholder="26848789" /></Field>
                   <Field label="Email"><TextInput type="email" value={customer.email} onChange={(e) => setCustomer({ ...customer, email: e.target.value })} placeholder="kunde@email.dk" /></Field>
@@ -1058,11 +1055,11 @@ function EmployeeHourPage({ employee, entries, onAddEntry, dataLoaded, syncStatu
   }
 
   if (!dataLoaded) {
-    return <main className="min-h-screen bg-black px-4 py-6 text-stone-50"><section className="panel mx-auto max-w-xl p-5"><h1 className="panel-title">Indlæser timer...</h1><p className="mt-3 text-stone-300/75">{syncStatus}</p></section></main>;
+    return <main className="employee-page min-h-screen bg-black px-4 py-5 text-stone-50"><section className="panel mx-auto max-w-xl p-5"><h1 className="panel-title">Indlæser timer...</h1><p className="mt-3 text-stone-300/75">{syncStatus}</p></section></main>;
   }
 
   if (!employee) {
-    return <main className="min-h-screen bg-black px-4 py-6 text-stone-50"><section className="panel mx-auto max-w-xl p-5"><p className="eyebrow">Ølands Service</p><h1 className="mt-3 text-3xl font-black uppercase tracking-[0.16em] text-white">Link ikke aktivt</h1><p className="mt-4 text-stone-300/75">Dette medarbejderlink findes ikke eller er deaktiveret. Kontakt admin for et nyt link.</p></section></main>;
+    return <main className="employee-page min-h-screen bg-black px-4 py-5 text-stone-50"><section className="panel mx-auto max-w-xl p-5"><p className="eyebrow">Ølands Service</p><h1 className="mt-3 text-3xl font-black uppercase tracking-[0.16em] text-white">Link ikke aktivt</h1><p className="mt-4 text-stone-300/75">Dette medarbejderlink findes ikke eller er deaktiveret. Kontakt admin for et nyt link.</p></section></main>;
   }
 
   return <main className="min-h-screen bg-black px-4 pb-10 pt-5 text-stone-50">
@@ -1184,7 +1181,7 @@ function EmployeesModule({ employees, timeEntries, newEmployeeName, onNameChange
         <h3 className="panel-title">{selectedEmployee ? `${selectedEmployee.name} · opgaver` : "Alle opgaver"}</h3>
         <button type="button" className="outline-button" onClick={() => { setSelectedEmployeeId(""); setShowAllTasks(false); setOpenTaskId(""); }}>Luk liste</button>
       </div>
-      <div className="mt-5 grid gap-3">
+      <div className="mt-4 grid gap-3">
         {visibleEntries.length === 0 && <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-stone-300/75">Ingen opgaver registreret endnu.</p>}
         {visibleEntries.map((entry) => <button key={entry.id} type="button" onClick={() => setOpenTaskId(openTaskId === entry.id ? "" : entry.id)} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left transition hover:border-white/35">
           <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
@@ -1338,7 +1335,7 @@ function CarEditor({ car, preferredDate = "", preferredTime = "", onDateChange, 
       </div>
     </div>
 
-    <div className="mt-5 grid gap-3">
+    <div className="mt-4 grid gap-3">
       <Field label="Beskriv opgaven"><TextArea value={car.notes} onChange={(e) => onPatch({ notes: e.target.value })} placeholder="Beskriv opgaven, afhentning, levering, adgang eller særlige forhold." /></Field>
       <Field label="Upload billeder"><input type="file" multiple accept="image/*" className="form-input min-w-0 pt-3" onChange={(e) => onPatch({ uploads: Array.from(e.target.files ?? []).map((file) => file.name) })} /></Field>
       {car.uploads.length > 0 && <p className="text-sm leading-5 text-stone-300/70">{fileNameSummary(car.uploads)}</p>}
@@ -1374,7 +1371,7 @@ function InvoiceModule({ orders, invoices, selectedInvoiceId, onSelectInvoice, o
     onUpdateInvoice(selectedInvoice.id, { lines: selectedInvoice.lines.filter((line) => line.id !== lineId) });
   }
 
-  return <div className="mt-6 grid gap-6">
+  return <div className="backend-module mt-4 grid gap-6">
     <div className="grid gap-4 sm:grid-cols-4">{[{ label: "Kladder", value: totals.draft }, { label: "Sendt", value: totals.sent }, { label: "Betalt", value: totals.paid }, { label: "Åbent beløb", value: kr(totals.unpaidValue) }].map((item) => <div key={item.label} className="panel p-4"><p className="text-xs uppercase tracking-[0.22em] text-stone-400">{item.label}</p><p className="mt-2 text-2xl font-black text-white">{item.value}</p></div>)}</div>
     <section className="panel p-5"><div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center"><div><h3 className="panel-title mb-0">Opret faktura fra ordre</h3><p className="mt-3 text-sm text-stone-300/75">Vælg en ordre og opret en fakturakladde med bilerne som fakturalinjer.</p></div></div><div className="mt-4 grid gap-3 lg:grid-cols-2">{ordersWithoutInvoice.length === 0 && <p className="text-sm text-stone-300/70">Alle aktive ordrer har allerede en faktura.</p>}{ordersWithoutInvoice.map((order) => <div key={order.id} className="detail-box flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><h4>{order.id} · {order.customer.name || "Ukendt kunde"}</h4><p>{order.cars.length} opgave(r) · {order.adminDate || order.preferredDate || "Ikke planlagt"} · {kr(orderTotal(order))}</p></div><button type="button" className="gold-button" onClick={() => onCreateFromOrder(order)}>Opret faktura</button></div>)}</div></section>
     <div className="grid gap-6 lg:grid-cols-[.82fr_1.18fr]">
@@ -1396,8 +1393,8 @@ type OrderEditHandlers = {
 };
 
 function NewOrdersModule({ orders, onAccept, ...handlers }: { orders: Order[]; onAccept: (id: string) => void } & OrderEditHandlers) {
-  return <section className="mt-6 grid gap-4">
-    <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end"><div><p className="eyebrow">New orders</p><h3 className="admin-section-heading">Nye forespørgsler</h3><p className="mt-2 text-stone-300/75"></p></div><span className="rounded-full border border-white/30 px-4 py-2 text-sm font-black uppercase tracking-[0.16em] text-white">{orders.length} nye</span></div>
+  return <section className="backend-module mt-4 grid gap-4">
+    <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end"><div><p className="eyebrow">New orders</p><h3 className="admin-section-heading">Nye forespørgsler</h3></div><span className="rounded-full border border-white/30 px-4 py-2 text-sm font-black uppercase tracking-[0.16em] text-white">{orders.length} nye</span></div>
     {orders.length === 0 && <div className="panel p-6 text-center text-stone-300/70">Ingen nye ordrer lige nu.</div>}
     {orders.map((order) => <details key={order.id} className="panel overflow-hidden p-0" open={orders.length === 1}>
       <summary className="cursor-pointer list-none p-5"><div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center"><div><p className="eyebrow">{order.id}</p><h4 className="mt-1 text-2xl font-black uppercase tracking-[0.12em] text-white">{order.customer.name || "Ny kunde"}</h4><p className="mt-1 text-stone-300/75">{order.customer.phone || "telefon mangler"} · {order.preferredDate || "dato mangler"} {order.preferredTime || ""}</p></div><div className="text-left sm:text-right"><p className="text-xs uppercase tracking-[0.18em] text-stone-400">Total</p><p className="text-2xl font-black text-white">{kr(orderTotal(order))}</p></div></div></summary>
@@ -1407,18 +1404,18 @@ function NewOrdersModule({ orders, onAccept, ...handlers }: { orders: Order[]; o
 }
 
 function CalendarModule({ calendarDays, onUpdate, onSelect }: { calendarDays: [string, Order[]][]; onUpdate: (id: string, patch: Partial<Order>, activity?: string) => void; onSelect: (id: string) => void }) {
-  return <section className="mt-6 grid gap-4"><div><p className="eyebrow">Calendar</p><h3 className="admin-section-heading">Bekræftede ordrer</h3><p className="mt-2 text-stone-300/75"></p></div>{calendarDays.length === 0 && <div className="panel p-6 text-center text-stone-300/70">Ingen accepterede ordrer i kalenderen endnu.</div>}{calendarDays.map(([date, dayOrders]) => <section key={date} className="panel p-5"><div className="mb-4 flex items-center justify-between"><h4 className="text-xl font-black uppercase tracking-[0.18em] text-white">{date === "Ikke planlagt" ? date : new Date(`${date}T00:00`).toLocaleDateString("da-DK", { weekday: "long", day: "numeric", month: "long" })}</h4><span className="rounded-full border border-white/30 px-3 py-1 text-xs uppercase tracking-[0.16em] text-white">{dayOrders.length} ordre</span></div><div className="grid gap-3">{dayOrders.sort((a, b) => `${a.adminTime || a.preferredTime}`.localeCompare(`${b.adminTime || b.preferredTime}`)).map((order) => <details key={order.id} className="rounded-2xl border border-white/15 bg-black/30"><summary className="cursor-pointer list-none p-4"><div className="grid gap-2 sm:grid-cols-[5rem_1fr_auto_auto]"><span className="font-black text-white">{order.adminTime || order.preferredTime || "--:--"}</span><strong>{order.customer.name || "Ukendt kunde"}</strong><em className="text-stone-300/70">{order.cars.length} opgave(r) · {order.status}</em><b className="text-white">{kr(orderTotal(order))}</b></div></summary><div className="border-t border-white/10 p-4"><div className="grid gap-3 sm:grid-cols-3"><Field label="Ordrestatus"><Select value={order.status} onChange={(e) => onUpdate(order.id, { status: e.target.value as OrderStatus }, `Status ændret til ${e.target.value}`)}>{statuses.map((status) => <option key={status}>{status}</option>)}</Select></Field><Field label="Dato"><TextInput type="date" value={order.adminDate || order.preferredDate} onChange={(e) => onUpdate(order.id, { adminDate: e.target.value }, "Dato opdateret")} /></Field><Field label="Tid"><TextInput type="time" value={order.adminTime || order.preferredTime} onChange={(e) => onUpdate(order.id, { adminTime: e.target.value }, "Tid opdateret")} /></Field></div><button type="button" className="outline-button mt-4" onClick={() => onSelect(order.id)}>Åbn i ordrevisning</button></div></details>)}</div></section>)}</section>;
+  return <section className="backend-module mt-4 grid gap-4"><div><p className="eyebrow">Calendar</p><h3 className="admin-section-heading">Bekræftede ordrer</h3></div>{calendarDays.length === 0 && <div className="panel p-6 text-center text-stone-300/70">Ingen accepterede ordrer i kalenderen endnu.</div>}{calendarDays.map(([date, dayOrders]) => <section key={date} className="panel p-5"><div className="mb-4 flex items-center justify-between"><h4 className="text-xl font-black uppercase tracking-[0.18em] text-white">{date === "Ikke planlagt" ? date : new Date(`${date}T00:00`).toLocaleDateString("da-DK", { weekday: "long", day: "numeric", month: "long" })}</h4><span className="rounded-full border border-white/30 px-3 py-1 text-xs uppercase tracking-[0.16em] text-white">{dayOrders.length} ordre</span></div><div className="grid gap-3">{dayOrders.sort((a, b) => `${a.adminTime || a.preferredTime}`.localeCompare(`${b.adminTime || b.preferredTime}`)).map((order) => <details key={order.id} className="rounded-2xl border border-white/15 bg-black/30"><summary className="cursor-pointer list-none p-4"><div className="grid gap-2 sm:grid-cols-[5rem_1fr_auto_auto]"><span className="font-black text-white">{order.adminTime || order.preferredTime || "--:--"}</span><strong>{order.customer.name || "Ukendt kunde"}</strong><em className="text-stone-300/70">{order.cars.length} opgave(r) · {order.status}</em><b className="text-white">{kr(orderTotal(order))}</b></div></summary><div className="border-t border-white/10 p-4"><div className="grid gap-3 sm:grid-cols-3"><Field label="Ordrestatus"><Select value={order.status} onChange={(e) => onUpdate(order.id, { status: e.target.value as OrderStatus }, `Status ændret til ${e.target.value}`)}>{statuses.map((status) => <option key={status}>{status}</option>)}</Select></Field><Field label="Dato"><TextInput type="date" value={order.adminDate || order.preferredDate} onChange={(e) => onUpdate(order.id, { adminDate: e.target.value }, "Dato opdateret")} /></Field><Field label="Tid"><TextInput type="time" value={order.adminTime || order.preferredTime} onChange={(e) => onUpdate(order.id, { adminTime: e.target.value }, "Tid opdateret")} /></Field></div><button type="button" className="outline-button mt-4" onClick={() => onSelect(order.id)}>Åbn i ordrevisning</button></div></details>)}</div></section>)}</section>;
 }
 
 function CompletedOrdersModule({ orders, ...handlers }: { orders: Order[] } & OrderEditHandlers) {
   const invoiceSent = orders.filter((order) => ["Udført", "Faktura sendt", "Færdig", "Faktureret"].includes(order.status));
   const paid = orders.filter((order) => order.status === "Betaling modtaget" || order.paymentStatus === "Betalt");
   const renderGroup = (title: string, list: Order[]) => <section className="grid gap-3"><h4 className="panel-title">{title}</h4>{list.length === 0 && <div className="panel p-5 text-stone-300/70">Ingen ordrer i denne gruppe.</div>}{list.map((order) => <details key={order.id} className="panel p-0"><summary className="cursor-pointer list-none p-5"><div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center"><div><p className="eyebrow">{order.id}</p><h5 className="text-2xl font-black uppercase tracking-[0.12em] text-white">{order.customer.name || "Kunde"}</h5><p className="text-stone-300/70">{order.status} · {order.paymentStatus}</p></div><b className="text-2xl text-white">{kr(orderTotal(order))}</b></div></summary><div className="border-t border-white/15 p-5"><OrderDetail selectedOrder={order} {...handlers} /></div></details>)}</section>;
-  return <section className="mt-6 grid gap-8"><div><p className="eyebrow">Completed orders</p><h3 className="admin-section-heading">Færdige ordrer</h3><p className="mt-2 text-stone-300/75"></p></div>{renderGroup("Faktura sendt / afventer betaling", invoiceSent)}{renderGroup("Betaling modtaget", paid)}</section>;
+  return <section className="backend-module mt-4 grid gap-8"><div><p className="eyebrow">Completed orders</p><h3 className="admin-section-heading">Færdige ordrer</h3></div>{renderGroup("Faktura sendt / afventer betaling", invoiceSent)}{renderGroup("Betaling modtaget", paid)}</section>;
 }
 
 function ServicesModule({ drafts, onUpdate, onAdd, onPublish }: { drafts: { services: Service[]; extras: Extra[]; packages: CarePackage[] }; onUpdate: (kind: "services" | "extras" | "packages", id: string, patch: Partial<Service & Extra & CarePackage>) => void; onAdd: (kind: "services" | "extras" | "packages") => void; onPublish: () => void }) {
-  return <section className="mt-6 grid gap-6"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="eyebrow">Services</p><h3 className="admin-section-heading">Ydelser, pakker og tillæg</h3><p className="mt-2 text-stone-300/75">Ændringer gemmes som kladder. Tryk publicer for at gøre dem aktive på kundesiden.</p></div><button className="gold-button" type="button" onClick={onPublish}>Publicer alle kladder</button></div>
+  return <section className="backend-module mt-4 grid gap-6"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="eyebrow">Services</p><h3 className="admin-section-heading">Ydelser, pakker og tillæg</h3><p className="mt-2 text-stone-300/75">Ændringer gemmes som kladder. Tryk publicer for at gøre dem aktive på kundesiden.</p></div><button className="gold-button" type="button" onClick={onPublish}>Publicer alle kladder</button></div>
     <ServiceGroup title="Pakker" kind="packages" items={drafts.packages} onUpdate={onUpdate} onAdd={onAdd} />
     <ServiceGroup title="Enkeltydelser" kind="services" items={drafts.services} onUpdate={onUpdate} onAdd={onAdd} />
     <ServiceGroup title="Tillæg" kind="extras" items={drafts.extras} onUpdate={onUpdate} onAdd={onAdd} />
@@ -1436,7 +1433,7 @@ function ServiceGroup({ title, kind, items, onUpdate, onAdd }: { title: string; 
 
 function CompanyInfoModule({ companyInfo, onChange }: { companyInfo: CompanyInfo; onChange: (next: CompanyInfo) => void }) {
   const patch = (part: Partial<CompanyInfo>) => onChange({ ...companyInfo, ...part });
-  return <section className="mt-6 grid gap-6 lg:grid-cols-2"><div><p className="eyebrow">Company information</p><h3 className="admin-section-heading">Firmaoplysninger</h3><p className="mt-2 text-stone-300/75"></p></div><section className="panel p-5 lg:col-span-2"><h4 className="panel-title">Kontakt</h4><div className="grid gap-4 sm:grid-cols-2"><Field label="Firmanavn"><TextInput value={companyInfo.name} onChange={(e) => patch({ name: e.target.value })} /></Field><Field label="Telefon"><TextInput value={companyInfo.phone} onChange={(e) => patch({ phone: e.target.value })} /></Field><Field label="Email"><TextInput value={companyInfo.email} onChange={(e) => patch({ email: e.target.value })} /></Field><Field label="Åbningstid"><TextInput value={companyInfo.openingHours} onChange={(e) => patch({ openingHours: e.target.value })} /></Field><div className="sm:col-span-2"><Field label="Adresse"><TextInput value={companyInfo.address} onChange={(e) => patch({ address: e.target.value })} /></Field></div></div></section><section className="panel p-5 lg:col-span-2"><h4 className="panel-title">Faktura</h4><div className="grid gap-4 sm:grid-cols-2"><Field label="Fakturanavn"><TextInput value={companyInfo.invoiceName} onChange={(e) => patch({ invoiceName: e.target.value })} /></Field><Field label="CVR"><TextInput value={companyInfo.cvr} onChange={(e) => patch({ cvr: e.target.value })} /></Field><Field label="Faktura email"><TextInput value={companyInfo.invoiceEmail} onChange={(e) => patch({ invoiceEmail: e.target.value })} /></Field><Field label="Betalingsfrist"><TextInput value={companyInfo.paymentTerms} onChange={(e) => patch({ paymentTerms: e.target.value })} /></Field><div className="sm:col-span-2"><Field label="Fakturaadresse"><TextInput value={companyInfo.invoiceAddress} onChange={(e) => patch({ invoiceAddress: e.target.value })} /></Field></div><div className="sm:col-span-2"><Field label="Bank / betaling"><TextArea value={companyInfo.bankInfo} onChange={(e) => patch({ bankInfo: e.target.value })} /></Field></div></div></section></section>;
+  return <section className="mt-6 grid gap-6 lg:grid-cols-2"><div><p className="eyebrow">Company information</p><h3 className="admin-section-heading">Firmaoplysninger</h3></div><section className="panel p-5 lg:col-span-2"><h4 className="panel-title">Kontakt</h4><div className="grid gap-4 sm:grid-cols-2"><Field label="Firmanavn"><TextInput value={companyInfo.name} onChange={(e) => patch({ name: e.target.value })} /></Field><Field label="Telefon"><TextInput value={companyInfo.phone} onChange={(e) => patch({ phone: e.target.value })} /></Field><Field label="Email"><TextInput value={companyInfo.email} onChange={(e) => patch({ email: e.target.value })} /></Field><Field label="Åbningstid"><TextInput value={companyInfo.openingHours} onChange={(e) => patch({ openingHours: e.target.value })} /></Field><div className="sm:col-span-2"><Field label="Adresse"><TextInput value={companyInfo.address} onChange={(e) => patch({ address: e.target.value })} /></Field></div></div></section><section className="panel p-5 lg:col-span-2"><h4 className="panel-title">Faktura</h4><div className="grid gap-4 sm:grid-cols-2"><Field label="Fakturanavn"><TextInput value={companyInfo.invoiceName} onChange={(e) => patch({ invoiceName: e.target.value })} /></Field><Field label="CVR"><TextInput value={companyInfo.cvr} onChange={(e) => patch({ cvr: e.target.value })} /></Field><Field label="Faktura email"><TextInput value={companyInfo.invoiceEmail} onChange={(e) => patch({ invoiceEmail: e.target.value })} /></Field><Field label="Betalingsfrist"><TextInput value={companyInfo.paymentTerms} onChange={(e) => patch({ paymentTerms: e.target.value })} /></Field><div className="sm:col-span-2"><Field label="Fakturaadresse"><TextInput value={companyInfo.invoiceAddress} onChange={(e) => patch({ invoiceAddress: e.target.value })} /></Field></div><div className="sm:col-span-2"><Field label="Bank / betaling"><TextArea value={companyInfo.bankInfo} onChange={(e) => patch({ bankInfo: e.target.value })} /></Field></div></div></section></section>;
 }
 
 function OrderDetail({ selectedOrder, onUpdate, onUpdateCustomer, onUpdateInvoice, onUpdateCar, onToggleCarArray, onAddCar, onRemoveCar, onDelete }: { selectedOrder?: Order; onUpdate: (id: string, patch: Partial<Order>, activity?: string) => void; onUpdateCustomer: (id: string, patch: Partial<CustomerInfo>) => void; onUpdateInvoice: (id: string, patch: Partial<InvoiceInfo>) => void; onUpdateCar: (orderId: string, carId: string, patch: Partial<CarEntry>) => void; onToggleCarArray: (orderId: string, carId: string, key: "services" | "extras", itemId: string) => void; onAddCar: (id: string) => void; onRemoveCar: (orderId: string, carId: string) => void; onDelete: (id: string) => void }) {

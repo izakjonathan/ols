@@ -807,201 +807,177 @@ body {
 }
 
 
-.tight-card-kicker {
-  letter-spacing: 0.14em;
-}
-
-.tight-card-title {
-  letter-spacing: 0.075em;
-  line-height: 1.08;
-}
-
-.chevron-toggle {
-  transform: rotate(90deg);
-  font-size: 1.45rem;
-  line-height: 1;
-}
-
-.chevron-toggle.is-open {
-  transform: rotate(-90deg);
-}
-
-.move-date-input {
-  min-width: 0;
-  width: 100%;
-  max-width: 100%;
-  height: 3.25rem;
-  padding-inline: 0.65rem;
-  font-size: 0.78rem;
-  letter-spacing: -0.03em;
-  overflow: hidden;
-}
-
-.move-date-input::-webkit-date-and-time-value {
-  text-align: left;
-  min-width: 0;
-}
-
-@media (max-width: 390px) {
-  .move-date-input {
-    font-size: 0.68rem;
-    padding-inline: 0.45rem;
-  }
-}
-
-
-/* v24 mobile scale hardening */
-.booking-date-time-input,
-.move-date-input {
-  box-sizing: border-box;
-  min-width: 0 !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  overflow: hidden !important;
-}
-
-input[type="date"].booking-date-time-input,
-input[type="time"].booking-date-time-input,
-input[type="date"].move-date-input {
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.tight-card-title {
-  letter-spacing: 0.055em;
-  line-height: 1.02;
-}
-
-.tight-card-kicker {
-  letter-spacing: 0.11em;
-  line-height: 1;
-}
-
-
-/* v25 typography + spacing pass */
+/* v26 full layout / typography / cleanup pass */
 :root {
-  --letter-tight: 0.045em;
-  --letter-label: 0.105em;
-  --letter-nav: 0.13em;
-  --space-section-y: clamp(2.75rem, 7vw, 5rem);
-  --panel-radius: 1.55rem;
-  --panel-pad: clamp(1.05rem, 4vw, 1.65rem);
+  --font-body-size: 16px;
+  --panel-radius: 1.28rem;
+  --panel-pad: clamp(0.92rem, 3.4vw, 1.35rem);
+  --letter-tight: 0.035em;
+  --letter-title: 0.045em;
+  --letter-label: 0.085em;
+  --letter-nav: 0.11em;
+}
+
+html,
+body {
+  background: #000000 !important;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
-  background: #000000 !important;
-  color: rgba(255,255,255,0.94);
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: var(--font-body-size);
+  line-height: 1.45;
+  color: rgba(255,255,255,.94);
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
 }
 
+main {
+  background: #000000 !important;
+}
+
 section[id] {
-  scroll-margin-top: 6.4rem;
+  scroll-margin-top: 5.75rem;
+}
+
+.panel,
+.detail-box {
+  min-width: 0;
+  border-radius: var(--panel-radius) !important;
 }
 
 .panel {
-  border-radius: var(--panel-radius);
   padding: var(--panel-pad);
+  background: rgba(0,0,0,.72);
+  border-color: rgba(255,255,255,.32);
+  box-shadow: 0 18px 62px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.cta-card {
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.cta-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,.62);
+  background: rgba(255,255,255,.055);
 }
 
 .panel-title {
   margin-bottom: 0;
-  font-size: clamp(1.05rem, 4.5vw, 1.55rem);
-  line-height: 1.08;
-  letter-spacing: var(--letter-tight);
-  word-break: normal;
-  overflow-wrap: anywhere;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  text-align: left;
+  font-size: clamp(1.02rem, 4.4vw, 1.45rem);
+  font-weight: 900;
+  line-height: 1.06;
+  letter-spacing: var(--letter-title);
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.admin-section-heading {
+  font-size: clamp(1.35rem, 6.4vw, 2.65rem) !important;
+  line-height: 1.04 !important;
+  letter-spacing: 0.045em !important;
 }
 
 .eyebrow,
 .mini-title,
 label.grid > span {
-  font-size: 0.66rem;
-  line-height: 1.05;
+  font-size: 0.62rem !important;
+  line-height: 1.06 !important;
   letter-spacing: var(--letter-label) !important;
+  font-weight: 900 !important;
 }
 
 .nav-pill {
-  font-size: 0.62rem;
-  line-height: 1;
-  letter-spacing: var(--letter-nav);
+  font-size: 0.58rem !important;
+  line-height: 1 !important;
+  letter-spacing: var(--letter-nav) !important;
+  padding: 0 !important;
 }
 
 .gold-button,
 .outline-button,
 .small-danger,
 .filter-pill {
-  min-height: 2.85rem;
-  padding: 0.74rem 1.05rem;
-  font-size: 0.68rem;
-  line-height: 1.04;
-  letter-spacing: 0.105em;
+  min-height: 2.55rem !important;
+  padding: 0.62rem 0.92rem !important;
+  font-size: 0.61rem !important;
+  line-height: 1.04 !important;
+  letter-spacing: 0.08em !important;
+  border-radius: 999px !important;
 }
 
 .form-input {
-  min-height: 3.05rem;
-  border-radius: 0.9rem;
-  padding: 0.72rem 0.82rem;
-  font-size: 0.94rem;
-  line-height: 1.15;
-  letter-spacing: 0;
+  min-height: 2.85rem !important;
+  height: auto;
+  border-radius: 0.84rem !important;
+  padding: 0.64rem 0.72rem !important;
+  font-size: 0.9rem !important;
+  line-height: 1.16 !important;
+  letter-spacing: 0 !important;
 }
 
 textarea.form-input {
-  line-height: 1.35;
+  min-height: 6rem !important;
+  line-height: 1.32 !important;
 }
 
 .choice-card {
-  min-height: auto;
-  align-items: flex-start;
-  gap: 0.82rem;
-  border-radius: 1.05rem;
-  padding: 0.82rem;
+  min-height: auto !important;
+  gap: 0.72rem !important;
+  border-radius: 1rem !important;
+  padding: 0.72rem !important;
 }
 
 .choice-card strong {
-  font-size: 0.78rem;
-  line-height: 1.05;
-  letter-spacing: 0.065em;
+  font-size: 0.73rem !important;
+  line-height: 1.04 !important;
+  letter-spacing: 0.055em !important;
 }
 
 .choice-card em {
-  margin-top: 0.2rem;
-  font-size: 0.95rem;
-  line-height: 1.1;
+  margin-top: 0.18rem !important;
+  font-size: 0.9rem !important;
+  line-height: 1.05 !important;
 }
 
 .check-row {
-  gap: 0.65rem;
-  border-radius: 0.82rem;
-  padding: 0.68rem 0.72rem;
-  font-size: 0.88rem;
-  line-height: 1.18;
+  gap: 0.58rem !important;
+  border-radius: 0.78rem !important;
+  padding: 0.58rem 0.64rem !important;
+  font-size: 0.82rem !important;
+  line-height: 1.16 !important;
 }
 
 .check-row strong {
-  font-size: 0.78rem;
+  font-size: 0.72rem !important;
 }
 
 .tight-card-kicker {
-  letter-spacing: 0.095em !important;
+  letter-spacing: 0.075em !important;
+  line-height: 1 !important;
 }
 
 .tight-card-title {
-  letter-spacing: 0.045em !important;
+  letter-spacing: 0.034em !important;
   line-height: 1.02 !important;
 }
 
 .chevron-toggle {
   display: grid;
-  width: 2.15rem;
-  height: 2.15rem;
+  width: 2rem;
+  height: 2rem;
   place-items: center;
   flex-shrink: 0;
   color: #fff;
-  font-size: 1.55rem;
+  font-size: 1.34rem;
   line-height: 1;
   transform: rotate(90deg);
 }
@@ -1011,18 +987,29 @@ textarea.form-input {
 }
 
 .booking-date-time-grid {
-  gap: 0.5rem;
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  gap: 0.45rem !important;
+  width: 100%;
+  min-width: 0;
 }
 
 .booking-date-time-input,
 .move-date-input {
+  box-sizing: border-box;
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
   min-height: 0 !important;
-  height: 3.05rem !important;
-  border-radius: 0.88rem;
-  padding: 0.55rem 0.44rem !important;
-  font-size: 0.66rem !important;
+  height: 2.82rem !important;
+  border-radius: 0.78rem !important;
+  padding: 0.48rem 0.34rem !important;
+  font-size: 0.56rem !important;
   line-height: 1 !important;
-  letter-spacing: -0.045em !important;
+  letter-spacing: -0.05em !important;
+  overflow: hidden !important;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .booking-date-time-input::-webkit-date-and-time-value,
@@ -1034,42 +1021,149 @@ textarea.form-input {
 
 .booking-date-time-input::-webkit-calendar-picker-indicator,
 .move-date-input::-webkit-calendar-picker-indicator {
-  width: 0.82rem;
-  height: 0.82rem;
+  width: 0.72rem;
+  height: 0.72rem;
   margin: 0;
   padding: 0;
-  opacity: 0.52;
+  opacity: 0.48;
+}
+
+/* Frontend rhythm */
+#kontakt > div,
+#booking > div,
+#priser > div {
+  max-width: 960px;
+}
+
+#kontakt .grid.gap-3,
+#booking .grid.gap-4 {
+  gap: 0.8rem;
+}
+
+/* Floating request pill */
+[aria-label="Aktuel ordreoversigt"] > div {
+  border-radius: 1.18rem !important;
+}
+
+[aria-label="Aktuel ordreoversigt"] button {
+  padding-block: 0.65rem !important;
+}
+
+/* Backend modules */
+#admin {
+  padding-top: 1rem !important;
+}
+
+.backend-module {
+  gap: 0.85rem !important;
+}
+
+#admin .panel {
+  padding: clamp(0.82rem, 3vw, 1.15rem) !important;
+  border-radius: 1.12rem !important;
+}
+
+#admin details.panel,
+#admin details.rounded-2xl {
+  overflow: hidden;
+}
+
+#admin summary {
+  padding: 0.86rem !important;
+}
+
+#admin summary h4,
+#admin summary h5,
+#admin strong,
+#admin b {
+  letter-spacing: 0.04em;
+  line-height: 1.08;
+}
+
+#admin .grid.gap-4 {
+  gap: 0.8rem !important;
+}
+
+#admin .grid.gap-6,
+#admin .grid.gap-8 {
+  gap: 1rem !important;
+}
+
+#admin .admin-dock {
+  padding: 0.55rem !important;
+  gap: 0.35rem !important;
+}
+
+#admin .admin-dock button {
+  min-width: 4.15rem;
+  padding: 0.48rem 0.42rem !important;
+  font-size: 0.58rem !important;
+  letter-spacing: 0.08em !important;
+}
+
+/* Employee pages */
+.employee-page .panel {
+  padding: clamp(0.9rem, 3.2vw, 1.25rem) !important;
+  border-radius: 1.15rem !important;
+}
+
+.employee-page .panel-title,
+.employee-page h1,
+.employee-page h2,
+.employee-page h3 {
+  letter-spacing: 0.045em !important;
+  line-height: 1.05 !important;
+}
+
+.employee-page .grid.gap-5,
+.employee-page .grid.gap-6 {
+  gap: 0.85rem !important;
+}
+
+.employee-page .form-input {
+  min-height: 2.72rem !important;
 }
 
 @media (max-width: 430px) {
-  .panel {
-    border-radius: 1.35rem;
+  :root {
+    --panel-radius: 1.2rem;
+    --panel-pad: 0.88rem;
+  }
+
+  .panel-title {
+    font-size: clamp(0.96rem, 4.1vw, 1.25rem);
   }
 
   .nav-pill {
-    font-size: 0.58rem;
-    letter-spacing: 0.115em;
+    font-size: 0.54rem !important;
+    letter-spacing: 0.095em !important;
   }
 
   .gold-button,
   .outline-button {
-    min-height: 2.75rem;
-    font-size: 0.62rem;
-    letter-spacing: 0.09em;
+    min-height: 2.48rem !important;
+    font-size: 0.58rem !important;
+    letter-spacing: 0.075em !important;
   }
 
   .booking-date-time-grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important;
   }
 
   .booking-date-time-input,
   .move-date-input {
-    font-size: 0.58rem !important;
-    padding-inline: 0.34rem !important;
+    height: 2.7rem !important;
+    font-size: 0.5rem !important;
+    padding-inline: 0.26rem !important;
+  }
+
+  #kontakt .panel,
+  #booking .panel {
+    border-radius: 1.18rem !important;
   }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 355px) {
   .booking-date-time-grid {
     grid-template-columns: 1fr !important;
   }

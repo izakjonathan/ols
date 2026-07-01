@@ -271,3 +271,16 @@ Production build tested successfully.
 - Reduced vertical gaps between frontend sections.
 - Reworked CarEditor markup for cleaner spacing and more consistent mobile layout.
 - Production build tested successfully.
+
+
+## v26 full layout / backend / employee cleanup
+
+- Ring CTA changed from a white pill to a matching CTA card without chevron.
+- Frontend vertical rhythm tightened across CTA, booking, packages and footer.
+- Added a single final v26 typography/layout CSS layer after removing duplicate v24/v25 override blocks.
+- Removed unused qualities constant and empty backend helper paragraphs.
+- Added backend-wide layout/typography rules for module headings, cards, summaries, dock buttons and form controls.
+- Added employee-page typography/spacing rules.
+- Hardened Dato/Tid and Flyttedato scaling again.
+- Reduced excessive card, button, label, package and checkbox spacing.
+- Site background remains black.
