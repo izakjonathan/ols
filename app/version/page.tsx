@@ -1,8 +1,8 @@
 export default function VersionPage() {
   return (
     <main style={{ padding: 24, fontFamily: "system-ui, sans-serif" }}>
-      <h1>Øland Service v24</h1>
-      <p>Frontend card/CTA typography and date scale fixed.</p>
+      <h1>Øland Service v25</h1>
+      <p>Full typography and spacing pass.</p>
       <p>Production build tested successfully.</p>
     </main>
   );

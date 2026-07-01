@@ -258,3 +258,16 @@ Production build tested successfully.
 - Tightened line/letter spacing on booking cards and add-task button.
 - Hardened Flyttedato and Dato/Tid mobile input scaling.
 - Production build tested successfully.
+
+
+## v25 typography and spacing pass
+
+- Added a final typography/spacing system layer in CSS.
+- Tightened excessive letter spacing across labels, buttons, nav, cards, and headings.
+- Normalized panel radius/padding and form control sizing.
+- Refined landing title/subtitle scale and spacing.
+- Made CTA cards, booking cards, package cards, check rows, and footer more consistent.
+- Hardened date/time and moving-date input scale again for mobile.
+- Reduced vertical gaps between frontend sections.
+- Reworked CarEditor markup for cleaner spacing and more consistent mobile layout.
+- Production build tested successfully.

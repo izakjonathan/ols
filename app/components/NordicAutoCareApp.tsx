@@ -844,9 +844,9 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
         <div className="splash-screen" aria-hidden="true"><Image src="/images/nordic-logo-splash.jpeg" alt="" fill priority sizes="100vw" className="object-cover" /></div>
         <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_-10%,rgba(255,255,255,.25),transparent_34%),linear-gradient(180deg,#0b0a09_0%,#030303_100%)]" />
         <div className="noise fixed inset-0 -z-10 opacity-35" />
-        <nav className="fixed inset-x-0 top-0 z-50 bg-black px-4 pb-3 sm:px-8" style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.75rem)" }}>
+        <nav className="fixed inset-x-0 top-0 z-50 bg-black px-4 pb-2.5 sm:px-8" style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.75rem)" }}>
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
-            <a href="/" className="relative block h-8 w-28 shrink-0 overflow-hidden sm:h-9 sm:w-36"><Image src="/images/oland-service-top-logo.jpeg" alt="Øland Service" fill sizes="144px" className="object-contain object-left" /></a>
+            <a href="/" className="relative block h-7 w-28 shrink-0 overflow-hidden sm:h-8 sm:w-36"><Image src="/images/oland-service-top-logo.jpeg" alt="Øland Service" fill sizes="144px" className="object-contain object-left" /></a>
             <a className="nav-pill" href="/">Kundeside</a>
           </div>
         </nav>
@@ -868,9 +868,9 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_-10%,rgba(255,255,255,.25),transparent_34%),linear-gradient(180deg,#0b0a09_0%,#030303_100%)]" />
       <div className="noise fixed inset-0 -z-10 opacity-35" />
 
-      <nav className="fixed inset-x-0 top-0 z-50 bg-black px-4 pb-3 sm:px-8" style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.75rem)" }}>
+      <nav className="fixed inset-x-0 top-0 z-50 bg-black px-4 pb-2.5 sm:px-8" style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.75rem)" }}>
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
-          <a href="#top" className="relative block h-8 w-28 shrink-0 overflow-hidden sm:h-9 sm:w-36"><Image src="/images/oland-service-top-logo.jpeg" alt="Øland Service" fill sizes="144px" className="object-contain object-left" /></a>
+          <a href="#top" className="relative block h-7 w-28 shrink-0 overflow-hidden sm:h-8 sm:w-36"><Image src="/images/oland-service-top-logo.jpeg" alt="Øland Service" fill sizes="144px" className="object-contain object-left" /></a>
           <div className="flex gap-4 overflow-x-auto text-[0.62rem] font-black uppercase tracking-[0.18em] text-stone-200/80 sm:text-[0.68rem]">
             {isBackend ? <><a className="nav-pill" href="/">Kundeside</a><button type="button" className="nav-pill" onClick={lockBackend}>Lås backend</button></> : <><a className="nav-pill" href="#kontakt">Kontakt</a><a className="nav-pill" href="#booking">Book</a><a className="nav-pill" href="#priser">Services</a></>}
           </div>
@@ -879,22 +879,22 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
 
       <div className="pt-24 sm:pt-24">
       {!isBackend && <>
-      <section id="top" className="relative grid min-h-[calc(100svh-5.75rem)] place-items-center px-5 text-center sm:px-8 lg:px-12">
+      <section id="top" className="relative grid min-h-[calc(100svh-5.35rem)] place-items-center px-5 text-center sm:px-8 lg:px-12">
         <div className="mx-auto max-w-5xl">
-          <h1 className="text-[1.95rem] font-black uppercase leading-[1.03] tracking-[0.035em] text-white sm:text-6xl lg:text-7xl">Transport og logistik i sikre hænder</h1>
-          <p className="mt-6 whitespace-nowrap text-[0.78rem] font-black uppercase tracking-[0.065em] text-white sm:text-2xl sm:tracking-[0.22em]">Kvalitet · Omhu · Tillid</p>
+          <h1 className="text-[2.05rem] font-black uppercase leading-[1.02] tracking-[0.032em] text-white sm:text-6xl lg:text-7xl">Transport og logistik i sikre hænder</h1>
+          <p className="mt-5 whitespace-nowrap text-[0.8rem] font-black uppercase leading-none tracking-[0.055em] text-white sm:text-2xl sm:tracking-[0.16em]">Kvalitet · Omhu · Tillid</p>
         </div>
       </section>
 
-      <section id="kontakt" className="px-5 py-8 sm:px-8 lg:px-12">
+      <section id="kontakt" className="px-5 py-6 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           {submittedId && <div className="mb-6 rounded-2xl border border-white/40 bg-white/[0.08] p-4 text-sm text-stone-100">Forespørgsel <strong className="text-white">{submittedId}</strong> er oprettet i backend.</div>}
           <div className="grid gap-4">
             <a href="tel:+4526848789" className="gold-button w-full">Ring til Øland Service</a>
 
-            <article className="panel p-5 sm:p-6">
+            <article className="panel p-4 sm:p-5">
               <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setCallbackExpanded((open) => !open)}>
-                <div><p className="eyebrow tight-card-kicker">Kontakt</p><h3 className="mt-2 text-2xl font-black uppercase tight-card-title text-white">Bliv ringet op af Øland Service</h3></div>
+                <div><p className="eyebrow tight-card-kicker">Kontakt</p><h3 className="mt-1 text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Bliv ringet op af Øland Service</h3></div>
                 <span className={`chevron-toggle ${callbackExpanded ? "is-open" : ""}`}>›</span>
               </button>
               {callbackExpanded && <form onSubmit={submitCallback} className="mt-5 grid gap-4">
@@ -905,9 +905,9 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
               </form>}
             </article>
 
-            <article className="panel p-5 sm:p-6">
+            <article className="panel p-4 sm:p-5">
               <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setQuoteExpanded((open) => !open)}>
-                <div><p className="eyebrow tight-card-kicker">Flytning</p><h3 className="mt-2 text-2xl font-black uppercase tight-card-title text-white">Gratis flyttetilbud</h3></div>
+                <div><p className="eyebrow tight-card-kicker">Flytning</p><h3 className="mt-1 text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Gratis flyttetilbud</h3></div>
                 <span className={`chevron-toggle ${quoteExpanded ? "is-open" : ""}`}>›</span>
               </button>
               {quoteExpanded && <form onSubmit={submitMovingQuote} className="mt-5 grid gap-4">
@@ -952,27 +952,27 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
         </div>
       </section>
 
-      <section id="booking" className="px-5 py-10 sm:px-8 lg:px-12">
+      <section id="booking" className="px-5 py-7 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <form id="booking-form" onSubmit={submitRequest} className="grid gap-6 lg:grid-cols-[1.1fr_.9fr]">
             <div className="grid gap-5">
               {cars.map((car, index) => {
                 const open = Boolean(openCarIds[car.id]);
-                return <article key={car.id} className="panel p-5 sm:p-6">
+                return <article key={car.id} className="panel p-4 sm:p-5">
                   <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setOpenCarIds((current) => ({ ...current, [car.id]: !current[car.id] }))}>
-                    <div><h3 className="text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Send forespørgsel</h3></div>
+                    <div><h3 className="text-[1.35rem] font-black uppercase tight-card-title text-white sm:text-2xl">Send forespørgsel</h3></div>
                     <span className={`chevron-toggle ${open ? "is-open" : ""}`}>›</span>
                   </button>
                   {open && <><div className="mt-5"><CarEditor car={car} preferredDate={preferredDate} preferredTime={preferredTime} onDateChange={setPreferredDate} onTimeChange={setPreferredTime} onPatch={(patch) => updateCar(car.id, patch)} onToggle={(key, itemId) => toggleCarArray(car.id, key, itemId)} /></div><div className="mt-5 rounded-2xl border border-white/25 bg-black/35 p-4 text-right text-sm uppercase tracking-[0.16em] text-stone-300/80">Opgave {index + 1} total <strong className="ml-3 text-xl text-white">{kr(carTotal(car))}</strong></div></>}
                   {cars.length > 1 && <button type="button" className="small-danger mt-4" onClick={() => { setCars((current) => current.filter((item) => item.id !== car.id)); setOpenCarIds((current) => { const next = { ...current }; delete next[car.id]; return next; }); }}>Fjern</button>}
                 </article>;
               })}
-              <button type="button" className="outline-button w-full !tracking-[0.08em] !leading-tight" onClick={() => { const next = makeCar(); setCars((current) => [...current, next]); }}>Tilføj endnu en opgave</button>
+              <button type="button" className="outline-button w-full !tracking-[0.08em] !leading-tight" onClick={() => { const next = makeCar(); setCars((current) => [...current, next]); }}>Tilføj opgave</button>
             </div>
             <aside className="grid content-start gap-5">
-              <section className="panel p-5 sm:p-6">
+              <section className="panel p-4 sm:p-5">
                 <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setCustomerInfoOpen((open) => !open)}>
-                  <div><p className="eyebrow tight-card-kicker">Registrer</p><h3 className="mt-1 text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Kundeinformation</h3></div>
+                  <div><p className="eyebrow tight-card-kicker">Registrer</p><h3 className="mt-1 text-[1.35rem] font-black uppercase tight-card-title text-white sm:text-2xl">Kundeinformation</h3></div>
                   <span className={`chevron-toggle ${customerInfoOpen ? "is-open" : ""}`}>›</span>
                 </button>
                 {customerInfoOpen && <div className="mt-5 grid gap-4">
@@ -991,7 +991,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
         </div>
       </section>
 
-      <section id="priser" className="relative px-5 py-10 sm:px-8 lg:px-12"><div className="mx-auto max-w-7xl"><div className="mb-8 text-center"><p className="eyebrow">Ydelser</p><h2 className="mt-2 text-3xl font-semibold uppercase tracking-[0.22em] text-white sm:text-5xl">Transport og logistik</h2></div><div className="grid gap-7 lg:grid-cols-[.9fr_1.1fr]"><div className="panel p-5 sm:p-6"><h3 className="panel-title">Enkeltydelser</h3><div className="divide-y divide-white/18">{services.map((row) => <div key={row.id} className="flex items-start justify-between gap-5 py-2.5 text-[0.94rem] leading-tight sm:text-base"><span className="text-stone-100/90">{row.name}</span><span className="shrink-0 text-right font-medium tracking-wide text-stone-100/90">{kr(row.price)}</span></div>)}</div><p className="mt-6 text-sm leading-6 text-white/86">Priserne er fra-priser og kan variere afhængigt af opgavens omfang og afstand.</p><div className="mt-9"><h3 className="panel-title">Tillæg</h3><div className="divide-y divide-white/18">{extras.map((row) => <div key={row.id} className="flex items-start justify-between gap-5 py-2.5 text-[0.94rem] leading-tight sm:text-base"><span className="text-stone-100/90">{row.name}</span><span className="shrink-0 text-right font-medium tracking-wide text-stone-100/90">{row.note ?? kr(row.price)}</span></div>)}</div></div></div><div id="pakker" className="grid gap-4"><h3 className="panel-title mb-0">Pakkeløsninger</h3>{packages.map((pack) => <article key={pack.title} className="package-card"><div className="flex items-center gap-5"><Icon name={pack.icon} className="h-16 w-16 shrink-0 text-white sm:h-20 sm:w-20" /><div className="min-w-0 flex-1"><div className="flex flex-wrap items-baseline justify-between gap-2"><h4 className="text-xl font-semibold uppercase tracking-[0.14em] text-white sm:text-2xl">{pack.title}</h4><p className="text-2xl font-bold tracking-wide text-white sm:text-3xl">{kr(pack.price)}</p></div><ul className="mt-3 grid gap-1.5 text-sm leading-5 text-stone-100/86 sm:text-base">{pack.items.map((item) => <li key={item} className="flex gap-2"><span className="text-white">•</span><span>{item}</span></li>)}</ul></div></div></article>)}</div></div></div></section>
+      <section id="priser" className="relative px-5 py-10 sm:px-8 lg:px-12"><div className="mx-auto max-w-7xl"><div className="mb-8 text-center"><p className="eyebrow">Ydelser</p><h2 className="mt-2 text-3xl font-semibold uppercase tracking-[0.22em] text-white sm:text-5xl">Transport og logistik</h2></div><div className="grid gap-7 lg:grid-cols-[.9fr_1.1fr]"><div className="panel p-4 sm:p-5"><h3 className="panel-title">Enkeltydelser</h3><div className="divide-y divide-white/18">{services.map((row) => <div key={row.id} className="flex items-start justify-between gap-5 py-2.5 text-[0.94rem] leading-tight sm:text-base"><span className="text-stone-100/90">{row.name}</span><span className="shrink-0 text-right font-medium tracking-wide text-stone-100/90">{kr(row.price)}</span></div>)}</div><p className="mt-6 text-sm leading-6 text-white/86">Priserne er fra-priser og kan variere afhængigt af opgavens omfang og afstand.</p><div className="mt-9"><h3 className="panel-title">Tillæg</h3><div className="divide-y divide-white/18">{extras.map((row) => <div key={row.id} className="flex items-start justify-between gap-5 py-2.5 text-[0.94rem] leading-tight sm:text-base"><span className="text-stone-100/90">{row.name}</span><span className="shrink-0 text-right font-medium tracking-wide text-stone-100/90">{row.note ?? kr(row.price)}</span></div>)}</div></div></div><div id="pakker" className="grid gap-4"><h3 className="panel-title mb-0">Pakkeløsninger</h3>{packages.map((pack) => <article key={pack.title} className="package-card"><div className="flex items-center gap-5"><Icon name={pack.icon} className="h-16 w-16 shrink-0 text-white sm:h-20 sm:w-20" /><div className="min-w-0 flex-1"><div className="flex flex-wrap items-baseline justify-between gap-2"><h4 className="text-xl font-semibold uppercase tracking-[0.14em] text-white sm:text-2xl">{pack.title}</h4><p className="text-2xl font-bold tracking-wide text-white sm:text-3xl">{kr(pack.price)}</p></div><ul className="mt-3 grid gap-1.5 text-sm leading-5 text-stone-100/86 sm:text-base">{pack.items.map((item) => <li key={item} className="flex gap-2"><span className="text-white">•</span><span>{item}</span></li>)}</ul></div></div></article>)}</div></div></div></section>
       </>}
 
       {isBackend && <section id="admin" className="backend-safe-bottom px-5 pt-6 sm:px-8 lg:px-12"><div className="mx-auto max-w-7xl">
@@ -1017,7 +1017,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
       {!isBackend && draftStarted && <DraftOrderFooter cars={cars} customer={customer} invoice={invoice} preferredDate={preferredDate} preferredTime={preferredTime} customerMessage={customerMessage} total={draftTotal} isOpen={draftSummaryOpen} onToggle={() => setDraftSummaryOpen((open) => !open)} />}
       {!isBackend && draftStarted && <div className={draftSummaryOpen ? "h-[32rem] sm:h-80" : "h-36"} aria-hidden="true" />}
       {!isBackend && (
-        <footer className="px-5 pb-48 pt-6 sm:px-8 lg:px-12">
+        <footer className="px-5 pb-44 pt-4 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-7xl rounded-2xl border border-white/25 bg-black/55 px-5 py-6 text-center sm:px-7">
             <p className="eyebrow">Kontakt os i dag</p>
             <h2 className="mt-3 text-4xl font-semibold uppercase tracking-[0.16em] text-white sm:text-5xl">Ølands Service</h2>
@@ -1259,10 +1259,10 @@ function DraftOrderFooter({ cars, customer, invoice, preferredDate, preferredTim
   const contactLine = [customer.name, customer.phone, customer.email].filter(Boolean).join(" · ");
   const dateLine = [preferredDate, preferredTime].filter(Boolean).join(" kl. ");
   return <section className="fixed inset-x-0 bottom-0 z-50 px-3 pb-3 sm:px-5 sm:pb-5" aria-label="Aktuel ordreoversigt">
-    <div className="mx-auto max-w-5xl overflow-hidden rounded-[1.55rem] border border-white/45 bg-[#060504]/95 shadow-[0_-24px_80px_rgba(0,0,0,.72)] backdrop-blur-2xl">
-      <button type="button" onClick={onToggle} className="flex w-full items-center justify-between gap-4 px-4 py-3 text-left sm:px-5">
-        <span className="min-w-0"><span className="block text-[0.66rem] font-black uppercase tracking-[0.24em] text-white/85">Aktuel forespørgsel</span><span className="mt-1 block truncate text-sm text-stone-200/80">{cars.length} opgave(r) · {dateLine || "dato og tid mangler"} · {contactLine || "kontaktinfo mangler"}</span></span>
-        <span className="flex shrink-0 items-center gap-3"><strong className="text-xl font-black text-white sm:text-2xl">{kr(total)}</strong><span className="grid h-8 w-8 place-items-center rounded-full border border-white/35 text-white">{isOpen ? "↓" : "↑"}</span></span>
+    <div className="mx-auto max-w-5xl overflow-hidden rounded-[1.35rem] border border-white/45 bg-[#060504]/95 shadow-[0_-24px_80px_rgba(0,0,0,.72)] backdrop-blur-2xl">
+      <button type="button" onClick={onToggle} className="flex w-full items-center justify-between gap-4 px-4 py-2.5 text-left sm:px-5">
+        <span className="min-w-0"><span className="block text-[0.66rem] font-black uppercase tracking-[0.14em] text-white/85">Aktuel forespørgsel</span><span className="mt-1 block truncate text-sm text-stone-200/80">{cars.length} opgave(r) · {dateLine || "dato og tid mangler"} · {contactLine || "kontaktinfo mangler"}</span></span>
+        <span className="flex shrink-0 items-center gap-3"><strong className="text-lg font-black text-white sm:text-2xl">{kr(total)}</strong><span className="grid h-8 w-8 place-items-center rounded-full border border-white/35 text-white">{isOpen ? "↓" : "↑"}</span></span>
       </button>
       {isOpen && <div className="max-h-[68vh] overflow-y-auto border-t border-white/18 px-4 py-4 sm:px-5">
         <div className="grid gap-4 lg:grid-cols-[1fr_.82fr]">
@@ -1295,9 +1295,56 @@ function DraftOrderFooter({ cars, customer, invoice, preferredDate, preferredTim
 
 function CarEditor({ car, preferredDate = "", preferredTime = "", onDateChange, onTimeChange, onPatch, onToggle }: { car: CarEntry; preferredDate?: string; preferredTime?: string; onDateChange?: (value: string) => void; onTimeChange?: (value: string) => void; onPatch: (patch: Partial<CarEntry>) => void; onToggle: (key: "services" | "extras", itemId: string) => void }) {
   const showDateTime = Boolean(onDateChange && onTimeChange);
-  return <><div className={showDateTime ? "grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]" : "grid gap-4"}><Field label="Opgavetype"><Select value={car.type} onChange={(e) => onPatch({ type: e.target.value })}><option>Flytning</option><option>Transport</option><option>Opbevaring</option></Select></Field>{showDateTime && <Field label="Dato & tid"><div className="booking-date-time-grid"><TextInput required type="date" className="booking-date-time-input" value={preferredDate} onChange={(e) => onDateChange?.(e.target.value)} /><TextInput required type="time" className="booking-date-time-input" value={preferredTime} onChange={(e) => onTimeChange?.(e.target.value)} /></div></Field>}</div><div className="mt-6 grid gap-3 sm:grid-cols-2">{packages.map((pack) => <button key={pack.id} type="button" onClick={() => onPatch({ packageId: pack.id })} className={car.packageId === pack.id ? "choice-card is-selected items-start" : "choice-card items-start"}><span><Icon name={pack.icon} className="h-9 w-9 text-white" /></span><span className="min-w-0"><span className="flex flex-wrap items-baseline justify-between gap-2"><strong>{pack.title}</strong><em>{kr(pack.price)}</em></span><span className="mt-3 grid gap-1 text-left text-[0.72rem] font-medium normal-case leading-4 tracking-normal text-stone-200/70">{pack.items.map((item) => <span key={item} className="flex gap-1.5"><b className="font-black text-white">•</b><span>{item}</span></span>)}</span></span></button>)}</div><div className="mt-6 grid gap-5 lg:grid-cols-2"><div><h4 className="mini-title">Ekstra enkelt ydelser</h4><div className="mt-3 grid gap-2">{services.map((service) => <label key={service.id} className="check-row"><input type="checkbox" checked={car.services.includes(service.id)} onChange={() => onToggle("services", service.id)} /><span>{service.name}</span><strong>{kr(service.price)}</strong></label>)}</div></div><div><h4 className="mini-title">Tillæg</h4><div className="mt-3 grid gap-2">{extras.map((extra) => <label key={extra.id} className="check-row"><input type="checkbox" checked={car.extras.includes(extra.id)} onChange={() => onToggle("extras", extra.id)} /><span>{extra.name}</span><strong>{extra.note ?? kr(extra.price)}</strong></label>)}</div></div></div><div className="mt-6 grid gap-4"><Field label="Beskriv opgaven"><TextArea value={car.notes} onChange={(e) => onPatch({ notes: e.target.value })} placeholder="Beskriv opgaven, afhentning, levering, adgang eller særlige forhold." /></Field><Field label="Upload billeder"><input type="file" multiple accept="image/*" className="form-input min-w-0 pt-3" onChange={(e) => onPatch({ uploads: Array.from(e.target.files ?? []).map((file) => file.name) })} /></Field>{car.uploads.length > 0 && <p className="text-sm text-stone-300/70">{fileNameSummary(car.uploads)}</p>}</div></>;
-}
+  return <>
+    <div className={showDateTime ? "grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]" : "grid gap-3"}>
+      <Field label="Opgavetype">
+        <Select value={car.type} onChange={(e) => onPatch({ type: e.target.value })}>
+          <option>Flytning</option>
+          <option>Transport</option>
+          <option>Opbevaring</option>
+        </Select>
+      </Field>
+      {showDateTime && <Field label="Dato & tid">
+        <div className="booking-date-time-grid">
+          <TextInput required type="date" className="booking-date-time-input" value={preferredDate} onChange={(e) => onDateChange?.(e.target.value)} />
+          <TextInput required type="time" className="booking-date-time-input" value={preferredTime} onChange={(e) => onTimeChange?.(e.target.value)} />
+        </div>
+      </Field>}
+    </div>
 
+    <div className="mt-5 grid gap-3 sm:grid-cols-2">
+      {packages.map((pack) => <button key={pack.id} type="button" onClick={() => onPatch({ packageId: pack.id })} className={car.packageId === pack.id ? "choice-card is-selected items-start" : "choice-card items-start"}>
+        <span><Icon name={pack.icon} className="h-8 w-8 text-white" /></span>
+        <span className="min-w-0">
+          <span className="flex flex-wrap items-baseline justify-between gap-2">
+            <strong>{pack.title}</strong>
+            <em>{kr(pack.price)}</em>
+          </span>
+          <span className="mt-2 grid gap-1 text-left text-[0.7rem] font-medium normal-case leading-4 tracking-normal text-stone-200/70">
+            {pack.items.map((item) => <span key={item} className="flex gap-1.5"><b className="font-black text-white">•</b><span>{item}</span></span>)}
+          </span>
+        </span>
+      </button>)}
+    </div>
+
+    <div className="mt-5 grid gap-4 lg:grid-cols-2">
+      <div>
+        <h4 className="mini-title">Ekstra ydelser</h4>
+        <div className="mt-2 grid gap-2">{services.map((service) => <label key={service.id} className="check-row"><input type="checkbox" checked={car.services.includes(service.id)} onChange={() => onToggle("services", service.id)} /><span>{service.name}</span><strong>{kr(service.price)}</strong></label>)}</div>
+      </div>
+      <div>
+        <h4 className="mini-title">Tillæg</h4>
+        <div className="mt-2 grid gap-2">{extras.map((extra) => <label key={extra.id} className="check-row"><input type="checkbox" checked={car.extras.includes(extra.id)} onChange={() => onToggle("extras", extra.id)} /><span>{extra.name}</span><strong>{extra.note ?? kr(extra.price)}</strong></label>)}</div>
+      </div>
+    </div>
+
+    <div className="mt-5 grid gap-3">
+      <Field label="Beskriv opgaven"><TextArea value={car.notes} onChange={(e) => onPatch({ notes: e.target.value })} placeholder="Beskriv opgaven, afhentning, levering, adgang eller særlige forhold." /></Field>
+      <Field label="Upload billeder"><input type="file" multiple accept="image/*" className="form-input min-w-0 pt-3" onChange={(e) => onPatch({ uploads: Array.from(e.target.files ?? []).map((file) => file.name) })} /></Field>
+      {car.uploads.length > 0 && <p className="text-sm leading-5 text-stone-300/70">{fileNameSummary(car.uploads)}</p>}
+    </div>
+  </>;
+}
 function OrderList({ orders, selectedId, onSelect }: { orders: Order[]; selectedId?: string; onSelect: (id: string) => void }) {
   return <div className="grid content-start gap-3">{orders.length === 0 && <div className="panel p-6 text-center text-stone-300/70">Ingen ordrer matcher filteret.</div>}{orders.map((order) => <button key={order.id} type="button" onClick={() => onSelect(order.id)} className={selectedId === order.id ? "order-card is-active" : "order-card"}><div className="flex items-start justify-between gap-3"><span><strong>{order.customer.name || "Ukendt kunde"}</strong><em>{order.id} · {new Date(order.createdAt).toLocaleDateString("da-DK")}</em></span><b>{order.status}</b></div><div className="mt-3 grid grid-cols-3 gap-2 text-left text-xs uppercase tracking-[0.12em] text-stone-300/70"><span>{order.cars.length} opgave(r)</span><span>{order.adminDate || order.preferredDate}</span><span className="text-right text-white">{kr(orderTotal(order))}</span></div></button>)}</div>;
 }
@@ -1332,7 +1379,7 @@ function InvoiceModule({ orders, invoices, selectedInvoiceId, onSelectInvoice, o
     <section className="panel p-5"><div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center"><div><h3 className="panel-title mb-0">Opret faktura fra ordre</h3><p className="mt-3 text-sm text-stone-300/75">Vælg en ordre og opret en fakturakladde med bilerne som fakturalinjer.</p></div></div><div className="mt-4 grid gap-3 lg:grid-cols-2">{ordersWithoutInvoice.length === 0 && <p className="text-sm text-stone-300/70">Alle aktive ordrer har allerede en faktura.</p>}{ordersWithoutInvoice.map((order) => <div key={order.id} className="detail-box flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><h4>{order.id} · {order.customer.name || "Ukendt kunde"}</h4><p>{order.cars.length} opgave(r) · {order.adminDate || order.preferredDate || "Ikke planlagt"} · {kr(orderTotal(order))}</p></div><button type="button" className="gold-button" onClick={() => onCreateFromOrder(order)}>Opret faktura</button></div>)}</div></section>
     <div className="grid gap-6 lg:grid-cols-[.82fr_1.18fr]">
       <div className="grid content-start gap-3">{invoices.length === 0 && <div className="panel p-6 text-center text-stone-300/70">Ingen fakturaer endnu.</div>}{invoices.map((invoice) => <button key={invoice.id} type="button" onClick={() => onSelectInvoice(invoice.id)} className={selectedInvoice?.id === invoice.id ? "order-card is-active" : "order-card"}><div className="flex items-start justify-between gap-3"><span><strong>{invoice.invoiceNo}</strong><em>{invoice.customerName || "Ukendt kunde"} · {invoice.orderId}</em></span><b>{invoice.status}</b></div><div className="mt-3 grid grid-cols-3 gap-2 text-left text-xs uppercase tracking-[0.12em] text-stone-300/70"><span>{invoice.dueDate}</span><span>{invoice.email || "ingen email"}</span><span className="text-right text-white">{kr(invoiceTotal(invoice))}</span></div></button>)}</div>
-      {!selectedInvoice ? <div className="panel grid min-h-[28rem] place-items-center p-6 text-center text-stone-300/70">Vælg eller opret en faktura.</div> : <section className="panel p-5 sm:p-6"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start"><div><p className="eyebrow">{selectedInvoice.orderId}</p><h3 className="mt-2 admin-section-heading">{selectedInvoice.invoiceNo}</h3><p className="mt-2 text-stone-300/75">{selectedInvoice.customerName || "Ukendt kunde"} · {selectedInvoice.email || "ingen email"}</p></div><div className="text-left sm:text-right"><p className="text-xs uppercase tracking-[0.18em] text-stone-400">Total</p><p className="text-3xl font-black text-white">{kr(invoiceTotal(selectedInvoice))}</p></div></div><div className="mt-6 grid gap-4 sm:grid-cols-3"><Field label="Fakturanr."><TextInput value={selectedInvoice.invoiceNo} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { invoiceNo: e.target.value })} /></Field><Field label="Status"><Select value={selectedInvoice.status} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { status: e.target.value as InvoiceStatus })}><option>Kladde</option><option>Sendt</option><option>Betalt</option><option>Forfalden</option><option>Annulleret</option></Select></Field><Field label="Forfald"><TextInput type="date" value={selectedInvoice.dueDate} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { dueDate: e.target.value })} /></Field><Field label="Kunde"><TextInput value={selectedInvoice.customerName} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { customerName: e.target.value })} /></Field><Field label="Email"><TextInput value={selectedInvoice.email} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { email: e.target.value })} /></Field><Field label="CVR"><TextInput value={selectedInvoice.cvr} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { cvr: e.target.value })} /></Field><Field label="Firma"><TextInput value={selectedInvoice.company} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { company: e.target.value })} /></Field><Field label="Fakturaadresse"><TextInput value={selectedInvoice.invoiceAddress} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { invoiceAddress: e.target.value })} /></Field></div><div className="mt-6 detail-box"><div className="mb-4 flex items-center justify-between gap-3"><h4>Fakturalinjer</h4><button type="button" className="outline-button" onClick={addLine}>+ Linje</button></div><div className="grid gap-3">{selectedInvoice.lines.map((line) => <div key={line.id} className="grid gap-3 rounded-2xl border border-white/15 bg-black/25 p-3 sm:grid-cols-[1fr_5rem_7rem_6rem_auto]"><TextInput value={line.text} onChange={(e) => updateLine(line.id, { text: e.target.value })} /><TextInput type="number" min="1" value={line.qty} onChange={(e) => updateLine(line.id, { qty: Number(e.target.value) || 1 })} /><TextInput type="number" min="0" value={line.price} onChange={(e) => updateLine(line.id, { price: Number(e.target.value) || 0 })} /><div className="grid place-items-center text-sm font-black text-white">{kr(line.qty * line.price)}</div><button type="button" className="small-danger" onClick={() => removeLine(line.id)}>Fjern</button></div>)}</div></div><div className="mt-6"><Field label="Fakturanote"><TextArea value={selectedInvoice.note} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { note: e.target.value })} /></Field></div><div className="mt-6 grid gap-3 sm:grid-cols-4"><button type="button" className="gold-button" onClick={() => onSendInvoice(selectedInvoice.id)}>Send faktura</button><button type="button" className="outline-button" onClick={() => onMarkPaid(selectedInvoice.id)}>Marker betalt</button><a className="outline-button" href={`mailto:${selectedInvoice.email}`}>Email kunde</a><button type="button" className="small-danger" onClick={() => onDeleteInvoice(selectedInvoice.id)}>Slet faktura</button></div><div className="mt-4 detail-box"><h4>Statuskontrol</h4><p>Oprettet: {new Date(selectedInvoice.createdAt).toLocaleString("da-DK")}</p><p>Sendt: {selectedInvoice.sentAt ? new Date(selectedInvoice.sentAt).toLocaleString("da-DK") : "ikke sendt"}</p><p>Betalt: {selectedInvoice.paidAt ? new Date(selectedInvoice.paidAt).toLocaleString("da-DK") : "ikke betalt"}</p><p>Mail-knappen åbner kundens mailprogram med fakturateksten. Et rigtigt send-/betalingsflow kan kobles på senere med database, email-provider og regnskabssystem.</p></div></section>}
+      {!selectedInvoice ? <div className="panel grid min-h-[28rem] place-items-center p-6 text-center text-stone-300/70">Vælg eller opret en faktura.</div> : <section className="panel p-4 sm:p-5"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start"><div><p className="eyebrow">{selectedInvoice.orderId}</p><h3 className="mt-2 admin-section-heading">{selectedInvoice.invoiceNo}</h3><p className="mt-2 text-stone-300/75">{selectedInvoice.customerName || "Ukendt kunde"} · {selectedInvoice.email || "ingen email"}</p></div><div className="text-left sm:text-right"><p className="text-xs uppercase tracking-[0.18em] text-stone-400">Total</p><p className="text-3xl font-black text-white">{kr(invoiceTotal(selectedInvoice))}</p></div></div><div className="mt-6 grid gap-4 sm:grid-cols-3"><Field label="Fakturanr."><TextInput value={selectedInvoice.invoiceNo} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { invoiceNo: e.target.value })} /></Field><Field label="Status"><Select value={selectedInvoice.status} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { status: e.target.value as InvoiceStatus })}><option>Kladde</option><option>Sendt</option><option>Betalt</option><option>Forfalden</option><option>Annulleret</option></Select></Field><Field label="Forfald"><TextInput type="date" value={selectedInvoice.dueDate} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { dueDate: e.target.value })} /></Field><Field label="Kunde"><TextInput value={selectedInvoice.customerName} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { customerName: e.target.value })} /></Field><Field label="Email"><TextInput value={selectedInvoice.email} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { email: e.target.value })} /></Field><Field label="CVR"><TextInput value={selectedInvoice.cvr} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { cvr: e.target.value })} /></Field><Field label="Firma"><TextInput value={selectedInvoice.company} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { company: e.target.value })} /></Field><Field label="Fakturaadresse"><TextInput value={selectedInvoice.invoiceAddress} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { invoiceAddress: e.target.value })} /></Field></div><div className="mt-6 detail-box"><div className="mb-4 flex items-center justify-between gap-3"><h4>Fakturalinjer</h4><button type="button" className="outline-button" onClick={addLine}>+ Linje</button></div><div className="grid gap-3">{selectedInvoice.lines.map((line) => <div key={line.id} className="grid gap-3 rounded-2xl border border-white/15 bg-black/25 p-3 sm:grid-cols-[1fr_5rem_7rem_6rem_auto]"><TextInput value={line.text} onChange={(e) => updateLine(line.id, { text: e.target.value })} /><TextInput type="number" min="1" value={line.qty} onChange={(e) => updateLine(line.id, { qty: Number(e.target.value) || 1 })} /><TextInput type="number" min="0" value={line.price} onChange={(e) => updateLine(line.id, { price: Number(e.target.value) || 0 })} /><div className="grid place-items-center text-sm font-black text-white">{kr(line.qty * line.price)}</div><button type="button" className="small-danger" onClick={() => removeLine(line.id)}>Fjern</button></div>)}</div></div><div className="mt-6"><Field label="Fakturanote"><TextArea value={selectedInvoice.note} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { note: e.target.value })} /></Field></div><div className="mt-6 grid gap-3 sm:grid-cols-4"><button type="button" className="gold-button" onClick={() => onSendInvoice(selectedInvoice.id)}>Send faktura</button><button type="button" className="outline-button" onClick={() => onMarkPaid(selectedInvoice.id)}>Marker betalt</button><a className="outline-button" href={`mailto:${selectedInvoice.email}`}>Email kunde</a><button type="button" className="small-danger" onClick={() => onDeleteInvoice(selectedInvoice.id)}>Slet faktura</button></div><div className="mt-4 detail-box"><h4>Statuskontrol</h4><p>Oprettet: {new Date(selectedInvoice.createdAt).toLocaleString("da-DK")}</p><p>Sendt: {selectedInvoice.sentAt ? new Date(selectedInvoice.sentAt).toLocaleString("da-DK") : "ikke sendt"}</p><p>Betalt: {selectedInvoice.paidAt ? new Date(selectedInvoice.paidAt).toLocaleString("da-DK") : "ikke betalt"}</p><p>Mail-knappen åbner kundens mailprogram med fakturateksten. Et rigtigt send-/betalingsflow kan kobles på senere med database, email-provider og regnskabssystem.</p></div></section>}
     </div>
   </div>;
 }

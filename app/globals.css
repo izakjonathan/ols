@@ -876,3 +876,201 @@ input[type="date"].move-date-input {
   letter-spacing: 0.11em;
   line-height: 1;
 }
+
+
+/* v25 typography + spacing pass */
+:root {
+  --letter-tight: 0.045em;
+  --letter-label: 0.105em;
+  --letter-nav: 0.13em;
+  --space-section-y: clamp(2.75rem, 7vw, 5rem);
+  --panel-radius: 1.55rem;
+  --panel-pad: clamp(1.05rem, 4vw, 1.65rem);
+}
+
+body {
+  background: #000000 !important;
+  color: rgba(255,255,255,0.94);
+  font-size: 16px;
+  line-height: 1.5;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+section[id] {
+  scroll-margin-top: 6.4rem;
+}
+
+.panel {
+  border-radius: var(--panel-radius);
+  padding: var(--panel-pad);
+}
+
+.panel-title {
+  margin-bottom: 0;
+  font-size: clamp(1.05rem, 4.5vw, 1.55rem);
+  line-height: 1.08;
+  letter-spacing: var(--letter-tight);
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+.eyebrow,
+.mini-title,
+label.grid > span {
+  font-size: 0.66rem;
+  line-height: 1.05;
+  letter-spacing: var(--letter-label) !important;
+}
+
+.nav-pill {
+  font-size: 0.62rem;
+  line-height: 1;
+  letter-spacing: var(--letter-nav);
+}
+
+.gold-button,
+.outline-button,
+.small-danger,
+.filter-pill {
+  min-height: 2.85rem;
+  padding: 0.74rem 1.05rem;
+  font-size: 0.68rem;
+  line-height: 1.04;
+  letter-spacing: 0.105em;
+}
+
+.form-input {
+  min-height: 3.05rem;
+  border-radius: 0.9rem;
+  padding: 0.72rem 0.82rem;
+  font-size: 0.94rem;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+textarea.form-input {
+  line-height: 1.35;
+}
+
+.choice-card {
+  min-height: auto;
+  align-items: flex-start;
+  gap: 0.82rem;
+  border-radius: 1.05rem;
+  padding: 0.82rem;
+}
+
+.choice-card strong {
+  font-size: 0.78rem;
+  line-height: 1.05;
+  letter-spacing: 0.065em;
+}
+
+.choice-card em {
+  margin-top: 0.2rem;
+  font-size: 0.95rem;
+  line-height: 1.1;
+}
+
+.check-row {
+  gap: 0.65rem;
+  border-radius: 0.82rem;
+  padding: 0.68rem 0.72rem;
+  font-size: 0.88rem;
+  line-height: 1.18;
+}
+
+.check-row strong {
+  font-size: 0.78rem;
+}
+
+.tight-card-kicker {
+  letter-spacing: 0.095em !important;
+}
+
+.tight-card-title {
+  letter-spacing: 0.045em !important;
+  line-height: 1.02 !important;
+}
+
+.chevron-toggle {
+  display: grid;
+  width: 2.15rem;
+  height: 2.15rem;
+  place-items: center;
+  flex-shrink: 0;
+  color: #fff;
+  font-size: 1.55rem;
+  line-height: 1;
+  transform: rotate(90deg);
+}
+
+.chevron-toggle.is-open {
+  transform: rotate(-90deg);
+}
+
+.booking-date-time-grid {
+  gap: 0.5rem;
+}
+
+.booking-date-time-input,
+.move-date-input {
+  min-height: 0 !important;
+  height: 3.05rem !important;
+  border-radius: 0.88rem;
+  padding: 0.55rem 0.44rem !important;
+  font-size: 0.66rem !important;
+  line-height: 1 !important;
+  letter-spacing: -0.045em !important;
+}
+
+.booking-date-time-input::-webkit-date-and-time-value,
+.move-date-input::-webkit-date-and-time-value {
+  min-width: 0;
+  padding: 0;
+  text-align: left;
+}
+
+.booking-date-time-input::-webkit-calendar-picker-indicator,
+.move-date-input::-webkit-calendar-picker-indicator {
+  width: 0.82rem;
+  height: 0.82rem;
+  margin: 0;
+  padding: 0;
+  opacity: 0.52;
+}
+
+@media (max-width: 430px) {
+  .panel {
+    border-radius: 1.35rem;
+  }
+
+  .nav-pill {
+    font-size: 0.58rem;
+    letter-spacing: 0.115em;
+  }
+
+  .gold-button,
+  .outline-button {
+    min-height: 2.75rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.09em;
+  }
+
+  .booking-date-time-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  }
+
+  .booking-date-time-input,
+  .move-date-input {
+    font-size: 0.58rem !important;
+    padding-inline: 0.34rem !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .booking-date-time-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
