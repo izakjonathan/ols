@@ -493,3 +493,20 @@ Fix:
 - Tightened the spacing below module titles and below stat grids slightly.
 - Preserved v43 backend consolidation and dock clearance.
 - Production build tested successfully.
+
+
+## v45 complete consolidation and cleanup
+
+- Renamed the main component from the old Nordic Auto Care name to `OlandServiceApp`.
+- Renamed the component file to `app/components/OlandServiceApp.tsx`.
+- Updated every route import to use the new component file/name.
+- Removed the unused `OrderList` function.
+- Removed the duplicate `LEGACY_STORAGE_KEY` constant because it had the same value as `STORAGE_KEY`.
+- Renamed the old `gold-button` styling hook to `primary-button`.
+- Rewrote `app/globals.css` into one consolidated design-system file.
+- Removed old v39/v40/v43/v44 appended CSS override layers.
+- Removed unused CSS selectors found in the post-pass review.
+- Centralized colors, typography, spacing, radius, nav height, backend top offset, dock clearance, snap section spacing and chevron spacing into `:root` tokens.
+- Aligned typography/spacing controls across frontend, backend and employee pages.
+- Preserved v39 splash fix, v40 heading weight reduction, v43 backend consolidation and v44 backend top spacing behavior inside the new clean CSS system.
+- Production build tested successfully.

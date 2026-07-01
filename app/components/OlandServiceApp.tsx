@@ -42,7 +42,6 @@ const STORAGE_KEY = "oland-service-orders-v1";
 const INVOICE_STORAGE_KEY = "oland-service-invoices-v1";
 const SERVICE_DRAFTS_KEY = "oland-service-service-drafts-v1";
 const COMPANY_INFO_KEY = "oland-service-company-info-v1";
-const LEGACY_STORAGE_KEY = "oland-service-orders-v1";
 
 const EMPLOYEES_STORAGE_KEY = "oland-service-employees-v1";
 const TIME_ENTRIES_STORAGE_KEY = "oland-service-time-entries-v1";
@@ -265,7 +264,7 @@ function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>) { return 
 function TextArea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) { return <textarea {...props} className={`form-input min-h-28 resize-none ${props.className ?? ""}`} />; }
 function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) { return <select {...props} className={`form-input ${props.className ?? ""}`} />; }
 
-export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "" }: { mode?: "frontend" | "backend" | "employee"; employeeToken?: string }) {
+export default function OlandServiceApp({ mode = "frontend", employeeToken = "" }: { mode?: "frontend" | "backend" | "employee"; employeeToken?: string }) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [invoices, setInvoices] = useState<InvoiceRecord[]>([]);
   const [customer, setCustomer] = useState<CustomerInfo>(emptyCustomer);
@@ -374,7 +373,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
     async function loadInitialData() {
       let localState: PersistentState = {};
       try {
-        const stored = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
+        const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) localState.orders = (JSON.parse(stored) as Order[]).map(normaliseOrder);
       } catch { localState.orders = []; }
       try {
@@ -970,7 +969,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
         <section className="backend-login-screen mx-auto grid min-h-screen w-full max-w-md place-content-center px-5 py-10">
           <form onSubmit={unlockBackend} className="grid gap-4">
             <Field label="Admin PIN"><TextInput type="password" inputMode="numeric" value={adminPin} onChange={(event) => setAdminPin(event.target.value)} placeholder="PIN" autoFocus /></Field>
-            <button type="submit" className="gold-button w-full">Åbn backend</button>
+            <button type="submit" className="primary-button w-full">Åbn backend</button>
           </form>
           <a href="/" className="outline-button mt-4 w-full">Gå til kundesiden</a>
           {adminPin && adminPin.trim() !== "2026" && <p className="mt-4 text-sm text-red-200">Forkert PIN.</p>}
@@ -1051,7 +1050,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
                 <Field label="Navn"><TextInput value={callbackName} onChange={(event) => setCallbackName(event.target.value)} placeholder="Fulde navn" required /></Field>
                 <Field label="Telefon"><TextInput inputMode="tel" value={callbackPhone} onChange={(event) => setCallbackPhone(event.target.value)} placeholder="26848789" required /></Field>
                 <Field label="Note"><TextArea value={callbackNote} onChange={(event) => setCallbackNote(event.target.value)} placeholder="Hvornår skal vi ringe? Hvad handler det om?" /></Field>
-                <button type="submit" className="gold-button w-full">Bliv ringet op</button>
+                <button type="submit" className="primary-button w-full">Bliv ringet op</button>
               </form>}
             </article>
 
@@ -1095,7 +1094,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
                 <Field label="Upload billeder"><input type="file" multiple accept="image/*" className="form-input min-w-0 pt-3" onChange={(event) => setQuoteFiles(Array.from(event.target.files ?? []).map((file) => file.name))} /></Field>
                 {quoteFiles.length > 0 && <p className="text-sm text-stone-300/70">{fileNameSummary(quoteFiles)}</p>}
                 <Field label="Kommentar"><TextArea value={quoteForm.comment} onChange={(event) => setQuoteForm({ ...quoteForm, comment: event.target.value })} placeholder="Særlige forhold, adgang, parkering, tidsrum..." /></Field>
-                <button type="submit" className="gold-button w-full">Send gratis flyttetilbud</button>
+                <button type="submit" className="primary-button w-full">Send gratis flyttetilbud</button>
               </form>}
             </article>
           </div>
@@ -1130,7 +1129,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
                 <Field label="Faktura email"><TextInput type="email" value={invoice.invoiceEmail} onChange={(e) => setInvoice({ ...invoice, invoiceEmail: e.target.value })} placeholder="Hvis anden end kontakt email" /></Field>
               </div>}
             </section>
-            <button type="submit" className="gold-button w-full">Send</button>
+            <button type="submit" className="primary-button w-full">Send</button>
           </form>
         </div>
         <a href="#services-overview" className="section-chevron section-chevron-top" aria-label="Gå til services"><span className="chevron" aria-hidden="true"></span><span className="section-chevron-label">Services</span></a>
@@ -1157,7 +1156,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
           {adminView === "services" && <ServicesModule drafts={serviceDrafts} onUpdate={updateServiceDraft} onAdd={addServiceDraft} onPublish={publishServices} />}
           {adminView === "company" && <CompanyInfoModule companyInfo={companyInfo} onChange={setCompanyInfo} />}
           {adminView === "employees" && <EmployeesModule employees={employees} timeEntries={timeEntries} newEmployeeName={newEmployeeName} onNameChange={setNewEmployeeName} onCreate={createEmployee} onUpdateEmployee={updateEmployee} onCopyLink={copyEmployeeLink} onRemoveHours={removeEmployeeHours} />}
-          {adminView === "settings" && <div className="backend-module grid gap-4 lg:grid-cols-2"><section className="panel backend-card lg:col-span-2"><h3 className="panel-title">Supabase</h3><p className="text-stone-300/75">Status: {syncStatus}</p><p className="mt-3 text-sm text-stone-400/80">Medarbejdere, timer, ordrer, fakturaer, ydelser og firmaoplysninger gemmes i Supabase, når miljøvariablerne er sat i Vercel. Ellers bruges lokal browserbackup.</p></section><section className="panel backend-card"><h3 className="panel-title">Backup</h3><p className="text-stone-300/75">Eksporter alle ordrer til JSON, så data kan gemmes eller flyttes til en anden browser.</p><button className="gold-button mt-5 w-full" onClick={exportOrders}>Eksporter ordrer</button></section><section className="panel backend-card"><h3 className="panel-title">Importer</h3><p className="text-stone-300/75">Importer en tidligere JSON backup. Dette erstatter de nuværende lokale ordrer.</p><input ref={importRef} type="file" accept="application/json" className="hidden" onChange={(e) => importOrders(e.target.files?.[0])} /><button className="outline-button mt-5 w-full" onClick={() => importRef.current?.click()}>Importer backup</button></section></div>}
+          {adminView === "settings" && <div className="backend-module grid gap-4 lg:grid-cols-2"><section className="panel backend-card lg:col-span-2"><h3 className="panel-title">Supabase</h3><p className="text-stone-300/75">Status: {syncStatus}</p><p className="mt-3 text-sm text-stone-400/80">Medarbejdere, timer, ordrer, fakturaer, ydelser og firmaoplysninger gemmes i Supabase, når miljøvariablerne er sat i Vercel. Ellers bruges lokal browserbackup.</p></section><section className="panel backend-card"><h3 className="panel-title">Backup</h3><p className="text-stone-300/75">Eksporter alle ordrer til JSON, så data kan gemmes eller flyttes til en anden browser.</p><button className="primary-button mt-5 w-full" onClick={exportOrders}>Eksporter ordrer</button></section><section className="panel backend-card"><h3 className="panel-title">Importer</h3><p className="text-stone-300/75">Importer en tidligere JSON backup. Dette erstatter de nuværende lokale ordrer.</p><input ref={importRef} type="file" accept="application/json" className="hidden" onChange={(e) => importOrders(e.target.files?.[0])} /><button className="outline-button mt-5 w-full" onClick={() => importRef.current?.click()}>Importer backup</button></section></div>}
           <nav className="admin-dock fixed bottom-3 left-1/2 z-50 flex w-[calc(100%-1.25rem)] max-w-3xl -translate-x-1/2 items-stretch gap-2 overflow-x-auto rounded-[1.45rem] border border-white/35 bg-black/94 p-2 shadow-[0_0_35px_rgba(255,255,255,.16)] backdrop-blur-xl sm:justify-between" aria-label="Backend menu">
             {adminViews.map((view) => <button key={view.id} type="button" onClick={() => setAdminView(view.id)} className={`grid min-w-[4.85rem] shrink-0 place-items-center rounded-[1.05rem] px-2.5 py-2 text-[0.64rem] font-black uppercase leading-tight tracking-[0.045em] transition sm:min-w-0 sm:flex-1 ${adminView === view.id ? "bg-white text-black shadow-[0_0_22px_rgba(255,255,255,.28)]" : "text-white hover:bg-white/10"}`}><span className="text-lg leading-none">{view.icon}</span><span className="mt-1 whitespace-nowrap">{view.label}</span></button>)}
           </nav>
@@ -1239,7 +1238,7 @@ function EmployeeHourPage({ employee, entries, onAddEntry, dataLoaded, syncStatu
           <p className="text-xs font-black uppercase tracking-[0.16em] text-white">Beregnet tid</p>
           <p className="text-xl font-black">{formatHours(calculatedHours)}</p>
         </div>
-        <button type="submit" className="gold-button w-full">Gem timer</button>
+        <button type="submit" className="primary-button w-full">Gem timer</button>
       </form>
 
       <section className="panel p-5">
@@ -1368,7 +1367,7 @@ function EmployeesModule({ employees, timeEntries, newEmployeeName, onNameChange
           </div>
           <form onSubmit={onCreate} className="grid gap-3 sm:grid-cols-[1fr_auto]">
             <TextInput value={newEmployeeName} onChange={(event) => onNameChange(event.target.value)} placeholder="Medarbejdernavn" />
-            <button type="submit" className="gold-button w-full sm:w-auto">Opret</button>
+            <button type="submit" className="primary-button w-full sm:w-auto">Opret</button>
           </form>
         </div>
 
@@ -1383,7 +1382,7 @@ function EmployeesModule({ employees, timeEntries, newEmployeeName, onNameChange
               <p className="text-sm text-stone-300/75">{formatHours(totalFor(employee))}</p>
             </div>
             <div className="mt-3 grid w-full grid-cols-2 gap-2">
-              <button type="button" className="gold-button w-full !min-h-[2.35rem] !px-1.5 !text-[0.56rem] !tracking-[0.08em]" onClick={() => onCopyLink(employee)}>Kopiér link</button>
+              <button type="button" className="primary-button w-full !min-h-[2.35rem] !px-1.5 !text-[0.56rem] !tracking-[0.08em]" onClick={() => onCopyLink(employee)}>Kopiér link</button>
               <button type="button" className="outline-button w-full !min-h-[2.35rem] !px-1.5 !text-[0.56rem] !tracking-[0.08em]" onClick={() => onUpdateEmployee(employee.id, { active: !employee.active })}>{employee.active ? "Deaktiver" : "Aktiver"}</button>
             </div>
           </div>)}
@@ -1397,7 +1396,7 @@ function EmployeesModule({ employees, timeEntries, newEmployeeName, onNameChange
         <Field label="Medarbejder"><Select value={adjustEmployeeId} onChange={(event) => setAdjustEmployeeId(event.target.value)} required><option value="">Vælg medarbejder</option>{employees.map((employee) => <option key={employee.id} value={employee.id}>{employee.name}</option>)}</Select></Field>
         <Field label="Timer"><TextInput type="number" min="0" step="0.25" value={adjustHours} onChange={(event) => setAdjustHours(event.target.value)} placeholder="2.5" required /></Field>
         <Field label="Note"><TextInput value={adjustNote} onChange={(event) => setAdjustNote(event.target.value)} placeholder="Hvorfor fjernes timer?" /></Field>
-        <button type="submit" className="gold-button">Fjern</button>
+        <button type="submit" className="primary-button">Fjern</button>
       </form>
     </section>
   </div>;
@@ -1454,10 +1453,6 @@ function CarEditor({ car, preferredDate = "", preferredTime = "", onDateChange, 
     </div>
   </>;
 }
-function OrderList({ orders, selectedId, onSelect }: { orders: Order[]; selectedId?: string; onSelect: (id: string) => void }) {
-  return <div className="grid content-start gap-3">{orders.length === 0 && <div className="panel p-6 text-center text-stone-300/70">Ingen ordrer matcher filteret.</div>}{orders.map((order) => <button key={order.id} type="button" onClick={() => onSelect(order.id)} className={selectedId === order.id ? "order-card is-active" : "order-card"}><div className="flex items-start justify-between gap-3"><span><strong>{order.customer.name || "Ukendt kunde"}</strong><em>{order.id} · {new Date(order.createdAt).toLocaleDateString("da-DK")}</em></span><b>{order.status}</b></div><div className="mt-3 grid grid-cols-3 gap-2 text-left text-xs uppercase tracking-[0.12em] text-stone-300/70"><span>{order.cars.length} opgave(r)</span><span>{order.adminDate || order.preferredDate}</span><span className="text-right text-white">{kr(orderTotal(order))}</span></div></button>)}</div>;
-}
-
 function InvoiceModule({ orders, invoices, selectedInvoiceId, onSelectInvoice, onCreateFromOrder, onUpdateInvoice, onSendInvoice, onMarkPaid, onDeleteInvoice }: { orders: Order[]; invoices: InvoiceRecord[]; selectedInvoiceId: string; onSelectInvoice: (id: string) => void; onCreateFromOrder: (order: Order) => void; onUpdateInvoice: (id: string, patch: Partial<InvoiceRecord>) => void; onSendInvoice: (id: string) => void; onMarkPaid: (id: string) => void; onDeleteInvoice: (id: string) => void }) {
   const selectedInvoice = invoices.find((invoice) => invoice.id === selectedInvoiceId) ?? invoices[0];
   const ordersWithoutInvoice = orders.filter((order) => !invoices.some((invoice) => invoice.orderId === order.id) && order.status !== "Annulleret");
@@ -1485,10 +1480,10 @@ function InvoiceModule({ orders, invoices, selectedInvoiceId, onSelectInvoice, o
 
   return <div className="backend-module grid gap-4">
     <div className="admin-stat-grid">{[{ label: "Kladder", value: totals.draft }, { label: "Sendt", value: totals.sent }, { label: "Betalt", value: totals.paid }, { label: "Åbent beløb", value: kr(totals.unpaidValue) }].map((item) => <div key={item.label} className="admin-stat-card"><p>{item.label}</p><strong>{item.value}</strong></div>)}</div>
-    <section className="panel backend-card"><div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center"><div><h3 className="panel-title mb-0">Opret faktura fra ordre</h3><p className="mt-3 text-sm text-stone-300/75">Vælg en ordre og opret en fakturakladde med bilerne som fakturalinjer.</p></div></div><div className="mt-4 grid gap-3 lg:grid-cols-2">{ordersWithoutInvoice.length === 0 && <p className="text-sm text-stone-300/70">Alle aktive ordrer har allerede en faktura.</p>}{ordersWithoutInvoice.map((order) => <div key={order.id} className="detail-box flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><h4>{order.id} · {order.customer.name || "Ukendt kunde"}</h4><p>{order.cars.length} opgave(r) · {order.adminDate || order.preferredDate || "Ikke planlagt"} · {kr(orderTotal(order))}</p></div><button type="button" className="gold-button" onClick={() => onCreateFromOrder(order)}>Opret faktura</button></div>)}</div></section>
+    <section className="panel backend-card"><div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center"><div><h3 className="panel-title mb-0">Opret faktura fra ordre</h3><p className="mt-3 text-sm text-stone-300/75">Vælg en ordre og opret en fakturakladde med bilerne som fakturalinjer.</p></div></div><div className="mt-4 grid gap-3 lg:grid-cols-2">{ordersWithoutInvoice.length === 0 && <p className="text-sm text-stone-300/70">Alle aktive ordrer har allerede en faktura.</p>}{ordersWithoutInvoice.map((order) => <div key={order.id} className="detail-box flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><h4>{order.id} · {order.customer.name || "Ukendt kunde"}</h4><p>{order.cars.length} opgave(r) · {order.adminDate || order.preferredDate || "Ikke planlagt"} · {kr(orderTotal(order))}</p></div><button type="button" className="primary-button" onClick={() => onCreateFromOrder(order)}>Opret faktura</button></div>)}</div></section>
     <div className="grid gap-6 lg:grid-cols-[.82fr_1.18fr]">
       <div className="grid content-start gap-3">{invoices.length === 0 && <div className="panel p-6 text-center text-stone-300/70">Ingen fakturaer endnu.</div>}{invoices.map((invoice) => <button key={invoice.id} type="button" onClick={() => onSelectInvoice(invoice.id)} className={selectedInvoice?.id === invoice.id ? "order-card is-active" : "order-card"}><div className="flex items-start justify-between gap-3"><span><strong>{invoice.invoiceNo}</strong><em>{invoice.customerName || "Ukendt kunde"} · {invoice.orderId}</em></span><b>{invoice.status}</b></div><div className="mt-3 grid grid-cols-3 gap-2 text-left text-xs uppercase tracking-[0.12em] text-stone-300/70"><span>{invoice.dueDate}</span><span>{invoice.email || "ingen email"}</span><span className="text-right text-white">{kr(invoiceTotal(invoice))}</span></div></button>)}</div>
-      {!selectedInvoice ? <div className="panel grid min-h-[28rem] place-items-center p-6 text-center text-stone-300/70">Vælg eller opret en faktura.</div> : <section className="panel p-4 sm:p-5"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start"><div><p className="eyebrow">{selectedInvoice.orderId}</p><h3 className="mt-2 admin-section-heading">{selectedInvoice.invoiceNo}</h3><p className="mt-2 text-stone-300/75">{selectedInvoice.customerName || "Ukendt kunde"} · {selectedInvoice.email || "ingen email"}</p></div><div className="text-left sm:text-right"><p className="text-xs uppercase tracking-[0.18em] text-stone-400">Total</p><p className="text-2xl font-semibold text-white">{kr(invoiceTotal(selectedInvoice))}</p></div></div><div className="mt-6 grid gap-4 sm:grid-cols-3"><Field label="Fakturanr."><TextInput value={selectedInvoice.invoiceNo} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { invoiceNo: e.target.value })} /></Field><Field label="Status"><Select value={selectedInvoice.status} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { status: e.target.value as InvoiceStatus })}><option>Kladde</option><option>Sendt</option><option>Betalt</option><option>Forfalden</option><option>Annulleret</option></Select></Field><Field label="Forfald"><TextInput type="date" value={selectedInvoice.dueDate} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { dueDate: e.target.value })} /></Field><Field label="Kunde"><TextInput value={selectedInvoice.customerName} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { customerName: e.target.value })} /></Field><Field label="Email"><TextInput value={selectedInvoice.email} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { email: e.target.value })} /></Field><Field label="CVR"><TextInput value={selectedInvoice.cvr} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { cvr: e.target.value })} /></Field><Field label="Firma"><TextInput value={selectedInvoice.company} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { company: e.target.value })} /></Field><Field label="Fakturaadresse"><TextInput value={selectedInvoice.invoiceAddress} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { invoiceAddress: e.target.value })} /></Field></div><div className="mt-6 detail-box"><div className="mb-4 flex items-center justify-between gap-3"><h4>Fakturalinjer</h4><button type="button" className="outline-button" onClick={addLine}>+ Linje</button></div><div className="grid gap-3">{selectedInvoice.lines.map((line) => <div key={line.id} className="backend-line-card grid gap-3 p-3 sm:grid-cols-[1fr_5rem_7rem_6rem_auto]"><TextInput value={line.text} onChange={(e) => updateLine(line.id, { text: e.target.value })} /><TextInput type="number" min="1" value={line.qty} onChange={(e) => updateLine(line.id, { qty: Number(e.target.value) || 1 })} /><TextInput type="number" min="0" value={line.price} onChange={(e) => updateLine(line.id, { price: Number(e.target.value) || 0 })} /><div className="grid place-items-center text-sm font-black text-white">{kr(line.qty * line.price)}</div><button type="button" className="small-danger" onClick={() => removeLine(line.id)}>Fjern</button></div>)}</div></div><div className="mt-6"><Field label="Fakturanote"><TextArea value={selectedInvoice.note} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { note: e.target.value })} /></Field></div><div className="mt-6 grid gap-3 sm:grid-cols-4"><button type="button" className="gold-button" onClick={() => onSendInvoice(selectedInvoice.id)}>Send faktura</button><button type="button" className="outline-button" onClick={() => onMarkPaid(selectedInvoice.id)}>Marker betalt</button><a className="outline-button" href={`mailto:${selectedInvoice.email}`}>Email kunde</a><button type="button" className="small-danger" onClick={() => onDeleteInvoice(selectedInvoice.id)}>Slet faktura</button></div><div className="mt-4 detail-box"><h4>Statuskontrol</h4><p>Oprettet: {new Date(selectedInvoice.createdAt).toLocaleString("da-DK")}</p><p>Sendt: {selectedInvoice.sentAt ? new Date(selectedInvoice.sentAt).toLocaleString("da-DK") : "ikke sendt"}</p><p>Betalt: {selectedInvoice.paidAt ? new Date(selectedInvoice.paidAt).toLocaleString("da-DK") : "ikke betalt"}</p><p>Mail-knappen åbner kundens mailprogram med fakturateksten. Et rigtigt send-/betalingsflow kan kobles på senere med database, email-provider og regnskabssystem.</p></div></section>}
+      {!selectedInvoice ? <div className="panel grid min-h-[28rem] place-items-center p-6 text-center text-stone-300/70">Vælg eller opret en faktura.</div> : <section className="panel p-4 sm:p-5"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start"><div><p className="eyebrow">{selectedInvoice.orderId}</p><h3 className="mt-2 admin-section-heading">{selectedInvoice.invoiceNo}</h3><p className="mt-2 text-stone-300/75">{selectedInvoice.customerName || "Ukendt kunde"} · {selectedInvoice.email || "ingen email"}</p></div><div className="text-left sm:text-right"><p className="text-xs uppercase tracking-[0.18em] text-stone-400">Total</p><p className="text-2xl font-semibold text-white">{kr(invoiceTotal(selectedInvoice))}</p></div></div><div className="mt-6 grid gap-4 sm:grid-cols-3"><Field label="Fakturanr."><TextInput value={selectedInvoice.invoiceNo} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { invoiceNo: e.target.value })} /></Field><Field label="Status"><Select value={selectedInvoice.status} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { status: e.target.value as InvoiceStatus })}><option>Kladde</option><option>Sendt</option><option>Betalt</option><option>Forfalden</option><option>Annulleret</option></Select></Field><Field label="Forfald"><TextInput type="date" value={selectedInvoice.dueDate} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { dueDate: e.target.value })} /></Field><Field label="Kunde"><TextInput value={selectedInvoice.customerName} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { customerName: e.target.value })} /></Field><Field label="Email"><TextInput value={selectedInvoice.email} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { email: e.target.value })} /></Field><Field label="CVR"><TextInput value={selectedInvoice.cvr} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { cvr: e.target.value })} /></Field><Field label="Firma"><TextInput value={selectedInvoice.company} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { company: e.target.value })} /></Field><Field label="Fakturaadresse"><TextInput value={selectedInvoice.invoiceAddress} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { invoiceAddress: e.target.value })} /></Field></div><div className="mt-6 detail-box"><div className="mb-4 flex items-center justify-between gap-3"><h4>Fakturalinjer</h4><button type="button" className="outline-button" onClick={addLine}>+ Linje</button></div><div className="grid gap-3">{selectedInvoice.lines.map((line) => <div key={line.id} className="backend-line-card grid gap-3 p-3 sm:grid-cols-[1fr_5rem_7rem_6rem_auto]"><TextInput value={line.text} onChange={(e) => updateLine(line.id, { text: e.target.value })} /><TextInput type="number" min="1" value={line.qty} onChange={(e) => updateLine(line.id, { qty: Number(e.target.value) || 1 })} /><TextInput type="number" min="0" value={line.price} onChange={(e) => updateLine(line.id, { price: Number(e.target.value) || 0 })} /><div className="grid place-items-center text-sm font-black text-white">{kr(line.qty * line.price)}</div><button type="button" className="small-danger" onClick={() => removeLine(line.id)}>Fjern</button></div>)}</div></div><div className="mt-6"><Field label="Fakturanote"><TextArea value={selectedInvoice.note} onChange={(e) => onUpdateInvoice(selectedInvoice.id, { note: e.target.value })} /></Field></div><div className="mt-6 grid gap-3 sm:grid-cols-4"><button type="button" className="primary-button" onClick={() => onSendInvoice(selectedInvoice.id)}>Send faktura</button><button type="button" className="outline-button" onClick={() => onMarkPaid(selectedInvoice.id)}>Marker betalt</button><a className="outline-button" href={`mailto:${selectedInvoice.email}`}>Email kunde</a><button type="button" className="small-danger" onClick={() => onDeleteInvoice(selectedInvoice.id)}>Slet faktura</button></div><div className="mt-4 detail-box"><h4>Statuskontrol</h4><p>Oprettet: {new Date(selectedInvoice.createdAt).toLocaleString("da-DK")}</p><p>Sendt: {selectedInvoice.sentAt ? new Date(selectedInvoice.sentAt).toLocaleString("da-DK") : "ikke sendt"}</p><p>Betalt: {selectedInvoice.paidAt ? new Date(selectedInvoice.paidAt).toLocaleString("da-DK") : "ikke betalt"}</p><p>Mail-knappen åbner kundens mailprogram med fakturateksten. Et rigtigt send-/betalingsflow kan kobles på senere med database, email-provider og regnskabssystem.</p></div></section>}
     </div>
   </div>;
 }
@@ -1510,7 +1505,7 @@ function NewOrdersModule({ orders, onAccept, ...handlers }: { orders: Order[]; o
     {orders.length === 0 && <div className="panel p-6 text-center text-stone-300/70">Ingen nye ordrer lige nu.</div>}
     {orders.map((order) => <details key={order.id} className="submitted-order-card panel overflow-hidden p-0">
       <summary className="cursor-pointer list-none p-5"><div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center"><div><p className="eyebrow">{order.id}</p><h4 className="mt-1 text-xl uppercase tracking-[0.12em] text-white">{order.customer.name || "Ny kunde"}</h4><p className="mt-1 text-stone-300/75">{order.customer.phone || "telefon mangler"} · {order.preferredDate || "dato mangler"} {order.preferredTime || ""}</p></div><div className="text-left sm:text-right"><p className="text-xs uppercase tracking-[0.18em] text-stone-400">Total</p><p className="text-2xl font-black text-white">{kr(orderTotal(order))}</p></div></div></summary>
-      <div className="submitted-order-detail border-t border-white/10 p-4"><div className="mb-4 grid gap-2 sm:grid-cols-3"><button className="gold-button" type="button" onClick={() => onAccept(order.id)}>Accepter</button><a className="outline-button" href={`mailto:${order.customer.email}`}>Email</a><a className="outline-button" href={`tel:${order.customer.phone}`}>Ring</a></div><div className="new-order-detail"><OrderDetail selectedOrder={order} {...handlers} /></div></div>
+      <div className="submitted-order-detail border-t border-white/10 p-4"><div className="mb-4 grid gap-2 sm:grid-cols-3"><button className="primary-button" type="button" onClick={() => onAccept(order.id)}>Accepter</button><a className="outline-button" href={`mailto:${order.customer.email}`}>Email</a><a className="outline-button" href={`tel:${order.customer.phone}`}>Ring</a></div><div className="new-order-detail"><OrderDetail selectedOrder={order} {...handlers} /></div></div>
     </details>)}
   </section>;
 }
@@ -1527,7 +1522,7 @@ function CompletedOrdersModule({ orders, ...handlers }: { orders: Order[] } & Or
 }
 
 function ServicesModule({ drafts, onUpdate, onAdd, onPublish }: { drafts: { services: Service[]; extras: Extra[]; packages: CarePackage[] }; onUpdate: (kind: "services" | "extras" | "packages", id: string, patch: Partial<Service & Extra & CarePackage>) => void; onAdd: (kind: "services" | "extras" | "packages") => void; onPublish: () => void }) {
-  return <section className="backend-module grid gap-5"><div className="flex justify-end"><button className="gold-button" type="button" onClick={onPublish}>Publicer</button></div>
+  return <section className="backend-module grid gap-5"><div className="flex justify-end"><button className="primary-button" type="button" onClick={onPublish}>Publicer</button></div>
     <ServiceGroup title="Pakker" kind="packages" items={drafts.packages} onUpdate={onUpdate} onAdd={onAdd} />
     <ServiceGroup title="Enkeltydelser" kind="services" items={drafts.services} onUpdate={onUpdate} onAdd={onAdd} />
     <ServiceGroup title="Tillæg" kind="extras" items={drafts.extras} onUpdate={onUpdate} onAdd={onAdd} />

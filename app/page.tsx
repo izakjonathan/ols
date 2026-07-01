@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import NordicAutoCareApp from "./components/NordicAutoCareApp";
+import OlandServiceApp from "./components/OlandServiceApp";
 
 export const metadata: Metadata = {
   title: "Ølands Service",
@@ -13,5 +13,5 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return <NordicAutoCareApp mode="frontend" />;
+  return <OlandServiceApp mode="frontend" />;
 }
