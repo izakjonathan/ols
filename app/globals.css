@@ -1091,3 +1091,39 @@ nav.fixed {
     grid-template-columns: 1fr !important;
   }
 }
+
+
+/* v44 backend top spacing fix
+   Move every backend module closer to the fixed top nav.
+   This is one global backend offset, so Nye/Kalender/Faktura/Færdige/Ydelser/Firma/Timer/Backup all align the same way. */
+.backend-screen,
+#admin {
+  padding-top: calc(env(safe-area-inset-top) + 3.65rem) !important;
+}
+
+.admin-module-header {
+  margin-bottom: .78rem !important;
+}
+
+.admin-stat-grid {
+  margin-bottom: .78rem !important;
+}
+
+.backend-module {
+  gap: .72rem !important;
+}
+
+@media (max-width: 430px) {
+  .backend-screen,
+  #admin {
+    padding-top: calc(env(safe-area-inset-top) + 3.55rem) !important;
+  }
+
+  .admin-module-header {
+    margin-bottom: .72rem !important;
+  }
+
+  .admin-stat-grid {
+    margin-bottom: .72rem !important;
+  }
+}

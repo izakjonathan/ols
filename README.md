@@ -483,3 +483,13 @@ Fix:
 - Increased dock/bottom clearance so backend bottom content is not hidden by the dock/mobile browser.
 - Checked backend modules: Nye, Kalender, Faktura, Færdige, Ydelser, Firma, Timer and Backup.
 - Production build tested successfully.
+
+
+## v44 backend top spacing
+
+- Moved backend content closer to the fixed top nav globally.
+- Uses one shared backend top offset for all backend modules.
+- Applies to Nye, Kalender, Faktura, Færdige, Ydelser, Firma, Timer and Backup.
+- Tightened the spacing below module titles and below stat grids slightly.
+- Preserved v43 backend consolidation and dock clearance.
+- Production build tested successfully.
