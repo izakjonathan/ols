@@ -175,3 +175,12 @@ Fix:
 - CTA, services, request and prices typography/spacing are normalized.
 - Backend and employee page behavior is preserved.
 - Production build tested successfully.
+
+
+## v51 compact navbar
+
+- Reduced the global `--nav-h` token.
+- Made the fixed navbar height fit the logo/nav text with small vertical margins.
+- Updated mobile nav height and logo sizing.
+- Preserved v50 stable frontend layout behavior.
+- Production build tested successfully.
