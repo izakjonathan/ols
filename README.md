@@ -404,3 +404,14 @@ Fix:
 - Labels are small, bold, caps and letter-spaced.
 - Existing smooth snap and v35 scroll-position root fix are preserved.
 - Production build tested successfully.
+
+
+## v37 global CSS cleanup / smaller chevron labels
+
+- Rewrote `app/globals.css` into a single clean stylesheet.
+- Removed old duplicated v27/v28/v34/v35/v36 override layers.
+- Removed unused/legacy selectors from earlier layout versions.
+- Kept only the current active custom classes used by the app.
+- Kept smooth snap, safe-area handling, black background, backend styles and employee page styles.
+- Changed chevron section-label styling to match the small button typography used by `+ Tilføj opgave`, while keeping the current muted grey color.
+- Production build tested successfully.
