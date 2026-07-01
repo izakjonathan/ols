@@ -780,105 +780,166 @@ nav.fixed {
   font-weight: 780 !important;
 }
 
-
-/* v41 backend alignment / typography / spacing pass */
+/* v43 consolidated backend layout / typography / spacing */
 .backend-login-screen {
   min-height: 100svh !important;
   padding-top: calc(env(safe-area-inset-top) + 5.2rem) !important;
   padding-bottom: calc(env(safe-area-inset-bottom) + 4rem) !important;
 }
 
+/* One source of truth for backend top spacing. */
+.backend-screen,
 #admin {
-  padding-top: calc(env(safe-area-inset-top) + 5.15rem) !important;
+  padding-top: calc(env(safe-area-inset-top) + 6.2rem) !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
 }
 
+/* Never let bottom content hide under the dock or mobile browser chrome. */
+.backend-safe-bottom {
+  padding-bottom: max(11rem, calc(env(safe-area-inset-bottom) + 10rem)) !important;
+}
+
+/* Same module heading structure for Nye, Kalender, Faktura, Færdige, Ydelser, Firma, Timer and Backup. */
 .admin-module-header {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  display: block !important;
+  margin: 0 0 .95rem !important;
+  min-height: 0 !important;
+}
+
+.admin-module-header .eyebrow,
+.admin-header-link {
+  display: none !important;
 }
 
 .admin-screen-title {
-  margin-top: .24rem;
-  color: #fff;
-  font-size: clamp(1.55rem, 8.2vw, 3.15rem);
-  font-weight: 760;
-  line-height: .96;
-  letter-spacing: .035em;
-  text-transform: uppercase;
-}
-
-.admin-header-link {
-  min-height: 2.2rem;
-  padding-inline: .85rem;
-  white-space: nowrap;
+  margin: 0 !important;
+  color: #fff !important;
+  font-size: clamp(1.02rem, 5.2vw, 1.82rem) !important;
+  font-weight: 540 !important;
+  line-height: 1 !important;
+  letter-spacing: .05em !important;
+  text-transform: uppercase !important;
 }
 
 .admin-shell,
 .backend-module {
-  min-width: 0;
-}
-
-.backend-module {
+  min-width: 0 !important;
   margin-top: 0 !important;
-  gap: .9rem !important;
 }
 
-.admin-stat-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: .72rem;
-  margin-bottom: 1rem;
+.backend-module,
+#admin .grid.gap-4,
+#admin .grid.gap-5,
+#admin .grid.gap-6,
+#admin .grid.gap-8 {
+  gap: .78rem !important;
 }
 
-.admin-stat-card {
-  min-width: 0;
-  border: 1px solid rgba(255,255,255,.20);
-  border-radius: .92rem;
-  background: rgba(255,255,255,.015);
-  padding: .82rem;
+/* Global backend card system */
+#admin .panel,
+.employee-page .panel {
+  border: 1px solid rgba(255,255,255,.18) !important;
+  border-radius: .92rem !important;
+  background: rgba(255,255,255,.012) !important;
+  box-shadow: none !important;
 }
 
-.admin-stat-card p {
-  color: rgba(255,255,255,.55);
-  font-size: .54rem;
-  font-weight: 900;
-  line-height: 1;
-  letter-spacing: .12em;
-  text-transform: uppercase;
+#admin .panel,
+#admin .backend-card,
+.employee-page .panel {
+  padding: .82rem !important;
 }
 
-.admin-stat-card strong {
-  display: block;
-  margin-top: .52rem;
-  color: #fff;
-  font-size: clamp(1.35rem, 7vw, 2.1rem);
-  font-weight: 780;
-  line-height: 1;
-  letter-spacing: -.04em;
+#admin .panel-title,
+#admin .admin-section-heading,
+.employee-page .panel-title,
+.employee-page h1,
+.employee-page h2,
+.employee-page h3 {
+  color: #fff !important;
+  font-weight: 560 !important;
+  line-height: 1.04 !important;
+  letter-spacing: .04em !important;
+  text-transform: uppercase !important;
 }
 
-#admin .panel {
-  border-color: rgba(255,255,255,.20) !important;
-  background: rgba(255,255,255,.014) !important;
+#admin .panel-title,
+.employee-page .panel-title {
+  font-size: clamp(.95rem, 4.5vw, 1.28rem) !important;
+}
+
+#admin .admin-section-heading {
+  font-size: clamp(1.04rem, 5.4vw, 1.7rem) !important;
+}
+
+/* All backend stat/info groups use the same two-column grid. */
+.admin-stat-grid,
+.backend-info-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: .64rem !important;
+  margin-bottom: .9rem !important;
+}
+
+.admin-stat-card,
+.backend-info-card {
+  min-width: 0 !important;
+  border: 1px solid rgba(255,255,255,.16) !important;
+  border-radius: .84rem !important;
+  background: rgba(255,255,255,.012) !important;
+  padding: .7rem !important;
+}
+
+.admin-stat-card p,
+.backend-info-card p {
+  margin: 0 !important;
+  color: rgba(255,255,255,.52) !important;
+  font-size: .5rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  letter-spacing: .11em !important;
+  text-transform: uppercase !important;
+}
+
+.admin-stat-card strong,
+.backend-info-card strong {
+  display: block !important;
+  margin-top: .48rem !important;
+  color: #fff !important;
+  font-size: clamp(1.1rem, 6vw, 1.72rem) !important;
+  font-weight: 580 !important;
+  line-height: 1 !important;
+  letter-spacing: -.035em !important;
+}
+
+/* Submitted/new order cards: collapsible, lighter, fewer nested frames. */
+.submitted-order-card {
+  overflow: hidden !important;
+  padding: 0 !important;
 }
 
 .submitted-order-card summary {
-  padding: .95rem !important;
+  padding: .82rem !important;
 }
 
-.submitted-order-card h4 {
-  font-weight: 760 !important;
-  line-height: 1.02 !important;
-  letter-spacing: .035em !important;
+.submitted-order-card h4,
+.submitted-order-card h5 {
+  color: #fff !important;
+  font-size: clamp(1rem, 5vw, 1.5rem) !important;
+  font-weight: 560 !important;
+  line-height: 1.04 !important;
+  letter-spacing: .038em !important;
+  text-transform: uppercase !important;
 }
 
 .submitted-order-detail {
-  padding: .78rem !important;
+  padding: .72rem !important;
+  border-top-color: rgba(255,255,255,.08) !important;
 }
 
+/* Global nested-border reduction for order/invoice details, completed orders, calendar and services. */
+.order-detail-panel,
 .new-order-detail > .panel {
   min-height: 0 !important;
   border: 0 !important;
@@ -887,61 +948,146 @@ nav.fixed {
   padding: 0 !important;
 }
 
-.new-order-detail .panel,
-.new-order-detail .detail-box {
-  border-color: rgba(255,255,255,.12) !important;
-  background: rgba(255,255,255,.012) !important;
+#admin .detail-box,
+#admin .backend-order-card,
+#admin .backend-line-card,
+#admin details:not(.submitted-order-card) {
+  border: 1px solid rgba(255,255,255,.11) !important;
+  border-radius: .82rem !important;
+  background: rgba(255,255,255,.010) !important;
+  box-shadow: none !important;
 }
 
-.new-order-detail .admin-section-heading {
-  font-size: clamp(1.2rem, 6vw, 2.1rem) !important;
-  font-weight: 760 !important;
-  letter-spacing: .03em !important;
+#admin .detail-box {
+  padding: .72rem !important;
 }
 
-#admin .panel-title,
-#admin .admin-section-heading {
-  font-weight: 760 !important;
-  letter-spacing: .035em !important;
+#admin .detail-box h4 {
+  color: #fff !important;
+  font-size: .62rem !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  letter-spacing: .075em !important;
+  text-transform: uppercase !important;
 }
 
-#admin .grid.gap-4,
-#admin .grid.gap-5,
-#admin .grid.gap-6,
-#admin .grid.gap-8 {
-  gap: .85rem !important;
+#admin details:not(.submitted-order-card) summary {
+  padding: .72rem !important;
 }
 
-.backend-safe-bottom {
-  padding-bottom: max(9rem, calc(env(safe-area-inset-bottom) + 8rem)) !important;
+#admin details:not(.submitted-order-card) > div {
+  border-top-color: rgba(255,255,255,.075) !important;
+  padding: .72rem !important;
 }
 
-@media (min-width: 768px) {
-  .admin-stat-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
+#admin .backend-line-card {
+  padding: .64rem !important;
 }
 
+/* Two-column information panels for Firma and similar module groups. */
+.backend-two-col {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+#admin .lg\:col-span-2 {
+  min-width: 0;
+}
+
+/* Forms and buttons inside backend: tighter, aligned, readable. */
+#admin .form-input,
+#admin .time-control-input,
+.employee-page .form-input,
+.employee-page .time-control-input {
+  min-height: 2.55rem !important;
+  border-radius: .72rem !important;
+  font-size: .84rem !important;
+}
+
+#admin .gold-button,
+#admin .outline-button,
+#admin .small-danger,
+.employee-page .gold-button,
+.employee-page .outline-button,
+.employee-page .small-danger {
+  min-height: 2.38rem !important;
+  padding: .56rem .78rem !important;
+  font-size: .54rem !important;
+  letter-spacing: .08em !important;
+}
+
+/* Dock clearance and dock sizing */
+.admin-dock {
+  display: flex !important;
+  gap: .28rem !important;
+  overflow-x: auto !important;
+  padding: .42rem !important;
+  scrollbar-width: none !important;
+}
+
+.admin-dock button {
+  min-width: 3.9rem !important;
+  padding: .42rem .32rem !important;
+  font-size: .5rem !important;
+  letter-spacing: .075em !important;
+}
+
+/* Module-by-module normalization */
+#admin .backend-module > section,
+#admin .backend-module > div {
+  min-width: 0;
+}
+
+#admin .backend-module > .panel + .panel,
+#admin .backend-module > section + section,
+#admin .backend-module > div + div {
+  margin-top: 0 !important;
+}
+
+/* Mobile backend */
 @media (max-width: 430px) {
-  .admin-module-header {
-    align-items: end;
-    margin-bottom: .85rem;
+  .backend-screen,
+  #admin {
+    padding-top: calc(env(safe-area-inset-top) + 6rem) !important;
+    padding-left: .92rem !important;
+    padding-right: .92rem !important;
   }
 
   .admin-screen-title {
-    font-size: clamp(1.45rem, 9vw, 2.35rem);
+    font-size: clamp(.98rem, 5.9vw, 1.48rem) !important;
+    font-weight: 540 !important;
+    letter-spacing: .048em !important;
   }
 
-  .admin-stat-grid {
-    gap: .62rem;
+  .admin-stat-grid,
+  .backend-info-grid,
+  .backend-two-col {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: .56rem !important;
   }
 
-  .admin-stat-card {
-    padding: .72rem;
+  .admin-stat-card,
+  .backend-info-card {
+    padding: .64rem !important;
   }
 
-  #admin {
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
+  #admin .panel,
+  #admin .backend-card,
+  .employee-page .panel {
+    padding: .76rem !important;
+  }
+
+  .backend-safe-bottom {
+    padding-bottom: max(11.5rem, calc(env(safe-area-inset-bottom) + 10.5rem)) !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .admin-stat-grid,
+  .backend-info-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .backend-two-col {
+    grid-template-columns: 1fr !important;
   }
 }

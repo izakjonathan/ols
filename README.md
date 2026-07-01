@@ -459,3 +459,27 @@ Fix:
 - Removed duplicate local module titles where the new shared backend header now handles the title.
 - Added a backend alignment/typography/spacing pass for cards, stats, titles, and dock clearance.
 - Production build tested successfully.
+
+
+## v42 backend title spacing
+
+- Removed `BACKEND` eyebrow text above each backend module title.
+- Removed the module-level `Kundeside` pill next to backend module titles.
+- Kept the top navigation `Kundeside` link.
+- Set all backend module titles to start at a consistent distance below the fixed nav.
+- Reduced backend module title font size and weight.
+- Production build tested successfully.
+
+
+## v43 backend consolidation
+
+- Removed `pt-6` from the backend JSX section and replaced it with `backend-screen`.
+- Consolidated backend CSS into one v43 backend section in `app/globals.css`.
+- Reduced `.admin-screen-title` size and weight further.
+- Applied one consistent backend card spacing system.
+- Kept `Nye` and `Faktura` stat cards in a shared two-column `admin-stat-grid`.
+- Added global backend card and info-card classes for consistent two-column info group styling.
+- Reduced nested borders globally across submitted orders, calendar details, completed order details, service details, invoice line cards and order details.
+- Increased dock/bottom clearance so backend bottom content is not hidden by the dock/mobile browser.
+- Checked backend modules: Nye, Kalender, Faktura, Færdige, Ydelser, Firma, Timer and Backup.
+- Production build tested successfully.
