@@ -415,3 +415,11 @@ Fix:
 - Kept smooth snap, safe-area handling, black background, backend styles and employee page styles.
 - Changed chevron section-label styling to match the small button typography used by `+ Tilføj opgave`, while keeping the current muted grey color.
 - Production build tested successfully.
+
+
+## v38 splash scale fix
+
+- Fixed the splash screen logo scaling after the v37 CSS cleanup.
+- Increased splash logo size on mobile and desktop.
+- Kept the logo centered on the black splash screen.
+- Production build tested successfully.

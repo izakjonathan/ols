@@ -96,9 +96,12 @@ section[id],
 }
 
 .splash-screen img {
-  max-width: min(58vw, 25rem);
+  width: min(72vw, 30rem);
+  max-width: 30rem;
   height: auto;
   object-fit: contain;
+  transform: scale(1.18);
+  transform-origin: center;
 }
 
 @keyframes splash-out {
@@ -741,5 +744,22 @@ nav.fixed {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto !important;
+  }
+}
+
+
+/* v38 splash logo scale fix */
+@media (max-width: 430px) {
+  .splash-screen img {
+    width: min(74vw, 20rem);
+    max-width: 20rem;
+    transform: scale(1.22);
+  }
+}
+
+@media (max-width: 360px) {
+  .splash-screen img {
+    width: min(78vw, 18rem);
+    transform: scale(1.2);
   }
 }
