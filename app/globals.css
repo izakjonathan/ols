@@ -192,7 +192,7 @@ label.grid > span {
 
 .tight-card-title {
   color: #fff;
-  font-weight: 900;
+  font-weight: 760;
   line-height: 1.02 !important;
   letter-spacing: .034em !important;
   text-transform: uppercase;
@@ -369,7 +369,7 @@ nav.fixed {
 .section-title {
   color: #fff;
   font-size: clamp(1.75rem, 8vw, 4.6rem);
-  font-weight: 950;
+  font-weight: 780;
   line-height: .96;
   letter-spacing: -.03em;
   text-transform: uppercase;
@@ -767,5 +767,181 @@ nav.fixed {
   .splash-screen .splash-logo {
     width: min(68vw, 18rem) !important;
     max-width: 18rem !important;
+  }
+}
+
+
+/* v40 reduced heading weight */
+.tight-card-title {
+  font-weight: 760 !important;
+}
+
+.section-title {
+  font-weight: 780 !important;
+}
+
+
+/* v41 backend alignment / typography / spacing pass */
+.backend-login-screen {
+  min-height: 100svh !important;
+  padding-top: calc(env(safe-area-inset-top) + 5.2rem) !important;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 4rem) !important;
+}
+
+#admin {
+  padding-top: calc(env(safe-area-inset-top) + 5.15rem) !important;
+}
+
+.admin-module-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.admin-screen-title {
+  margin-top: .24rem;
+  color: #fff;
+  font-size: clamp(1.55rem, 8.2vw, 3.15rem);
+  font-weight: 760;
+  line-height: .96;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+
+.admin-header-link {
+  min-height: 2.2rem;
+  padding-inline: .85rem;
+  white-space: nowrap;
+}
+
+.admin-shell,
+.backend-module {
+  min-width: 0;
+}
+
+.backend-module {
+  margin-top: 0 !important;
+  gap: .9rem !important;
+}
+
+.admin-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .72rem;
+  margin-bottom: 1rem;
+}
+
+.admin-stat-card {
+  min-width: 0;
+  border: 1px solid rgba(255,255,255,.20);
+  border-radius: .92rem;
+  background: rgba(255,255,255,.015);
+  padding: .82rem;
+}
+
+.admin-stat-card p {
+  color: rgba(255,255,255,.55);
+  font-size: .54rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.admin-stat-card strong {
+  display: block;
+  margin-top: .52rem;
+  color: #fff;
+  font-size: clamp(1.35rem, 7vw, 2.1rem);
+  font-weight: 780;
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+
+#admin .panel {
+  border-color: rgba(255,255,255,.20) !important;
+  background: rgba(255,255,255,.014) !important;
+}
+
+.submitted-order-card summary {
+  padding: .95rem !important;
+}
+
+.submitted-order-card h4 {
+  font-weight: 760 !important;
+  line-height: 1.02 !important;
+  letter-spacing: .035em !important;
+}
+
+.submitted-order-detail {
+  padding: .78rem !important;
+}
+
+.new-order-detail > .panel {
+  min-height: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.new-order-detail .panel,
+.new-order-detail .detail-box {
+  border-color: rgba(255,255,255,.12) !important;
+  background: rgba(255,255,255,.012) !important;
+}
+
+.new-order-detail .admin-section-heading {
+  font-size: clamp(1.2rem, 6vw, 2.1rem) !important;
+  font-weight: 760 !important;
+  letter-spacing: .03em !important;
+}
+
+#admin .panel-title,
+#admin .admin-section-heading {
+  font-weight: 760 !important;
+  letter-spacing: .035em !important;
+}
+
+#admin .grid.gap-4,
+#admin .grid.gap-5,
+#admin .grid.gap-6,
+#admin .grid.gap-8 {
+  gap: .85rem !important;
+}
+
+.backend-safe-bottom {
+  padding-bottom: max(9rem, calc(env(safe-area-inset-bottom) + 8rem)) !important;
+}
+
+@media (min-width: 768px) {
+  .admin-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .admin-module-header {
+    align-items: end;
+    margin-bottom: .85rem;
+  }
+
+  .admin-screen-title {
+    font-size: clamp(1.45rem, 9vw, 2.35rem);
+  }
+
+  .admin-stat-grid {
+    gap: .62rem;
+  }
+
+  .admin-stat-card {
+    padding: .72rem;
+  }
+
+  #admin {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
   }
 }

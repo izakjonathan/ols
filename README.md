@@ -438,3 +438,24 @@ Fix:
 - Added a dedicated `.splash-logo` class with explicit width and mobile sizing.
 - Splash remains centered on the black screen.
 - Production build tested successfully.
+
+
+## v40 reduced heading weight
+
+- Reduced `.tight-card-title` font weight, affecting all card headings using that shared style, including `BLIV RINGET OP`.
+- Removed Tailwind `font-black` from every heading using `.tight-card-title` so the shared CSS controls all matching instances.
+- Reduced `.section-title` font weight, affecting `HVAD ØLAND SERVICE HJÆLPER MED` and any future section title using that style.
+- Added a final v40 CSS guard so these shared styles win consistently.
+- Production build tested successfully.
+
+
+## v41 backend layout pass
+
+- Vertically centered the backend login screen.
+- Added one consistent backend module title/header at the top of every backend module.
+- Changed backend/invoice information cards to a consistent two-column stat grid.
+- Made submitted/new orders in `Nye` collapsible by default.
+- Reduced nested borders inside submitted order details using a compact new-order detail wrapper.
+- Removed duplicate local module titles where the new shared backend header now handles the title.
+- Added a backend alignment/typography/spacing pass for cards, stats, titles, and dock clearance.
+- Production build tested successfully.
