@@ -297,3 +297,12 @@ Production build tested successfully.
 - Removed old v26 final CSS layer and replaced it with one v27 layer.
 - Date/time and Flyttedato mobile scaling hardened again.
 - Production build tested successfully.
+
+
+## v28 CTA spacing / customer type
+
+- Removed CTA helper texts: Ring, Kontakt, Flytning.
+- Increased spacing between CTA cards.
+- Matched spacing between CTAs and the Forespørgsel section.
+- Changed Kundeinformation Type field from text input to Privat/Erhverv dropdown.
+- Production build tested successfully.

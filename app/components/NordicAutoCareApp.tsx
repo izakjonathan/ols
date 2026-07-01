@@ -881,17 +881,17 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
         </div>
       </section>
 
-      <section id="kontakt" className="px-5 py-5 sm:px-8 lg:px-12">
+      <section id="kontakt" className="px-5 pb-5 pt-5 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-3xl">
           {submittedId && <div className="mb-6 rounded-2xl border border-white/40 bg-white/[0.08] p-4 text-sm text-stone-100">Forespørgsel <strong className="text-white">{submittedId}</strong> er oprettet i backend.</div>}
-          <div className="grid gap-3">
+          <div className="grid gap-4 sm:gap-5">
             <a href="tel:+4526848789" className="panel cta-card block p-4 sm:p-5">
-              <div><p className="eyebrow tight-card-kicker">Ring</p><h3 className="mt-1 text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Ring til Øland</h3></div>
+              <div><h3 className="text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Ring til Øland</h3></div>
             </a>
 
             <article className="panel p-4 sm:p-5">
               <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setCallbackExpanded((open) => !open)}>
-                <div><p className="eyebrow tight-card-kicker">Kontakt</p><h3 className="mt-1 text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Bliv ringet op</h3></div>
+                <div><h3 className="text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Bliv ringet op</h3></div>
                 <span className={`chevron-toggle ${callbackExpanded ? "is-open" : ""}`}>›</span>
               </button>
               {callbackExpanded && <form onSubmit={submitCallback} className="mt-4 grid gap-3">
@@ -904,7 +904,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
 
             <article className="panel p-4 sm:p-5">
               <button type="button" className="flex w-full items-start justify-between gap-4 text-left" onClick={() => setQuoteExpanded((open) => !open)}>
-                <div><p className="eyebrow tight-card-kicker">Flytning</p><h3 className="mt-1 text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Gratis flyttetilbud</h3></div>
+                <div><h3 className="text-xl font-black uppercase tight-card-title text-white sm:text-2xl">Gratis flyttetilbud</h3></div>
                 <span className={`chevron-toggle ${quoteExpanded ? "is-open" : ""}`}>›</span>
               </button>
               {quoteExpanded && <form onSubmit={submitMovingQuote} className="mt-4 grid gap-3">
@@ -949,7 +949,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
         </div>
       </section>
 
-      <section id="booking" className="px-5 py-6 pb-36 sm:px-8 lg:px-12">
+      <section id="booking" className="px-5 pb-36 pt-5 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-3xl">
           <form id="booking-form" onSubmit={submitRequest} className="grid gap-4 lg:grid-cols-[1.1fr_.9fr]">
             <div className="grid gap-4">
@@ -978,7 +978,7 @@ export default function NordicAutoCareApp({ mode = "frontend", employeeToken = "
                   <Field label="Email"><TextInput type="email" value={customer.email} onChange={(e) => setCustomer({ ...customer, email: e.target.value })} placeholder="kunde@email.dk" /></Field>
                   <Field label="Adresse"><TextInput value={customer.address} onChange={(e) => setCustomer({ ...customer, address: e.target.value })} placeholder="Afhentningsadresse / område" /></Field>
                   <Field label="Betaling"><Select value={invoice.paymentMethod} onChange={(e) => setInvoice({ ...invoice, paymentMethod: e.target.value })}><option>Faktura</option><option>Kontant</option></Select></Field>
-                  <Field label="Type"><TextInput value={invoice.customerType} onChange={(e) => setInvoice({ ...invoice, customerType: e.target.value })} placeholder="Privat, erhverv eller andet" /></Field>
+                  <Field label="Type"><Select value={invoice.customerType || "Privat"} onChange={(e) => setInvoice({ ...invoice, customerType: e.target.value })}><option>Privat</option><option>Erhverv</option></Select></Field>
                   <Field label="Faktura email"><TextInput type="email" value={invoice.invoiceEmail} onChange={(e) => setInvoice({ ...invoice, invoiceEmail: e.target.value })} placeholder="Hvis anden end kontakt email" /></Field>
                 </div>}
               </section>

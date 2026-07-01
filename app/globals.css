@@ -1192,3 +1192,24 @@ textarea.form-input {
     grid-template-columns: 1fr !important;
   }
 }
+
+
+/* v28 CTA spacing / helper text removal */
+#kontakt .grid.gap-4 {
+  gap: 1rem !important;
+}
+
+@media (min-width: 640px) {
+  #kontakt .grid.gap-4 {
+    gap: 1.15rem !important;
+  }
+}
+
+#kontakt .cta-card,
+#kontakt article.panel {
+  min-height: 4.35rem;
+}
+
+#kontakt .tight-card-title {
+  margin-top: 0 !important;
+}
