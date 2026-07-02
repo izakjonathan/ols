@@ -1,75 +1,6 @@
 @import "tailwindcss";
 
-/* Øland Service v46 Apple-style typography and spacing system
-   Dark visual theme preserved. Typography, spacing and controls are centralized here. */
-
-:root {
-  color-scheme: dark;
-
-  /* Apple-like dark palette */
-  --c-bg: #000000;
-  --c-surface: #111113;
-  --c-surface-2: #1c1c1e;
-  --c-surface-3: #2c2c2e;
-  --c-fill: rgba(120,120,128,.18);
-  --c-fill-strong: rgba(120,120,128,.28);
-  --c-separator: rgba(84,84,88,.58);
-  --c-separator-soft: rgba(84,84,88,.34);
-  --c-text: rgba(255,255,255,.96);
-  --c-text-secondary: rgba(235,235,245,.64);
-  --c-text-tertiary: rgba(235,235,245,.38);
-  --c-inverse: #000000;
-
-  /* System typography */
-  --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-  --fs-caption-2: 11px;
-  --fs-caption-1: 12px;
-  --fs-footnote: 13px;
-  --fs-subhead: 15px;
-  --fs-body: 17px;
-  --fs-headline: 17px;
-  --fs-title-3: 20px;
-  --fs-title-2: 22px;
-  --fs-title-1: 28px;
-  --fs-large-title: 34px;
-  --fs-display: clamp(2.45rem, 12.4vw, 6.2rem);
-  --lh-tight: 1.05;
-  --lh-title: 1.12;
-  --lh-body: 1.38;
-  --fw-regular: 400;
-  --fw-medium: 500;
-  --fw-semibold: 600;
-  --fw-bold: 700;
-  --ls-tight: -0.035em;
-  --ls-normal: -0.012em;
-  --ls-label: 0;
-
-  /* Apple-like spacing scale */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-7: 32px;
-  --space-8: 40px;
-
-  /* Shape */
-  --radius-control: 12px;
-  --radius-card: 18px;
-  --radius-panel: 22px;
-  --radius-pill: 999px;
-
-  /* Fixed UI / safe areas */
-  --nav-h: 58px;
-  --backend-top: calc(env(safe-area-inset-top) + 72px);
-  --dock-clearance: max(132px, calc(env(safe-area-inset-bottom) + 120px));
-  --snap-top-clearance: calc(env(safe-area-inset-top) + var(--nav-h));
-  --snap-bottom-clearance: calc(env(safe-area-inset-bottom) + 72px);
-  --chevron-gap: 18px;
-  --chevron-top: calc(env(safe-area-inset-top) + var(--nav-h) + var(--chevron-gap));
-  --chevron-bottom: calc(env(safe-area-inset-bottom) + var(--chevron-gap));
-}
+/* Øland Service — consolidated design system (merged duplicate rules, June 2026 pass) */
 
 @theme inline {
   --color-background: var(--c-bg);
@@ -77,17 +8,9 @@
   --font-sans: var(--font-body);
 }
 
+/* Base reset */
 * {
   box-sizing: border-box;
-}
-
-html {
-  background: var(--c-bg);
-  scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
-  scroll-padding: 0 !important;
-  overscroll-behavior-y: none;
-  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -106,34 +29,23 @@ body {
   overscroll-behavior-y: none;
 }
 
-main,
-section {
+main, section {
   background: var(--c-bg);
 }
 
-section[id],
-.snap-section,
-[data-snap-section] {
+section[id], .snap-section, [data-snap-section] {
   scroll-margin: 0 !important;
 }
 
-button,
-a,
-summary,
-input,
-select,
-textarea {
+button, a, summary, input, select, textarea {
   font-family: var(--font-body);
 }
 
-button,
-a,
-summary {
+button, a, summary {
   -webkit-tap-highlight-color: transparent;
 }
 
-button,
-summary {
+button, summary {
   cursor: pointer;
 }
 
@@ -142,10 +54,8 @@ summary {
   color: var(--c-text);
 }
 
-/* Reduce legacy heavy/uppercase utility styling globally without changing content. */
-main [class*="font-black"],
-main [class*="font-extrabold"],
-main [class*="font-bold"] {
+/* Neutralize legacy heavy/uppercase utility classes globally, without touching markup */
+main [class*="font-black"], main [class*="font-extrabold"], main [class*="font-bold"] {
   font-weight: var(--fw-semibold) !important;
 }
 
@@ -157,39 +67,12 @@ main [class*="uppercase"] {
   text-transform: none !important;
 }
 
-/* Top navigation */
-nav.fixed {
-  min-height: var(--nav-h);
-  background: rgba(0,0,0,.94) !important;
-  border-bottom: 1px solid var(--c-separator-soft);
-  box-shadow: none;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-}
-
-.nav-pill {
-  border: 0 !important;
-  background: transparent !important;
-  padding: 0 !important;
-  color: var(--c-text-secondary);
-  font-size: var(--fs-footnote);
-  font-weight: var(--fw-semibold);
-  line-height: 1;
-  letter-spacing: 0 !important;
-  text-transform: none !important;
-}
-
 .nav-pill:hover {
   color: var(--c-text);
 }
 
-/* Shared typography */
-.eyebrow,
-.mini-title,
-label.grid > span,
-.tight-card-kicker,
-.section-chevron-label,
-.admin-stat-card p {
+/* Shared typography roles */
+.eyebrow, .mini-title, label.grid > span, .tight-card-kicker, .section-chevron-label, .admin-stat-card p {
   color: var(--c-text-secondary);
   font-size: var(--fs-footnote);
   font-weight: var(--fw-semibold);
@@ -198,11 +81,7 @@ label.grid > span,
   text-transform: none !important;
 }
 
-.panel-title,
-.admin-section-heading,
-.admin-screen-title,
-.tight-card-title,
-.section-title {
+.panel-title, .admin-section-heading, .admin-screen-title, .tight-card-title {
   color: var(--c-text);
   font-weight: var(--fw-semibold) !important;
   line-height: var(--lh-title);
@@ -233,15 +112,8 @@ label.grid > span,
   font-size: var(--fs-title-3);
 }
 
-/* Base cards */
-.panel,
-.detail-box,
-.backend-order-card,
-.backend-line-card,
-.service-intro-card,
-.choice-card,
-.check-row,
-.submitted-order-card {
+/* Base card surfaces */
+.panel, .detail-box, .backend-order-card, .backend-line-card, .service-intro-card, .choice-card, .check-row, .submitted-order-card {
   min-width: 0;
   border: 1px solid var(--c-separator-soft);
   border-radius: var(--radius-card);
@@ -249,14 +121,11 @@ label.grid > span,
   box-shadow: none;
 }
 
-.panel,
-.backend-card {
+.panel, .backend-card {
   padding: var(--space-4);
 }
 
-.detail-box,
-.backend-order-card,
-.backend-line-card {
+.detail-box, .backend-order-card, .backend-line-card {
   border-color: var(--c-separator-soft);
   background: rgba(255,255,255,.025);
   padding: var(--space-3);
@@ -272,12 +141,7 @@ label.grid > span,
   text-transform: none !important;
 }
 
-.detail-box p,
-.detail-box span,
-.detail-box li,
-.panel p,
-.panel span,
-.panel li {
+.detail-box p, .detail-box span, .detail-box li, .panel p, .panel span, .panel li {
   color: var(--c-text-secondary);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
@@ -287,16 +151,13 @@ label.grid > span,
   margin-top: var(--space-2);
 }
 
-.detail-box strong,
-.panel strong {
+.detail-box strong, .panel strong {
   color: var(--c-text);
   font-weight: var(--fw-semibold);
 }
 
 /* Buttons */
-.primary-button,
-.outline-button,
-.small-danger {
+.primary-button, .outline-button, .small-danger {
   display: inline-flex;
   min-height: 44px;
   align-items: center;
@@ -319,28 +180,23 @@ label.grid > span,
   box-shadow: 0 8px 32px rgba(255,255,255,.08);
 }
 
-.outline-button,
-.small-danger {
+.outline-button, .small-danger {
   border: 1px solid var(--c-separator);
   background: var(--c-fill);
   color: var(--c-text);
 }
 
-.outline-button:hover,
-.small-danger:hover {
+.outline-button:hover, .small-danger:hover {
   border-color: var(--c-separator);
   background: var(--c-fill-strong);
 }
 
-.primary-button:hover,
-.outline-button:hover:hover,
-.small-danger:hover {
+.primary-button:hover, .outline-button:hover:hover, .small-danger:hover {
   transform: translateY(-1px);
 }
 
-/* Inputs */
-.form-input,
-.time-control-input {
+/* Form inputs */
+.form-input, .time-control-input {
   min-height: 48px;
   width: 100%;
   min-width: 0;
@@ -357,13 +213,11 @@ label.grid > span,
   outline: none;
 }
 
-.form-input::placeholder,
-.time-control-input::placeholder {
+.form-input::placeholder, .time-control-input::placeholder {
   color: var(--c-text-tertiary);
 }
 
-.form-input:focus,
-.time-control-input:focus {
+.form-input:focus, .time-control-input:focus {
   border-color: rgba(255,255,255,.58);
   background: rgba(255,255,255,.06);
 }
@@ -374,12 +228,11 @@ textarea.form-input {
   resize: vertical;
 }
 
-select.form-input,
-select.time-control-input {
+select.form-input, select.time-control-input {
   appearance: auto;
 }
 
-/* Splash */
+/* Splash screen */
 .splash-screen {
   position: fixed;
   inset: 0;
@@ -418,103 +271,24 @@ select.time-control-input {
   mix-blend-mode: soft-light;
 }
 
-/* Frontend snap sections */
-.snap-section {
-  position: relative !important;
-  min-height: 100svh !important;
-  height: 100svh !important;
-  overflow: hidden !important;
-  isolation: isolate;
-  contain: layout paint;
-  scroll-snap-align: start !important;
-  scroll-snap-stop: always !important;
-}
-
-.landing-section,
-.section-panel,
-#priser {
+/* Frontend snap sections: shared spacing + scrollbar cleanup */
+.section-panel, #priser {
   padding-top: var(--snap-top-clearance) !important;
   padding-bottom: var(--snap-bottom-clearance) !important;
 }
 
-#services-overview > div,
-#action > div,
-#priser > div {
-  min-height: 0 !important;
-  max-height: calc(100svh - var(--snap-top-clearance) - var(--snap-bottom-clearance)) !important;
-  overflow-y: auto !important;
-  overscroll-behavior: contain !important;
-  scrollbar-width: none;
-}
-
-#services-overview > div::-webkit-scrollbar,
-#action > div::-webkit-scrollbar,
-#priser > div::-webkit-scrollbar,
 .admin-dock::-webkit-scrollbar {
   display: none;
 }
 
-.landing-title {
-  display: grid;
-  gap: .04em;
-  color: var(--c-text);
-  font-size: var(--fs-display);
-  font-weight: var(--fw-bold) !important;
-  line-height: .92;
-  letter-spacing: -.055em !important;
-  text-transform: none !important;
-}
-
+/* Landing hero */
 .landing-title span {
   display: block;
 }
 
-.landing-subtitle {
-  margin-top: var(--space-6);
-  white-space: nowrap;
-  color: var(--c-text-secondary);
-  font-size: var(--fs-subhead);
-  font-weight: var(--fw-semibold);
-  line-height: 1.2;
-  letter-spacing: 0 !important;
-  text-transform: none !important;
-}
-
-.section-title {
-  font-size: clamp(1.85rem, 7.2vw, 3.4rem);
-  font-weight: var(--fw-bold) !important;
-  line-height: 1.03;
-  letter-spacing: -.035em !important;
-}
-
-.service-intro-card {
-  padding: var(--space-4);
-  text-align: left;
-}
-
-.service-intro-card h3 {
-  margin: 0;
-  color: var(--c-text);
-  font-size: var(--fs-headline);
-  font-weight: var(--fw-semibold);
-  line-height: 1.2;
-  letter-spacing: var(--ls-normal) !important;
-  text-transform: none !important;
-}
-
-.service-intro-card p {
-  margin-top: var(--space-2);
-  color: var(--c-text-secondary);
-  font-size: var(--fs-body);
-  line-height: var(--lh-body);
-}
-
+/* Action / request section */
 .action-section > div {
   transform: none !important;
-}
-
-.action-section .panel {
-  padding-block: var(--space-4) !important;
 }
 
 .action-section h3 {
@@ -529,75 +303,12 @@ select.time-control-input {
   text-decoration: none;
 }
 
-.cta-card:hover,
-#action .panel:hover {
+.cta-card:hover, #action .panel:hover {
   border-color: var(--c-separator);
   background: var(--c-surface-2);
 }
 
-/* Section chevrons */
-.section-chevron {
-  position: absolute !important;
-  left: 50% !important;
-  z-index: 30 !important;
-  display: inline-flex !important;
-  width: auto !important;
-  height: auto !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: var(--space-2) !important;
-  padding: 0 !important;
-  transform: translateX(-50%) !important;
-  border: 0 !important;
-  background: transparent !important;
-  color: var(--c-text-secondary) !important;
-  text-decoration: none !important;
-  font-size: 0 !important;
-  line-height: 1 !important;
-}
-
-.section-chevron-top {
-  top: var(--chevron-top) !important;
-  bottom: auto !important;
-  flex-direction: column !important;
-}
-
-.section-chevron-bottom {
-  top: auto !important;
-  bottom: var(--chevron-bottom) !important;
-  flex-direction: column !important;
-}
-
-.chevron {
-  display: inline-block;
-  width: 1.05rem;
-  height: 1.05rem;
-  color: var(--c-text-secondary);
-  font-size: 1.28rem;
-}
-
-.chevron::before {
-  border-style: solid;
-  border-width: .25em .25em 0 0;
-  content: "";
-  display: inline-block;
-  height: .45em;
-  left: .15em;
-  position: relative;
-  top: .15em;
-  transform: rotate(-45deg);
-  vertical-align: top;
-  width: .45em;
-}
-
-.chevron.bottom::before {
-  top: 0;
-  transform: rotate(135deg);
-}
-
-/* Booking / request forms */
+/* Booking / request form controls */
 .choice-card {
   display: flex;
   gap: var(--space-3);
@@ -651,6 +362,7 @@ select.time-control-input {
   white-space: nowrap;
 }
 
+/* Date & time pickers */
 .booking-date-time-grid {
   display: grid !important;
   grid-template-columns: minmax(0,1fr) minmax(0,1fr);
@@ -659,9 +371,7 @@ select.time-control-input {
   min-width: 0;
 }
 
-.booking-date-time-input,
-.move-date-input,
-.time-control-input {
+.booking-date-time-input, .move-date-input, .time-control-input {
   box-sizing: border-box;
   min-width: 0 !important;
   width: 100% !important;
@@ -678,34 +388,18 @@ select.time-control-input {
   -webkit-appearance: none;
 }
 
-.booking-date-time-input::-webkit-date-and-time-value,
-.move-date-input::-webkit-date-and-time-value,
-.time-control-input::-webkit-date-and-time-value {
+.booking-date-time-input::-webkit-date-and-time-value, .move-date-input::-webkit-date-and-time-value, .time-control-input::-webkit-date-and-time-value {
   min-width: 0;
   padding: 0;
   text-align: left;
 }
 
-.booking-date-time-input::-webkit-calendar-picker-indicator,
-.move-date-input::-webkit-calendar-picker-indicator,
-.time-control-input::-webkit-calendar-picker-indicator {
+.booking-date-time-input::-webkit-calendar-picker-indicator, .move-date-input::-webkit-calendar-picker-indicator, .time-control-input::-webkit-calendar-picker-indicator {
   width: 1rem;
   height: 1rem;
   margin: 0;
   padding: 0;
   opacity: .55;
-}
-
-.chevron-toggle {
-  display: grid;
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-  place-items: center;
-  color: var(--c-text-secondary);
-  font-size: var(--fs-title-3);
-  line-height: 1;
-  transform: rotate(90deg);
 }
 
 .chevron-toggle.is-open {
@@ -717,13 +411,6 @@ select.time-control-input {
   min-height: 100svh !important;
   padding-top: calc(env(safe-area-inset-top) + var(--nav-h)) !important;
   padding-bottom: calc(env(safe-area-inset-bottom) + var(--space-8)) !important;
-}
-
-.backend-screen,
-#admin {
-  padding-top: var(--backend-top) !important;
-  padding-left: var(--space-4) !important;
-  padding-right: var(--space-4) !important;
 }
 
 .backend-safe-bottom {
@@ -740,20 +427,12 @@ select.time-control-input {
   display: none !important;
 }
 
-.admin-shell,
-.backend-module {
+.admin-shell, .backend-module {
   min-width: 0 !important;
   margin-top: 0 !important;
 }
 
-.backend-module,
-#admin .grid.gap-4,
-#admin .grid.gap-5,
-#admin .grid.gap-6,
-#admin .grid.gap-8,
-.employee-page .grid.gap-4,
-.employee-page .grid.gap-5,
-.employee-page .grid.gap-6 {
+.backend-module, #admin .grid.gap-4, #admin .grid.gap-5, #admin .grid.gap-6, #admin .grid.gap-8, .employee-page .grid.gap-4, .employee-page .grid.gap-5, .employee-page .grid.gap-6 {
   gap: var(--space-3) !important;
 }
 
@@ -791,8 +470,7 @@ select.time-control-input {
   padding: var(--space-4) !important;
 }
 
-.submitted-order-card h4,
-.submitted-order-card h5 {
+.submitted-order-card h4, .submitted-order-card h5 {
   color: var(--c-text) !important;
   font-size: var(--fs-title-3) !important;
   font-weight: var(--fw-semibold) !important;
@@ -806,8 +484,7 @@ select.time-control-input {
   border-top-color: var(--c-separator-soft) !important;
 }
 
-.order-detail-panel,
-.new-order-detail > .panel {
+.order-detail-panel, .new-order-detail > .panel {
   min-height: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
@@ -821,8 +498,7 @@ select.time-control-input {
   background: rgba(255,255,255,.025) !important;
 }
 
-#admin details:not(.submitted-order-card) summary,
-#admin details:not(.submitted-order-card) > div {
+#admin details:not(.submitted-order-card) summary, #admin details:not(.submitted-order-card) > div {
   padding: var(--space-3) !important;
 }
 
@@ -854,14 +530,12 @@ select.time-control-input {
   text-transform: none !important;
 }
 
-/* Employee link */
+/* Employee hour-tracking page */
 .employee-page .panel {
   padding: var(--space-4) !important;
 }
 
-.employee-page h1,
-.employee-page h2,
-.employee-page h3 {
+.employee-page h1, .employee-page h2, .employee-page h3 {
   color: var(--c-text);
   font-weight: var(--fw-semibold) !important;
   line-height: var(--lh-title) !important;
@@ -869,9 +543,7 @@ select.time-control-input {
   text-transform: none !important;
 }
 
-.employee-page p,
-.employee-page span,
-.employee-page li {
+.employee-page p, .employee-page span, .employee-page li {
   font-size: var(--fs-body);
   line-height: var(--lh-body);
 }
@@ -882,7 +554,6 @@ select.time-control-input {
     --nav-h: 62px;
     --backend-top: calc(env(safe-area-inset-top) + 80px);
     --snap-bottom-clearance: calc(env(safe-area-inset-bottom) + 80px);
-    --chevron-gap: 22px;
   }
 
   .splash-screen .splash-logo {
@@ -890,8 +561,7 @@ select.time-control-input {
     max-width: 34rem !important;
   }
 
-  .panel,
-  .backend-card {
+  .panel, .backend-card {
     padding: var(--space-5);
   }
 }
@@ -912,17 +582,68 @@ select.time-control-input {
   }
 }
 
-/* v50 frontend stable layout fix
-   Reason: full-screen + overflow-hidden + inner max-height created clipped price content and black dead zones around chevrons.
-   New approach: keep dark Apple-like style, but use normal document flow with min-height sections.
-   No section hides overflowing content. Chevrons are small transparent controls and never create large black blocks. */
-
 html {
-  scroll-snap-type: none !important;
+  background: var(--c-bg);
   scroll-behavior: smooth !important;
+  scroll-snap-type: none !important;
+  scroll-padding: 0 !important;
+  overscroll-behavior-y: none;
+  -webkit-text-size-adjust: 100%;
 }
 
 :root {
+  color-scheme: dark;
+  --c-bg: #000000;
+  --c-surface: #111113;
+  --c-surface-2: #1c1c1e;
+  --c-surface-3: #2c2c2e;
+  --c-fill: rgba(120,120,128,.18);
+  --c-fill-strong: rgba(120,120,128,.28);
+  --c-separator: rgba(84,84,88,.58);
+  --c-separator-soft: rgba(84,84,88,.34);
+  --c-text: rgba(255,255,255,.96);
+  --c-text-secondary: rgba(235,235,245,.64);
+  --c-text-tertiary: rgba(235,235,245,.38);
+  --c-inverse: #000000;
+  --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+  --fs-caption-2: 11px;
+  --fs-caption-1: 12px;
+  --fs-footnote: 13px;
+  --fs-subhead: 15px;
+  --fs-body: 17px;
+  --fs-headline: 17px;
+  --fs-title-3: 20px;
+  --fs-title-2: 22px;
+  --fs-title-1: 28px;
+  --fs-large-title: 34px;
+  --fs-display: clamp(2.45rem, 12.4vw, 6.2rem);
+  --lh-tight: 1.05;
+  --lh-title: 1.12;
+  --lh-body: 1.38;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --ls-tight: -0.035em;
+  --ls-normal: -0.012em;
+  --ls-label: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --radius-control: 12px;
+  --radius-card: 18px;
+  --radius-panel: 22px;
+  --radius-pill: 999px;
+  --nav-h: 58px;
+  --backend-top: calc(env(safe-area-inset-top) + 72px);
+  --dock-clearance: max(132px, calc(env(safe-area-inset-bottom) + 120px));
+  --snap-top-clearance: calc(env(safe-area-inset-top) + var(--nav-h));
+  --snap-bottom-clearance: calc(env(safe-area-inset-bottom) + 72px);
   --front-side: clamp(22px, 5.2vw, 34px);
   --front-top: calc(env(safe-area-inset-top) + var(--nav-h) + 28px);
   --front-bottom: calc(env(safe-area-inset-bottom) + 76px);
@@ -931,21 +652,22 @@ html {
   --front-card-min: 64px;
 }
 
-/* Stable frontend section model */
 .snap-section {
   position: relative !important;
-  display: flex !important;
   min-height: 100svh !important;
   height: auto !important;
+  overflow: visible !important;
+  isolation: isolate;
+  contain: layout paint;
+  scroll-snap-align: none !important;
+  scroll-snap-stop: normal !important;
+  display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  overflow: visible !important;
   padding-left: var(--front-side) !important;
   padding-right: var(--front-side) !important;
   padding-top: var(--front-top) !important;
   padding-bottom: var(--front-bottom) !important;
-  scroll-snap-align: none !important;
-  scroll-snap-stop: normal !important;
 }
 
 .landing-section {
@@ -954,10 +676,7 @@ html {
   padding-bottom: calc(env(safe-area-inset-bottom) + 86px) !important;
 }
 
-.landing-section > div,
-#services-overview > div,
-#action > div,
-#priser > div {
+.landing-section > div, #services-overview > div, #action > div, #priser > div {
   width: 100% !important;
   height: auto !important;
   min-height: 0 !important;
@@ -965,7 +684,7 @@ html {
   overflow: visible !important;
 }
 
-/* Chevrons: transparent inline navigation, no boxes, no clipping zones */
+/* Section chevrons (scroll nav arrows) */
 .section-chevron {
   position: absolute !important;
   left: 50% !important;
@@ -981,13 +700,13 @@ html {
   padding: 0 !important;
   transform: translateX(-50%) !important;
   border: 0 !important;
-  border-radius: 0 !important;
   background: transparent !important;
-  box-shadow: none !important;
   color: var(--c-text-tertiary) !important;
   text-decoration: none !important;
   font-size: 0 !important;
   line-height: 1 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
 .section-chevron-top {
@@ -1050,28 +769,28 @@ html {
   font-weight: 700 !important;
   line-height: .94 !important;
   letter-spacing: -0.06em !important;
-  text-align: center !important;
   text-transform: none !important;
+  text-align: center !important;
 }
 
 .landing-subtitle {
   margin-top: 24px !important;
+  white-space: nowrap !important;
   color: var(--c-text-secondary) !important;
   font-size: 15px !important;
   font-weight: 600 !important;
   line-height: 1.2 !important;
   letter-spacing: 0 !important;
-  text-align: center !important;
   text-transform: none !important;
-  white-space: nowrap !important;
+  text-align: center !important;
 }
 
 .section-title {
-  color: var(--c-text) !important;
   font-size: clamp(30px, 7.3vw, 48px) !important;
   font-weight: 650 !important;
   line-height: 1.04 !important;
   letter-spacing: -0.045em !important;
+  color: var(--c-text) !important;
   text-align: center !important;
   text-transform: none !important;
 }
@@ -1091,10 +810,12 @@ html {
 
 .service-intro-card {
   padding: 16px !important;
+  text-align: left;
   border-radius: 18px !important;
 }
 
 .service-intro-card h3 {
+  margin: 0;
   color: var(--c-text) !important;
   font-size: 17px !important;
   font-weight: 600 !important;
@@ -1110,7 +831,7 @@ html {
   line-height: 1.35 !important;
 }
 
-/* Action/request */
+/* Action/request layout */
 #action > div {
   display: grid !important;
   align-content: center !important;
@@ -1118,28 +839,24 @@ html {
   max-width: 44rem !important;
 }
 
-#action > div > .grid,
-.action-section form,
-.action-section .grid.gap-3 {
+#action > div > .grid, .action-section form, .action-section .grid.gap-3 {
   gap: var(--front-gap) !important;
 }
 
-.action-section .panel,
-.action-section .cta-card {
+.action-section .panel, .action-section .cta-card {
   border-radius: 18px !important;
 }
 
 .action-section .panel {
+  padding-block: var(--space-4) !important;
   padding: var(--front-card-pad) !important;
 }
 
-.action-section .cta-card,
-.action-section article > button {
+.action-section .cta-card, .action-section article > button {
   min-height: var(--front-card-min) !important;
 }
 
-.action-section h3,
-.tight-card-title {
+.action-section h3, .tight-card-title {
   color: var(--c-text) !important;
   font-size: clamp(24px, 6.4vw, 30px) !important;
   font-weight: 600 !important;
@@ -1148,9 +865,7 @@ html {
   text-transform: none !important;
 }
 
-.action-section .primary-button,
-.action-section .outline-button,
-.action-section .small-danger {
+.action-section .primary-button, .action-section .outline-button, .action-section .small-danger {
   min-height: 48px !important;
   border-radius: var(--radius-pill) !important;
   font-size: 17px !important;
@@ -1159,12 +874,7 @@ html {
   text-transform: none !important;
 }
 
-.action-section .form-input,
-.action-section .time-control-input,
-.employee-page .form-input,
-.employee-page .time-control-input,
-#admin .form-input,
-#admin .time-control-input {
+.action-section .form-input, .action-section .time-control-input, .employee-page .form-input, .employee-page .time-control-input, #admin .form-input, #admin .time-control-input {
   min-height: 48px !important;
   border-radius: 12px !important;
   font-size: 17px !important;
@@ -1197,14 +907,18 @@ html {
 }
 
 .chevron-toggle {
+  display: grid;
   width: 28px !important;
   height: 28px !important;
+  flex-shrink: 0;
+  place-items: center;
   color: var(--c-text-secondary) !important;
   font-size: 22px !important;
   line-height: 1 !important;
+  transform: rotate(90deg);
 }
 
-/* Prices: this section has more content than one screen, so it must scroll normally */
+/* Prices: this section has more content than one screen, so it scrolls normally */
 .prices-section {
   display: block !important;
   min-height: 100svh !important;
@@ -1226,8 +940,7 @@ html {
   margin-bottom: 24px !important;
 }
 
-.prices-heading .section-title,
-#priser h2 {
+.prices-heading .section-title, #priser h2 {
   color: var(--c-text) !important;
   font-size: clamp(30px, 8vw, 48px) !important;
   font-weight: 650 !important;
@@ -1298,14 +1011,14 @@ html {
   line-height: 1.28 !important;
 }
 
-/* Keep backend/employee behavior from the current baseline */
-.backend-screen,
-#admin {
+/* Backend/admin & employee shared spacing */
+.backend-screen, #admin {
   padding-top: var(--backend-top) !important;
+  padding-left: var(--space-4) !important;
+  padding-right: var(--space-4) !important;
 }
 
-.backend-safe-bottom,
-.employee-page {
+.backend-safe-bottom, .employee-page {
   padding-bottom: var(--dock-clearance) !important;
 }
 
@@ -1313,36 +1026,6 @@ html {
   .prices-grid {
     grid-template-columns: .9fr 1.1fr !important;
     align-items: start !important;
-  }
-}
-
-@media (max-width: 430px) {
-  :root {
-    --front-side: 22px;
-    --front-top: calc(env(safe-area-inset-top) + var(--nav-h) + 26px);
-    --front-bottom: calc(env(safe-area-inset-bottom) + 78px);
-    --front-card-min: 64px;
-    --front-card-pad: 16px;
-  }
-
-  .nav-pill {
-    font-size: 17px !important;
-    font-weight: 500 !important;
-  }
-
-  .prices-section {
-    padding-top: calc(env(safe-area-inset-top) + var(--nav-h) + 76px) !important;
-    padding-bottom: calc(env(safe-area-inset-bottom) + 120px) !important;
-  }
-
-  .package-card .flex.items-center {
-    align-items: flex-start !important;
-    gap: 18px !important;
-  }
-
-  .package-card svg {
-    width: 58px !important;
-    height: 58px !important;
   }
 }
 
@@ -1357,16 +1040,19 @@ html {
     font-size: 11px !important;
   }
 
-  .action-section h3,
-  .tight-card-title {
+  .action-section h3, .tight-card-title {
     font-size: clamp(21px, 5.8vw, 26px) !important;
   }
 }
 
-
-/* v51 compact navbar */
+/* Top navigation (compact variant) */
 nav.fixed {
   min-height: auto !important;
+  background: rgba(0,0,0,.94) !important;
+  border-bottom: 1px solid var(--c-separator-soft);
+  box-shadow: none;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   height: auto !important;
   padding-top: calc(env(safe-area-inset-top) + 10px) !important;
   padding-bottom: 10px !important;
@@ -1385,13 +1071,45 @@ nav.fixed img {
 }
 
 .nav-pill {
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  color: var(--c-text-secondary);
   font-size: 15px !important;
+  font-weight: var(--fw-semibold);
   line-height: 1.05 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
 }
 
 @media (max-width: 430px) {
   :root {
+    --front-side: 22px;
+    --front-top: calc(env(safe-area-inset-top) + var(--nav-h) + 26px);
+    --front-bottom: calc(env(safe-area-inset-bottom) + 78px);
+    --front-card-min: 64px;
+    --front-card-pad: 16px;
     --nav-h: 3.55rem;
+  }
+
+  .nav-pill {
+    font-size: 15px !important;
+    font-weight: 500 !important;
+  }
+
+  .prices-section {
+    padding-top: calc(env(safe-area-inset-top) + var(--nav-h) + 76px) !important;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 120px) !important;
+  }
+
+  .package-card .flex.items-center {
+    align-items: flex-start !important;
+    gap: 18px !important;
+  }
+
+  .package-card svg {
+    width: 58px !important;
+    height: 58px !important;
   }
 
   nav.fixed {
@@ -1401,9 +1119,5 @@ nav.fixed img {
 
   nav.fixed img {
     max-height: 32px !important;
-  }
-
-  .nav-pill {
-    font-size: 15px !important;
   }
 }
