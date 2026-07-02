@@ -184,3 +184,18 @@ Fix:
 - Updated mobile nav height and logo sizing.
 - Preserved v50 stable frontend layout behavior.
 - Production build tested successfully.
+
+
+## v52 baseline lock
+
+This build keeps the Claude CSS cleanup as the new baseline and only makes small baseline-lock changes:
+
+- Updated `/version` so it correctly shows `Øland Service v52`.
+- Reviewed previously suspected unused selectors:
+  - `.choice-card` is still used in the app markup, so it was kept.
+  - `.chevron-toggle` is still used in the app markup, so it was kept.
+- Added comments in `app/globals.css` explaining the `:root` structure:
+  - the base `:root` is the main design-token control panel.
+  - responsive `:root` blocks only override specific sizing/spacing tokens for tablet/desktop, short mobile screens, and mobile.
+- Did not add a new styling override layer.
+- Future changes should stay small and targeted against this baseline.

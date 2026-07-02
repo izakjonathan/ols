@@ -550,6 +550,7 @@ select.form-input, select.time-control-input {
 
 /* Desktop/tablet refinement */
 @media (min-width: 640px) {
+  /* Responsive token override: tablet/desktop only. Keep this limited to sizing/spacing tokens that genuinely need a larger viewport value. */
   :root {
     --nav-h: 62px;
     --backend-top: calc(env(safe-area-inset-top) + 80px);
@@ -591,6 +592,7 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Token note: this is the BASE :root block. It is the main control panel for colors, typography, spacing, radii, nav height, backend offset, dock clearance and frontend section spacing. Responsive :root blocks below only override a small set of these tokens for specific screen sizes. */
 :root {
   color-scheme: dark;
   --c-bg: #000000;
@@ -1030,6 +1032,7 @@ html {
 }
 
 @media (max-height: 760px) and (max-width: 430px) {
+  /* Responsive token override: short iPhone screens only. Used to tighten frontend card rhythm so content remains visible. */
   :root {
     --front-gap: 10px;
     --front-card-pad: 14px;
@@ -1083,6 +1086,7 @@ nav.fixed img {
 }
 
 @media (max-width: 430px) {
+  /* Responsive token override: iPhone/mobile only. Used for compact side padding, card sizing and nav height. */
   :root {
     --front-side: 22px;
     --front-top: calc(env(safe-area-inset-top) + var(--nav-h) + 26px);
