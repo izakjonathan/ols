@@ -1,15 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Big_Shoulders_Display, JetBrains_Mono } from "next/font/google";
+import { Oswald, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 
-const displayFont = Big_Shoulders_Display({
+const displayFont = Oswald({
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  weight: ["500", "600", "700"],
   variable: "--font-display",
   display: "swap",
 });
 
-const monoFont = JetBrains_Mono({
+const monoFont = Roboto_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-mono",
