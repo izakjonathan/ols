@@ -254,6 +254,9 @@ function Icon({ name, className = "" }: { name: string; className?: string }) {
   if (name === "handshake") return <svg viewBox="0 0 64 64" className={className} aria-hidden="true"><path className={common} d="m25 35 7 7c2 2 5 2 7 0l13-13" /><path className={common} d="M12 25 24 13l11 11-12 12L12 25Zm40 0L40 13l-9 9 17 17 4-4c3-3 3-7 0-10Z" /><path className={common} d="m20 39 8 8m-2-14 9 9m-3-15 10 10" /></svg>;
   if (name === "phone") return <svg viewBox="0 0 24 24" className={className}><path className={common} d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1.1.4 2.2.7 3.2a2 2 0 0 1-.5 2.1L8.1 10.2a16 16 0 0 0 5.7 5.7l1.2-1.2a2 2 0 0 1 2.1-.5c1 .3 2.1.6 3.2.7a2 2 0 0 1 1.7 2Z" /></svg>;
   if (name === "mail") return <svg viewBox="0 0 24 24" className={className}><path className={common} d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" /><path className={common} d="m22 6-10 7L2 6" /></svg>;
+  if (name === "box") return <svg viewBox="0 0 64 64" className={className} aria-hidden="true"><path className={common} d="M8 20 32 8l24 12v24L32 56 8 44V20Z" /><path className={common} d="M8 20 32 32m0 0 24-12M32 32v24" /></svg>;
+  if (name === "truck") return <svg viewBox="0 0 64 64" className={className} aria-hidden="true"><path className={common} d="M6 16h30v26H6z" /><path className={common} d="M36 26h12l10 10v6H36z" /><circle className={common} cx="18" cy="46" r="5" /><circle className={common} cx="46" cy="46" r="5" /></svg>;
+  if (name === "warehouse") return <svg viewBox="0 0 64 64" className={className} aria-hidden="true"><path className={common} d="M6 28 32 10l26 18v26H6V28Z" /><path className={common} d="M22 54V34h20v20" /></svg>;
   return null;
 }
 
@@ -467,112 +470,6 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
     const hasCarInfo = cars.some((car) => car.services.length || car.extras.length || car.notes.trim() || car.packageId !== "basis" || car.type !== "Transport" || car.uploads.length) || cars.length > 1;
     return draftTotal > 0 || hasCustomerInfo || hasInvoiceInfo || hasTimeInfo || hasCarInfo;
   }, [cars, customer, customerMessage, draftTotal, invoice, isBackend, preferredDate, preferredTime]);
-
-  useEffect(() => {
-    if (isBackend || isEmployee) return;
-
-    const getSections = () => Array.from(document.querySelectorAll<HTMLElement>("[data-snap-section]"));
-
-    const getCurrentIndex = (sections: HTMLElement[]) => {
-      const viewportCenter = window.scrollY + window.innerHeight / 2;
-      let currentIndex = 0;
-      let smallestDistance = Number.POSITIVE_INFINITY;
-
-      sections.forEach((section, index) => {
-        const center = section.offsetTop + section.offsetHeight / 2;
-        const distance = Math.abs(center - viewportCenter);
-        if (distance < smallestDistance) {
-          smallestDistance = distance;
-          currentIndex = index;
-        }
-      });
-
-      return currentIndex;
-    };
-
-    const canScrollInside = (target: EventTarget | null, deltaY: number) => {
-      let node = target instanceof HTMLElement ? target : null;
-
-      while (node && node !== document.body) {
-        const style = window.getComputedStyle(node);
-        const canScroll = /(auto|scroll)/.test(style.overflowY) && node.scrollHeight > node.clientHeight + 2;
-        if (canScroll) {
-          const atTop = node.scrollTop <= 2;
-          const atBottom = node.scrollTop + node.clientHeight >= node.scrollHeight - 2;
-          if ((deltaY < 0 && !atTop) || (deltaY > 0 && !atBottom)) return true;
-        }
-        node = node.parentElement;
-      }
-
-      return false;
-    };
-
-    const scrollToSection = (direction: 1 | -1) => {
-      if (snapScrollLockRef.current) return;
-      const sections = getSections();
-      if (!sections.length) return;
-
-      const currentIndex = getCurrentIndex(sections);
-      const nextIndex = Math.max(0, Math.min(sections.length - 1, currentIndex + direction));
-      if (nextIndex === currentIndex) return;
-
-      snapScrollLockRef.current = true;
-      sections[nextIndex].scrollIntoView({ behavior: "smooth", block: "start" });
-      window.setTimeout(() => { snapScrollLockRef.current = false; }, 780);
-    };
-
-    const onWheel = (event: WheelEvent) => {
-      if (Math.abs(event.deltaY) < 18) return;
-      if (canScrollInside(event.target, event.deltaY)) return;
-      event.preventDefault();
-      scrollToSection(event.deltaY > 0 ? 1 : -1);
-    };
-
-    const onTouchStart = (event: TouchEvent) => {
-      snapTouchStartRef.current = { y: event.touches[0]?.clientY ?? 0, target: event.target };
-    };
-
-    const onTouchEnd = (event: TouchEvent) => {
-      const start = snapTouchStartRef.current;
-      snapTouchStartRef.current = null;
-      if (!start) return;
-
-      const endY = event.changedTouches[0]?.clientY ?? start.y;
-      const deltaY = start.y - endY;
-      if (Math.abs(deltaY) < 48) return;
-      if (canScrollInside(start.target, deltaY)) return;
-
-      event.preventDefault();
-      scrollToSection(deltaY > 0 ? 1 : -1);
-    };
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      const active = document.activeElement;
-      if (active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement || active instanceof HTMLSelectElement) return;
-
-      if (["ArrowDown", "PageDown", " "].includes(event.key)) {
-        event.preventDefault();
-        scrollToSection(1);
-      }
-
-      if (["ArrowUp", "PageUp"].includes(event.key)) {
-        event.preventDefault();
-        scrollToSection(-1);
-      }
-    };
-
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchend", onTouchEnd, { passive: false });
-    window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchend", onTouchEnd);
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [isBackend, isEmployee]);
 
   const searchedOrders = useMemo(() => {
     const needle = searchTerm.trim().toLowerCase();
@@ -979,7 +876,7 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black text-stone-50">
+    <main className={`relative min-h-screen overflow-hidden bg-black text-stone-50 ${isBackend ? "" : "site-frontend"}`}>
       <div className="splash-screen" aria-hidden="true"><Image src="/images/oland-service-logo.png" alt="" width={1931} height={778} priority sizes="70vw" className="splash-logo" /></div>
       <div className="fixed inset-0 -z-10 bg-black" />
       <div className="noise fixed inset-0 -z-10 opacity-35" />
@@ -995,8 +892,9 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
 
       <div className={isBackend ? "pt-24 sm:pt-24" : ""}>
       {!isBackend && <>
-      <section id="top" data-snap-section className="snap-section landing-section relative grid place-items-center px-5 text-center sm:px-8 lg:px-12">
+      <section id="top" className="landing-section relative grid place-items-center px-5 text-center sm:px-8 lg:px-12">
         <div className="mx-auto max-w-5xl">
+          <p className="eyebrow hero-eyebrow"><span className="hero-eyebrow-dot" aria-hidden="true" />Book direkte online</p>
           <h1 className="landing-title text-white">
             <span>Transport</span>
             <span>Og logistik</span>
@@ -1004,36 +902,40 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
             <span>Hænder</span>
           </h1>
           <p className="landing-subtitle">Kvalitet . Omhu . Tillid</p>
+          <div className="hero-actions">
+            <a href="tel:+4526848789" className="primary-button hero-cta"><Icon name="phone" className="h-4 w-4" />Ring nu</a>
+            <a href="#action" className="outline-button hero-cta">Book opgave</a>
+          </div>
         </div>
-        <a href="#services-overview" className="section-chevron section-chevron-bottom" aria-label="Gå til services"><span className="section-chevron-label">Services</span><span className="chevron bottom" aria-hidden="true"></span></a>
       </section>
 
-      <section id="services-overview" data-snap-section className="snap-section section-panel px-5 sm:px-8 lg:px-12">
-        <div className="mx-auto grid h-full max-w-3xl content-center gap-6 text-center">
+      <section id="services-overview" className="section-panel px-5 sm:px-8 lg:px-12">
+        <div className="mx-auto grid h-full max-w-4xl content-center gap-8 text-center">
           <div>
             <p className="eyebrow">Services</p>
             <h2 className="section-title mt-3">Hvad Øland Service hjælper med</h2>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
             <article className="service-intro-card">
+              <Icon name="box" className="service-intro-icon" />
               <h3>Flytning</h3>
               <p>Tekst kommer senere.</p>
             </article>
             <article className="service-intro-card">
+              <Icon name="truck" className="service-intro-icon" />
               <h3>Transport</h3>
               <p>Tekst kommer senere.</p>
             </article>
             <article className="service-intro-card">
+              <Icon name="warehouse" className="service-intro-icon" />
               <h3>Opbevaring</h3>
               <p>Tekst kommer senere.</p>
             </article>
           </div>
         </div>
-        <a href="#top" className="section-chevron section-chevron-top" aria-label="Gå til landing"><span className="chevron" aria-hidden="true"></span><span className="section-chevron-label">Landing</span></a>
-        <a href="#action" className="section-chevron section-chevron-bottom" aria-label="Gå til kontakt"><span className="section-chevron-label">Kontakt</span><span className="chevron bottom" aria-hidden="true"></span></a>
       </section>
 
-      <section id="action" data-snap-section className="snap-section action-section section-panel px-5 sm:px-8 lg:px-12">
+      <section id="action" className="action-section section-panel px-5 sm:px-8 lg:px-12">
         <div className="mx-auto grid h-full max-w-3xl content-center gap-3">
           {submittedId && <div className="rounded-2xl border border-white/40 bg-white/[0.08] p-3 text-xs text-stone-100">Forespørgsel <strong className="text-white">{submittedId}</strong> er oprettet i backend.</div>}
           <div className="grid gap-3">
@@ -1132,11 +1034,9 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
             <button type="submit" className="primary-button w-full">Send</button>
           </form>
         </div>
-        <a href="#services-overview" className="section-chevron section-chevron-top" aria-label="Gå til services"><span className="chevron" aria-hidden="true"></span><span className="section-chevron-label">Services</span></a>
-        <a href="#priser" className="section-chevron section-chevron-bottom" aria-label="Gå til priser"><span className="section-chevron-label">Priser</span><span className="chevron bottom" aria-hidden="true"></span></a>
       </section>
 
-      <section id="priser" data-snap-section className="snap-section prices-section px-5 sm:px-8 lg:px-12"><a href="#action" className="section-chevron section-chevron-top" aria-label="Gå til forespørgsel"><span className="chevron" aria-hidden="true"></span><span className="section-chevron-label">Forespørgsel</span></a><div className="prices-inner mx-auto max-w-7xl"><div className="prices-heading text-center"><p className="eyebrow">Ydelser</p><h2 className="section-title">Transport og logistik</h2></div><div className="prices-grid"><div className="panel p-4 sm:p-5"><h3 className="panel-title">Enkeltydelser</h3><div className="divide-y divide-white/18">{services.map((row) => <div key={row.id} className="flex items-start justify-between gap-5 py-2.5 text-[0.94rem] leading-tight sm:text-base"><span className="text-stone-100/90">{row.name}</span><span className="shrink-0 text-right font-medium tracking-wide text-stone-100/90">{kr(row.price)}</span></div>)}</div><p className="mt-6 text-sm leading-6 text-white/86">Priserne er fra-priser og kan variere afhængigt af opgavens omfang og afstand.</p><div className="mt-9"><h3 className="panel-title">Tillæg</h3><div className="divide-y divide-white/18">{extras.map((row) => <div key={row.id} className="flex items-start justify-between gap-5 py-2.5 text-[0.94rem] leading-tight sm:text-base"><span className="text-stone-100/90">{row.name}</span><span className="shrink-0 text-right font-medium tracking-wide text-stone-100/90">{row.note ?? kr(row.price)}</span></div>)}</div></div></div><div id="pakker" className="packages-list"><h3 className="panel-title mb-0">Pakkeløsninger</h3>{packages.map((pack) => <article key={pack.title} className="package-card"><div className="flex items-center gap-5"><Icon name={pack.icon} className="h-16 w-16 shrink-0 text-white sm:h-20 sm:w-20" /><div className="min-w-0 flex-1"><div className="flex flex-wrap items-baseline justify-between gap-2"><h4 className="package-title">{pack.title}</h4><p className="package-price">{kr(pack.price)}</p></div><ul className="package-items">{pack.items.map((item) => <li key={item} className="flex gap-2"><span className="text-white">•</span><span>{item}</span></li>)}</ul></div></div></article>)}</div></div></div></section>
+      <section id="priser" className="prices-section px-5 sm:px-8 lg:px-12"><div className="prices-inner mx-auto max-w-7xl"><div className="prices-heading text-center"><p className="eyebrow">Ydelser</p><h2 className="section-title">Transport og logistik</h2></div><div className="prices-grid"><div className="panel p-4 sm:p-5"><h3 className="panel-title">Enkeltydelser</h3><div className="price-list">{services.map((row) => <div key={row.id} className="price-row"><span className="price-row-name">{row.name}</span><span className="price-row-leader" aria-hidden="true" /><span className="price-row-value">{kr(row.price)}</span></div>)}</div><p className="mt-6 text-sm leading-6 text-white/86">Priserne er fra-priser og kan variere afhængigt af opgavens omfang og afstand.</p><div className="mt-9"><h3 className="panel-title">Tillæg</h3><div className="price-list">{extras.map((row) => <div key={row.id} className="price-row"><span className="price-row-name">{row.name}</span><span className="price-row-leader" aria-hidden="true" /><span className="price-row-value">{row.note ?? kr(row.price)}</span></div>)}</div></div></div><div id="pakker" className="packages-list"><h3 className="panel-title mb-0">Pakkeløsninger</h3>{packages.map((pack) => <article key={pack.title} className="package-card"><div className="flex items-center gap-5"><Icon name={pack.icon} className="h-16 w-16 shrink-0 text-white sm:h-20 sm:w-20" /><div className="min-w-0 flex-1"><div className="flex flex-wrap items-baseline justify-between gap-2"><h4 className="package-title">{pack.title}</h4><p className="package-price">{kr(pack.price)}</p></div><ul className="package-items">{pack.items.map((item) => <li key={item} className="flex gap-2"><span className="text-white">•</span><span>{item}</span></li>)}</ul></div></div></article>)}</div></div></div></section>
       </>}
 
       {isBackend && <section id="admin" className="backend-safe-bottom backend-screen px-5 sm:px-8 lg:px-12"><div className="mx-auto max-w-7xl">
@@ -1163,12 +1063,12 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
         </div></div></section>}
       </div>
       {!isBackend && (
-        <footer className="snap-section px-5 pb-12 pt-8 sm:px-8 lg:px-12">
-          <div className="mx-auto max-w-7xl rounded-2xl border border-white/25 bg-black/55 px-5 py-6 text-center sm:px-7">
+        <footer className="site-footer px-5 pb-12 pt-8 sm:px-8 lg:px-12">
+          <div className="mx-auto max-w-7xl rounded-2xl border border-white/25 bg-black/55 px-5 py-8 text-center sm:px-7 sm:py-10">
             <p className="eyebrow">Kontakt os i dag</p>
-            <h2 className="mt-3 text-4xl font-semibold uppercase tracking-[0.16em] text-white sm:text-5xl">Øland Service</h2>
+            <h2 className="footer-title mt-3">Øland Service</h2>
             <p className="mt-4 text-base leading-7 text-stone-200/82">Transport, flytning og praktisk logistik med enkel booking, tydelige priser og personlig service.</p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            <div className="mt-8 grid gap-3 sm:grid-cols-3">
               <a href="tel:+4526848789" className="contact-card justify-center"><Icon name="phone" className="h-5 w-5 text-white" /><span>26848789</span></a>
               <a href="mailto:kontakt@olandservice.dk" className="contact-card justify-center"><Icon name="mail" className="h-5 w-5 text-white" /><span>kontakt@olandservice.dk</span></a>
               <div className="contact-card justify-center"><span className="grid h-5 w-5 place-items-center text-lg text-white">◷</span><span>Åben 8-20 hver dag</span></div>

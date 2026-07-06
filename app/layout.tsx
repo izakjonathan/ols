@@ -1,5 +1,20 @@
 import type { Metadata, Viewport } from "next";
+import { Big_Shoulders_Display, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+
+const displayFont = Big_Shoulders_Display({
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const monoFont = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Øland Service",
@@ -40,7 +55,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="da">
+    <html lang="da" className={`${displayFont.variable} ${monoFont.variable}`}>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />

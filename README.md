@@ -199,3 +199,13 @@ This build keeps the Claude CSS cleanup as the new baseline and only makes small
   - responsive `:root` blocks only override specific sizing/spacing tokens for tablet/desktop, short mobile screens, and mobile.
 - Did not add a new styling override layer.
 - Future changes should stay small and targeted against this baseline.
+
+
+## v53 normal scrolling
+
+- Removed section-by-section stop/scroll snapping behavior.
+- Removed all frontend section chevron symbols.
+- Removed all frontend chevron section labels.
+- Returned frontend pages to normal document scrolling.
+- Kept collapsible-card chevrons used inside forms/cards.
+- Production build tested successfully.
