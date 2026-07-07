@@ -600,17 +600,17 @@ html {
 /* Token note: this is the BASE :root block. It is the main control panel for colors, typography, spacing, radii, nav height, backend offset, dock clearance and frontend section spacing. Responsive :root blocks below only override a small set of these tokens for specific screen sizes. */
 :root {
   color-scheme: dark;
-  --c-bg: #000000;
-  --c-surface: #111113;
-  --c-surface-2: #1c1c1e;
-  --c-surface-3: #2c2c2e;
-  --c-fill: rgba(120,120,128,.18);
-  --c-fill-strong: rgba(120,120,128,.28);
-  --c-separator: rgba(84,84,88,.58);
-  --c-separator-soft: rgba(84,84,88,.34);
+  --c-bg: #07080a;
+  --c-surface: #13151a;
+  --c-surface-2: #1a1d23;
+  --c-surface-3: #262a31;
+  --c-fill: rgba(120,128,140,.16);
+  --c-fill-strong: rgba(120,128,140,.26);
+  --c-separator: rgba(120,128,140,.4);
+  --c-separator-soft: rgba(120,128,140,.22);
   --c-text: rgba(255,255,255,.96);
-  --c-text-secondary: rgba(235,235,245,.64);
-  --c-text-tertiary: rgba(235,235,245,.38);
+  --c-text-secondary: rgba(224,228,236,.66);
+  --c-text-tertiary: rgba(224,228,236,.4);
   --c-inverse: #000000;
   --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
   --fs-caption-2: 11px;
@@ -659,9 +659,12 @@ html {
   --front-card-min: 64px;
 
   /* Frontend signature tokens: industrial manifest/signage identity */
-  --c-accent: #e8b23c;
-  --c-accent-soft: rgba(232, 178, 60, .14);
-  --c-accent-dim: rgba(232, 178, 60, .5);
+  --c-accent: #f2a93b;
+  --c-accent-soft: rgba(242, 169, 59, .14);
+  --c-accent-dim: rgba(242, 169, 59, .5);
+  --c-accent-2: #3fa79a;
+  --c-accent-2-soft: rgba(63, 167, 154, .16);
+  --c-accent-2-dim: rgba(63, 167, 154, .55);
   --fs-hero-eyebrow: 12px;
 }
 
@@ -751,29 +754,6 @@ html {
   max-width: 720px !important;
   margin-left: auto !important;
   margin-right: auto !important;
-}
-
-.service-intro-card {
-  padding: 16px !important;
-  text-align: left;
-  border-radius: 18px !important;
-}
-
-.service-intro-card h3 {
-  margin: 0;
-  color: var(--c-text) !important;
-  font-size: 17px !important;
-  font-weight: 600 !important;
-  line-height: 1.2 !important;
-  letter-spacing: 0 !important;
-  text-transform: none !important;
-}
-
-.service-intro-card p {
-  margin-top: 6px !important;
-  color: var(--c-text-secondary) !important;
-  font-size: 15px !important;
-  line-height: 1.35 !important;
 }
 
 /* Action/request layout */
@@ -1051,9 +1031,9 @@ nav.fixed img {
     gap: 18px !important;
   }
 
-  .package-card svg {
-    width: 58px !important;
-    height: 58px !important;
+  .package-icon-badge svg {
+    width: 26px !important;
+    height: 26px !important;
   }
 
   nav.fixed {
@@ -1208,36 +1188,6 @@ section[id],
   color: var(--c-accent) !important;
 }
 
-/* Services overview cards */
-#services-overview .service-intro-card {
-  display: grid;
-  justify-items: center;
-  gap: 10px;
-  text-align: center;
-  padding: 22px 16px !important;
-  transition: border-color 200ms ease, background 200ms ease, transform 200ms ease;
-}
-
-#services-overview .service-intro-card:hover {
-  border-color: var(--c-accent-dim);
-  background: var(--c-surface-2);
-  transform: translateY(-2px);
-}
-
-.service-intro-icon {
-  width: 30px;
-  height: 30px;
-  color: var(--c-accent);
-}
-
-#services-overview .service-intro-card h3 {
-  text-align: center !important;
-}
-
-#services-overview .service-intro-card p {
-  text-align: center !important;
-}
-
 /* Prices: manifest-style dotted leader rows with tabular mono figures */
 .price-list {
   display: grid;
@@ -1335,5 +1285,346 @@ section[id],
 
   .hero-cta {
     width: 100%;
+  }
+}
+
+/* =========================================================================
+   Vitality pass — signature system
+   The manifest identity stays, but the page now has depth (layered amber /
+   teal glow), motion (a running route strip, hazard-tape section breaks)
+   and a repeated signature: corner registration marks on every card, like
+   the alignment marks stencilled on a shipping crate.
+   ========================================================================= */
+
+/* Corner registration marks — the page's signature element */
+.site-frontend .panel,
+.site-frontend .package-card,
+.service-accordion-card {
+  position: relative;
+  overflow: visible;
+}
+
+.site-frontend .panel::before,
+.site-frontend .panel::after,
+.service-accordion-card::before,
+.service-accordion-card::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  opacity: .85;
+}
+
+.site-frontend .panel::before,
+.service-accordion-card::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--c-accent);
+  border-left: 2px solid var(--c-accent);
+}
+
+.site-frontend .panel::after,
+.service-accordion-card::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--c-accent-2);
+  border-right: 2px solid var(--c-accent-2);
+}
+
+/* Hero atmosphere */
+.hero-glow {
+  position: absolute;
+  inset: -10% -20% auto -20%;
+  height: 70%;
+  z-index: -1;
+  background:
+    radial-gradient(46% 60% at 26% 20%, var(--c-accent-soft), transparent 68%),
+    radial-gradient(40% 55% at 78% 32%, var(--c-accent-2-soft), transparent 70%);
+  filter: blur(6px);
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: .5;
+  background-image:
+    linear-gradient(var(--c-separator-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--c-separator-soft) 1px, transparent 1px);
+  background-size: 34px 34px;
+  -webkit-mask-image: radial-gradient(65% 55% at 50% 30%, #000 0%, transparent 78%);
+  mask-image: radial-gradient(65% 55% at 50% 30%, #000 0%, transparent 78%);
+}
+
+/* Route marquee — a running strip of the service area between hero and services */
+.route-marquee {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--c-separator-soft);
+  border-bottom: 1px solid var(--c-separator-soft);
+  background: var(--c-surface);
+  mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
+
+.route-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: route-scroll 34s linear infinite;
+}
+
+.route-marquee-set {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.route-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 22px;
+  color: var(--c-text-secondary);
+  font-family: var(--font-mono-stack);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.route-marquee-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--c-accent);
+  flex-shrink: 0;
+}
+
+@keyframes route-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-marquee-track {
+    animation: none;
+  }
+}
+
+/* Hazard-stripe divider — used at major section breaks */
+.hazard-divider {
+  height: 8px;
+  background-image: repeating-linear-gradient(-45deg, var(--c-accent) 0 10px, #0b0d10 10px 20px);
+  opacity: .9;
+}
+
+/* Services lede */
+.services-lede {
+  margin-top: 12px;
+  color: var(--c-text-secondary);
+  font-size: var(--fs-subhead);
+  line-height: 1.4;
+}
+
+/* Services explainer accordion */
+.service-accordion-list {
+  display: grid;
+  gap: 14px;
+}
+
+.service-accordion-card {
+  border: 1px solid var(--c-separator-soft);
+  border-radius: var(--radius-card);
+  background: linear-gradient(180deg, var(--c-surface), var(--c-surface) 60%, var(--c-surface-2));
+  transition: border-color 200ms ease, background 200ms ease;
+}
+
+.service-accordion-card.is-open {
+  border-color: var(--c-accent-dim);
+}
+
+.service-accordion-summary {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  border: 0;
+}
+
+.service-icon-badge {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--c-accent-soft);
+  border: 1px solid var(--c-accent-dim);
+}
+
+.service-icon-glyph {
+  width: 24px;
+  height: 24px;
+  color: var(--c-accent);
+}
+
+.service-accordion-heading {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 2px;
+}
+
+.service-code {
+  color: var(--c-accent-2);
+  font-family: var(--font-mono-stack);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .14em;
+}
+
+.service-accordion-title {
+  color: var(--c-text);
+  font-family: var(--font-display-stack);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.service-accordion-teaser {
+  color: var(--c-text-secondary);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.service-accordion-body {
+  padding: 0 16px 18px;
+  border-top: 1px solid var(--c-separator-soft);
+  margin-top: 2px;
+  padding-top: 16px;
+}
+
+.service-accordion-body p {
+  color: var(--c-text-secondary);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.service-bullets {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.service-bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--c-text-secondary);
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.service-bullet-icon {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  color: var(--c-accent-2);
+}
+
+.service-accordion-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.service-price-tag {
+  color: var(--c-accent);
+  font-family: var(--font-mono-stack);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: .02em;
+}
+
+/* Accordion reveal motion — used by every expand-in-place panel on the
+   frontend so nothing is clipped or forced into an inner scrollbar. */
+.accordion-panel {
+  animation: accordion-in 280ms cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes accordion-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accordion-panel {
+    animation: none;
+  }
+}
+
+/* Package cards: promote from flat list rows to proper elevated cards */
+.site-frontend .package-card {
+  border: 1px solid var(--c-separator-soft) !important;
+  border-radius: var(--radius-card) !important;
+  background: var(--c-surface-2) !important;
+  padding: 20px !important;
+  transition: border-color 200ms ease, transform 200ms ease;
+}
+
+.site-frontend .package-card + .package-card {
+  margin-top: 0 !important;
+}
+
+.site-frontend .package-card.is-popular {
+  border-color: var(--c-accent-dim) !important;
+  background: linear-gradient(180deg, var(--c-accent-soft), var(--c-surface-2) 55%) !important;
+}
+
+.package-ribbon {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--c-accent);
+  color: var(--c-inverse);
+  font-family: var(--font-mono-stack);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.package-icon-badge {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: var(--c-surface-3);
+  border: 1px solid var(--c-separator-soft);
+  color: var(--c-accent);
+}
+
+@media (min-width: 640px) {
+  .package-icon-badge {
+    width: 76px;
+    height: 76px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-accordion-card {
+    transition: none;
   }
 }

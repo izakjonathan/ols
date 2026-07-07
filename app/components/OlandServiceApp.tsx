@@ -138,6 +138,51 @@ let packages: CarePackage[] = [
   { id: "fullservice", title: "Full service", price: 3999, icon: "laurel", items: ["Planlægning", "Pakke-/bærehjælp", "Transport", "Oprydning/bortkørsel"] }
 ];
 
+type ServiceExplainer = { id: string; icon: string; code: string; title: string; teaser: string; body: string; bullets: string[]; priceFrom?: string };
+
+const serviceExplainers: ServiceExplainer[] = [
+  {
+    id: "flytning",
+    icon: "box",
+    code: "01 · BOHAVE",
+    title: "Flytning",
+    teaser: "Fra første kasse til sidste skruetrækker – vi tager hele flytningen.",
+    body: "Vi håndterer flytningen fra A til Z, så du kan bruge kræfterne på at falde til i det nye hjem i stedet for at bære kasser ned ad trapper. Vores folk pakker forsigtigt med dine ting, som var de deres egne.",
+    bullets: ["Pakning og nedpakning af bohave", "Bæring op og ned ad trapper uden elevator", "Sikker fastspænding i egne transportbiler", "Opsætning af møbler på den nye adresse"],
+    priceFrom: "Fra 1.499 kr."
+  },
+  {
+    id: "transport",
+    icon: "truck",
+    code: "02 · GODS",
+    title: "Transport & varekørsel",
+    teaser: "Hurtig og sikker kørsel af gods, møbler og udstyr – i byen eller på tværs af landet.",
+    body: "Skal noget hentes eller leveres samme dag? Vi kører møbler, paller, maskiner og erhvervsgods med kort varsel og holder dig opdateret hele vejen, så du altid ved, hvor forsendelsen er.",
+    bullets: ["Afhentning ofte samme dag", "Møbler, paller og erhvervsgods", "Forsikret gods under hele turen", "Fleksible tidsrum – også aften og weekend"],
+    priceFrom: "Fra 499 kr."
+  },
+  {
+    id: "opbevaring",
+    icon: "warehouse",
+    code: "03 · LAGER",
+    title: "Opbevaring",
+    teaser: "Midlertidig eller løbende opbevaring af dine ting i tørre, sikrede faciliteter.",
+    body: "Mellem to boliger, midt i en renovering, eller bare pladsmangel derhjemme? Vi henter dine ting, registrerer dem på en inventarliste og opbevarer dem sikkert, indtil du er klar til at få dem tilbage.",
+    bullets: ["Fleksibel opbevaringsperiode – uger eller år", "Afhentning og aflevering ved din dør", "Tørt, aflåst og overvåget lager", "Inventarliste, så intet bliver væk"],
+    priceFrom: "Kontakt for pris"
+  },
+  {
+    id: "erhverv",
+    icon: "handshake",
+    code: "04 · ERHVERV",
+    title: "Erhverv & logistik",
+    teaser: "Fleksibel logistikpartner til virksomheder, events og kontorflytning.",
+    body: "Fra enkeltstående kontorflytninger til løbende kørselsaftaler – vi går ind som en fast logistikpartner, der kender jeres rutiner, fakturerer korrekt på CVR og løser akutte opgaver med kort varsel.",
+    bullets: ["Fast tilknyttet kontaktperson", "Fakturering til virksomhed på CVR", "Planlagte aftaler eller akutte opgaver", "Håndtering af udstyr, inventar og møbler"],
+    priceFrom: "Fra 899 kr."
+  }
+];
+
 const statuses: OrderStatus[] = ["Ny", "Bekræftet", "Planlagt", "I gang", "Udført", "Faktura sendt", "Betaling modtaget", "Annulleret"];
 const paymentStatuses: PaymentStatus[] = ["Ikke faktureret", "Faktura sendt", "Betalt", "Forfalden"];
 const priorities: Priority[] = ["Normal", "Haster", "VIP"];
@@ -283,6 +328,7 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
   const [quoteFiles, setQuoteFiles] = useState<string[]>([]);
   const [customerInfoOpen, setCustomerInfoOpen] = useState(false);
   const [openCarIds, setOpenCarIds] = useState<Record<string, boolean>>({});
+  const [openServiceKey, setOpenServiceKey] = useState<string | null>(null);
   const [quoteForm, setQuoteForm] = useState({
     name: "",
     phone: "",
@@ -893,6 +939,8 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
       <div className={isBackend ? "pt-24 sm:pt-24" : ""}>
       {!isBackend && <>
       <section id="top" className="landing-section relative grid place-items-center px-5 text-center sm:px-8 lg:px-12">
+        <div className="hero-glow" aria-hidden="true" />
+        <div className="hero-grid" aria-hidden="true" />
         <div className="mx-auto max-w-5xl">
           <p className="eyebrow hero-eyebrow"><span className="hero-eyebrow-dot" aria-hidden="true" />Book direkte online</p>
           <h1 className="landing-title text-white">
@@ -909,28 +957,52 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
         </div>
       </section>
 
+      <div className="route-marquee" aria-hidden="true">
+        <div className="route-marquee-track">
+          {Array.from({ length: 2 }).map((_, loop) => (
+            <div className="route-marquee-set" key={loop}>
+              {["København", "Aarhus", "Odense", "Aalborg", "Esbjerg", "Kolding", "Randers", "Herning"].map((city) => (
+                <span key={`${loop}-${city}`} className="route-marquee-item"><Icon name="truck" className="route-marquee-icon" />{city}</span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
       <section id="services-overview" className="section-panel px-5 sm:px-8 lg:px-12">
-        <div className="mx-auto grid h-full max-w-4xl content-center gap-8 text-center">
-          <div>
-            <p className="eyebrow">Services</p>
+        <div className="mx-auto grid h-full max-w-3xl content-center gap-8">
+          <div className="text-center">
+            <p className="eyebrow">Ydelser</p>
             <h2 className="section-title mt-3">Hvad Øland Service hjælper med</h2>
+            <p className="services-lede">Fire kerneopgaver, én kontaktperson. Tryk på en ydelse for at se, hvad den dækker.</p>
           </div>
-          <div className="grid gap-3 sm:grid-cols-3">
-            <article className="service-intro-card">
-              <Icon name="box" className="service-intro-icon" />
-              <h3>Flytning</h3>
-              <p>Tekst kommer senere.</p>
-            </article>
-            <article className="service-intro-card">
-              <Icon name="truck" className="service-intro-icon" />
-              <h3>Transport</h3>
-              <p>Tekst kommer senere.</p>
-            </article>
-            <article className="service-intro-card">
-              <Icon name="warehouse" className="service-intro-icon" />
-              <h3>Opbevaring</h3>
-              <p>Tekst kommer senere.</p>
-            </article>
+          <div className="service-accordion-list">
+            {serviceExplainers.map((item) => {
+              const open = openServiceKey === item.id;
+              return (
+                <article key={item.id} className={`service-accordion-card${open ? " is-open" : ""}`}>
+                  <button type="button" className="service-accordion-summary" aria-expanded={open} onClick={() => setOpenServiceKey((current) => (current === item.id ? null : item.id))}>
+                    <span className="service-icon-badge"><Icon name={item.icon} className="service-icon-glyph" /></span>
+                    <div className="service-accordion-heading">
+                      <span className="service-code">{item.code}</span>
+                      <h3 className="service-accordion-title">{item.title}</h3>
+                      <span className="service-accordion-teaser">{item.teaser}</span>
+                    </div>
+                    <span className={`chevron-toggle ${open ? "is-open" : ""}`}>›</span>
+                  </button>
+                  {open && <div className="service-accordion-body accordion-panel">
+                    <p>{item.body}</p>
+                    <ul className="service-bullets">
+                      {item.bullets.map((bullet) => <li key={bullet}><Icon name="badge" className="service-bullet-icon" />{bullet}</li>)}
+                    </ul>
+                    <div className="service-accordion-footer">
+                      <span className="service-price-tag">{item.priceFrom}</span>
+                      <a href="#action" className="outline-button">Book denne ydelse</a>
+                    </div>
+                  </div>}
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -948,7 +1020,7 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
                 <div><h3 className="tight-card-title">Bliv ringet op</h3></div>
                 <span className={`chevron-toggle ${callbackExpanded ? "is-open" : ""}`}>›</span>
               </button>
-              {callbackExpanded && <form onSubmit={submitCallback} className="mt-3 grid max-h-[38svh] gap-3 overflow-y-auto pr-1">
+              {callbackExpanded && <form onSubmit={submitCallback} className="mt-3 grid gap-3 accordion-panel">
                 <Field label="Navn"><TextInput value={callbackName} onChange={(event) => setCallbackName(event.target.value)} placeholder="Fulde navn" required /></Field>
                 <Field label="Telefon"><TextInput inputMode="tel" value={callbackPhone} onChange={(event) => setCallbackPhone(event.target.value)} placeholder="26848789" required /></Field>
                 <Field label="Note"><TextArea value={callbackNote} onChange={(event) => setCallbackNote(event.target.value)} placeholder="Hvornår skal vi ringe? Hvad handler det om?" /></Field>
@@ -961,7 +1033,7 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
                 <div><h3 className="tight-card-title">Gratis flyttetilbud</h3></div>
                 <span className={`chevron-toggle ${quoteExpanded ? "is-open" : ""}`}>›</span>
               </button>
-              {quoteExpanded && <form onSubmit={submitMovingQuote} className="mt-3 grid max-h-[42svh] gap-3 overflow-y-auto pr-1">
+              {quoteExpanded && <form onSubmit={submitMovingQuote} className="mt-3 grid gap-3 accordion-panel">
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Field label="Navn"><TextInput value={quoteForm.name} onChange={(event) => setQuoteForm({ ...quoteForm, name: event.target.value })} required /></Field>
                   <Field label="Telefon"><TextInput inputMode="tel" value={quoteForm.phone} onChange={(event) => setQuoteForm({ ...quoteForm, phone: event.target.value })} required /></Field>
@@ -1010,7 +1082,7 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
                     <div><h3 className="text-[1.18rem] uppercase tight-card-title text-white sm:text-2xl">Forespørgsel</h3></div>
                     <span className={`chevron-toggle ${open ? "is-open" : ""}`}>›</span>
                   </button>
-                  {open && <><div className="mt-3 max-h-[36svh] overflow-y-auto pr-1"><CarEditor car={car} preferredDate={preferredDate} preferredTime={preferredTime} onDateChange={setPreferredDate} onTimeChange={setPreferredTime} onPatch={(patch) => updateCar(car.id, patch)} onToggle={(key, itemId) => toggleCarArray(car.id, key, itemId)} /></div><div className="request-total-row">Opgave {index + 1} total <strong className="ml-3 text-lg text-white">{kr(carTotal(car))}</strong></div></>}
+                  {open && <><div className="mt-3 accordion-panel"><CarEditor car={car} preferredDate={preferredDate} preferredTime={preferredTime} onDateChange={setPreferredDate} onTimeChange={setPreferredTime} onPatch={(patch) => updateCar(car.id, patch)} onToggle={(key, itemId) => toggleCarArray(car.id, key, itemId)} /></div><div className="request-total-row">Opgave {index + 1} total <strong className="ml-3 text-lg text-white">{kr(carTotal(car))}</strong></div></>}
                   {cars.length > 1 && <button type="button" className="small-danger mt-3" onClick={() => { setCars((current) => current.filter((item) => item.id !== car.id)); setOpenCarIds((current) => { const next = { ...current }; delete next[car.id]; return next; }); }}>Fjern</button>}
                 </article>;
               })}
@@ -1021,7 +1093,7 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
                 <div><p className="eyebrow tight-card-kicker">Registrer</p><h3 className="mt-1 text-[1.18rem] uppercase tight-card-title text-white sm:text-2xl">Kundeinformation</h3></div>
                 <span className={`chevron-toggle ${customerInfoOpen ? "is-open" : ""}`}>›</span>
               </button>
-              {customerInfoOpen && <div className="mt-3 grid max-h-[34svh] gap-3 overflow-y-auto pr-1">
+              {customerInfoOpen && <div className="mt-3 grid gap-3 accordion-panel">
                 <Field label="Navn"><TextInput required value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} placeholder="Fulde navn" /></Field>
                 <Field label="Telefon"><TextInput required value={customer.phone} onChange={(e) => setCustomer({ ...customer, phone: e.target.value })} placeholder="26848789" /></Field>
                 <Field label="Email"><TextInput type="email" value={customer.email} onChange={(e) => setCustomer({ ...customer, email: e.target.value })} placeholder="kunde@email.dk" /></Field>
@@ -1036,7 +1108,9 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
         </div>
       </section>
 
-      <section id="priser" className="prices-section px-5 sm:px-8 lg:px-12"><div className="prices-inner mx-auto max-w-7xl"><div className="prices-heading text-center"><p className="eyebrow">Ydelser</p><h2 className="section-title">Transport og logistik</h2></div><div className="prices-grid"><div className="panel p-4 sm:p-5"><h3 className="panel-title">Enkeltydelser</h3><div className="price-list">{services.map((row) => <div key={row.id} className="price-row"><span className="price-row-name">{row.name}</span><span className="price-row-leader" aria-hidden="true" /><span className="price-row-value">{kr(row.price)}</span></div>)}</div><p className="mt-6 text-sm leading-6 text-white/86">Priserne er fra-priser og kan variere afhængigt af opgavens omfang og afstand.</p><div className="mt-9"><h3 className="panel-title">Tillæg</h3><div className="price-list">{extras.map((row) => <div key={row.id} className="price-row"><span className="price-row-name">{row.name}</span><span className="price-row-leader" aria-hidden="true" /><span className="price-row-value">{row.note ?? kr(row.price)}</span></div>)}</div></div></div><div id="pakker" className="packages-list"><h3 className="panel-title mb-0">Pakkeløsninger</h3>{packages.map((pack) => <article key={pack.title} className="package-card"><div className="flex items-center gap-5"><Icon name={pack.icon} className="h-16 w-16 shrink-0 text-white sm:h-20 sm:w-20" /><div className="min-w-0 flex-1"><div className="flex flex-wrap items-baseline justify-between gap-2"><h4 className="package-title">{pack.title}</h4><p className="package-price">{kr(pack.price)}</p></div><ul className="package-items">{pack.items.map((item) => <li key={item} className="flex gap-2"><span className="text-white">•</span><span>{item}</span></li>)}</ul></div></div></article>)}</div></div></div></section>
+      <div className="hazard-divider" aria-hidden="true" />
+
+      <section id="priser" className="prices-section px-5 sm:px-8 lg:px-12"><div className="prices-inner mx-auto max-w-7xl"><div className="prices-heading text-center"><p className="eyebrow">Ydelser</p><h2 className="section-title">Transport og logistik</h2></div><div className="prices-grid"><div className="panel p-4 sm:p-5"><h3 className="panel-title">Enkeltydelser</h3><div className="price-list">{services.map((row) => <div key={row.id} className="price-row"><span className="price-row-name">{row.name}</span><span className="price-row-leader" aria-hidden="true" /><span className="price-row-value">{kr(row.price)}</span></div>)}</div><p className="mt-6 text-sm leading-6 text-white/86">Priserne er fra-priser og kan variere afhængigt af opgavens omfang og afstand.</p><div className="mt-9"><h3 className="panel-title">Tillæg</h3><div className="price-list">{extras.map((row) => <div key={row.id} className="price-row"><span className="price-row-name">{row.name}</span><span className="price-row-leader" aria-hidden="true" /><span className="price-row-value">{row.note ?? kr(row.price)}</span></div>)}</div></div></div><div id="pakker" className="packages-list"><h3 className="panel-title mb-0">Pakkeløsninger</h3>{packages.map((pack) => <article key={pack.title} className={`package-card${pack.id === "moving" ? " is-popular" : ""}`}>{pack.id === "moving" && <span className="package-ribbon">Mest valgt</span>}<div className="flex items-center gap-5"><span className="package-icon-badge"><Icon name={pack.icon} className="h-8 w-8 sm:h-10 sm:w-10" /></span><div className="min-w-0 flex-1"><div className="flex flex-wrap items-baseline justify-between gap-2"><h4 className="package-title">{pack.title}</h4><p className="package-price">{kr(pack.price)}</p></div><ul className="package-items">{pack.items.map((item) => <li key={item} className="flex gap-2"><span className="text-white">•</span><span>{item}</span></li>)}</ul></div></div></article>)}</div></div></div></section>
       </>}
 
       {isBackend && <section id="admin" className="backend-safe-bottom backend-screen px-5 sm:px-8 lg:px-12"><div className="mx-auto max-w-7xl">
