@@ -938,36 +938,24 @@ export default function OlandServiceApp({ mode = "frontend", employeeToken = "" 
 
       <div className={isBackend ? "pt-24 sm:pt-24" : ""}>
       {!isBackend && <>
-      <section id="top" className="landing-section relative grid place-items-center px-5 text-center sm:px-8 lg:px-12">
-        <div className="hero-glow" aria-hidden="true" />
-        <div className="hero-grid" aria-hidden="true" />
-        <div className="mx-auto max-w-5xl">
-          <p className="eyebrow hero-eyebrow"><span className="hero-eyebrow-dot" aria-hidden="true" />Book direkte online</p>
-          <h1 className="landing-title text-white">
-            <span>Transport</span>
-            <span>Og logistik</span>
-            <span>I sikre</span>
-            <span>Hænder</span>
-          </h1>
-          <p className="landing-subtitle">Kvalitet . Omhu . Tillid</p>
-          <div className="hero-actions">
-            <a href="tel:+4526848789" className="primary-button hero-cta"><Icon name="phone" className="h-4 w-4" />Ring nu</a>
-            <a href="#action" className="outline-button hero-cta">Book opgave</a>
+      <section id="top" className="landing-section relative flex flex-col justify-end px-6 pb-12 sm:px-10 lg:justify-center lg:px-14">
+        <div className="hero-bg-image" aria-hidden="true" />
+        <div className="hero-bg-fade" aria-hidden="true" />
+        <div className="relative mx-auto w-full max-w-xl">
+          <span className="hero-chip"><span className="hero-chip-dot" aria-hidden="true" />Øland Service</span>
+          <h1 className="hero-heading">Din flytning, håndteret roligt og sikkert hele vejen.</h1>
+          <p className="hero-subline">Flytning, transport og opbevaring i hele Danmark.</p>
+          <div className="hero-pill-track" aria-hidden="true" />
+          <div className="hero-pill-bar">
+            <a href="tel:+4526848789" className="hero-pill-icon" aria-label="Ring nu"><Icon name="phone" className="h-4 w-4" /></a>
+            <a href="#action" className="hero-pill-cta">Book opgave</a>
+            <a href="#services-overview" className="hero-pill-icon" aria-label="Se ydelser">
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+            </a>
           </div>
         </div>
       </section>
 
-      <div className="route-marquee" aria-hidden="true">
-        <div className="route-marquee-track">
-          {Array.from({ length: 2 }).map((_, loop) => (
-            <div className="route-marquee-set" key={loop}>
-              {["København", "Aarhus", "Odense", "Aalborg", "Esbjerg", "Kolding", "Randers", "Herning"].map((city) => (
-                <span key={`${loop}-${city}`} className="route-marquee-item"><Icon name="truck" className="route-marquee-icon" />{city}</span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
 
       <section id="services-overview" className="section-panel px-5 sm:px-8 lg:px-12">
         <div className="mx-auto grid h-full max-w-3xl content-center gap-8">

@@ -287,10 +287,6 @@ select.form-input, select.time-control-input {
 }
 
 /* Landing hero */
-.landing-title span {
-  display: block;
-}
-
 /* Action / request section */
 .action-section > div {
   transform: none !important;
@@ -658,13 +654,13 @@ html {
   --front-card-pad: 16px;
   --front-card-min: 64px;
 
-  /* Frontend signature tokens: brass gold + slate — a quieter, premium duo */
-  --c-accent: #c9a463;
-  --c-accent-soft: rgba(201, 164, 99, .12);
-  --c-accent-dim: rgba(201, 164, 99, .42);
-  --c-accent-2: #5c7c8c;
-  --c-accent-2-soft: rgba(92, 124, 140, .14);
-  --c-accent-2-dim: rgba(92, 124, 140, .45);
+  /* Frontend signature tokens: crisp sky-blue, matching the hero photo */
+  --c-accent: #3ab6ff;
+  --c-accent-soft: rgba(58, 182, 255, .14);
+  --c-accent-dim: rgba(58, 182, 255, .5);
+  --c-accent-2: #2f5fdb;
+  --c-accent-2-soft: rgba(47, 95, 219, .16);
+  --c-accent-2-dim: rgba(47, 95, 219, .5);
   --fs-hero-eyebrow: 12px;
 }
 
@@ -708,29 +704,25 @@ html {
 
 
 
-/* Frontend typography rhythm */
-.landing-title {
-  display: grid !important;
-  gap: .03em !important;
-  color: var(--c-text) !important;
-  font-size: clamp(3rem, 13vw, 6.2rem) !important;
-  font-weight: 700 !important;
-  line-height: .94 !important;
-  letter-spacing: -0.06em !important;
-  text-transform: none !important;
-  text-align: center !important;
+/* Frontend typography rhythm — clean, left-aligned hero */
+.hero-heading {
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: clamp(2.1rem, 8vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  text-align: left;
 }
 
-.landing-subtitle {
-  margin-top: 24px !important;
-  white-space: nowrap !important;
-  color: var(--c-text-secondary) !important;
-  font-size: 15px !important;
-  font-weight: 600 !important;
-  line-height: 1.2 !important;
-  letter-spacing: 0 !important;
-  text-transform: none !important;
-  text-align: center !important;
+.hero-subline {
+  margin-top: 14px;
+  max-width: 30ch;
+  color: rgba(255,255,255,.72);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: left;
 }
 
 .section-title {
@@ -1116,65 +1108,93 @@ section[id],
   transform: translateY(-1px);
 }
 
-/* Hero */
-.site-frontend .hero-eyebrow {
-  display: inline-flex !important;
+/* Hero: small logo-style chip, clean bold heading, bottom pill action bar
+   — inspired by minimal native-app UI rather than manifest signage */
+.hero-chip {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  margin: 0 auto 18px;
-  color: var(--c-accent) !important;
-  font-family: var(--font-mono-stack);
-  font-size: var(--fs-hero-eyebrow) !important;
-  font-weight: 500 !important;
-  letter-spacing: .13em !important;
-  text-transform: uppercase !important;
+  margin-bottom: 18px;
+  padding: 7px 14px 7px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.16);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
-.hero-eyebrow-dot {
-  width: 6px;
-  height: 6px;
+.hero-chip-dot {
+  width: 7px;
+  height: 7px;
   border-radius: 999px;
   background: var(--c-accent);
-  box-shadow: 0 0 0 4px var(--c-accent-soft);
+  box-shadow: 0 0 0 3px var(--c-accent-soft);
 }
 
-.site-frontend .landing-title {
-  font-family: var(--font-display-stack) !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.02em !important;
-  text-transform: uppercase !important;
+.hero-pill-track {
+  width: 34px;
+  height: 3px;
+  margin: 30px 0 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.22);
 }
 
-.site-frontend .landing-subtitle {
-  font-family: var(--font-mono-stack);
-  letter-spacing: .05em !important;
-  text-transform: uppercase !important;
-  color: var(--c-text-secondary) !important;
-}
-
-.hero-actions {
-  margin-top: 34px;
+.hero-pill-bar {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-
-.hero-cta {
-  display: inline-flex !important;
   align-items: center;
   gap: 8px;
-  min-width: 9.5rem;
+  width: 100%;
+  max-width: 22rem;
+  padding: 6px;
+  border-radius: var(--radius-pill);
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.14);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
-/* Section titles / eyebrows share the manifest display treatment */
+.hero-pill-icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(255,255,255,.08);
+  transition: background 180ms ease;
+}
+
+.hero-pill-icon:hover {
+  background: rgba(255,255,255,.16);
+}
+
+.hero-pill-cta {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  height: 44px;
+  border-radius: 999px;
+  background: #fff;
+  color: #000;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Section titles: clean and bold, sentence case — no more condensed
+   uppercase manifest treatment */
 .site-frontend .section-title,
 .site-frontend .package-title,
 .site-frontend .prices-heading .section-title {
-  font-family: var(--font-display-stack) !important;
-  text-transform: uppercase !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  text-transform: none !important;
 }
 
 .site-frontend .eyebrow {
@@ -1279,17 +1299,6 @@ section[id],
   }
 }
 
-@media (max-width: 430px) {
-  .hero-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .hero-cta {
-    width: 100%;
-  }
-}
-
 /* =========================================================================
    Vitality pass — signature system
    The manifest identity stays, but the page now has depth (layered amber /
@@ -1298,45 +1307,15 @@ section[id],
    the alignment marks stencilled on a shipping crate.
    ========================================================================= */
 
-/* Corner registration marks — refined, detached from the edge like a
-   quiet embossed mark rather than crate stencilling */
+/* Clean minimal card surfaces: soft ambient shadow, no ornamentation */
 .site-frontend .panel,
 .site-frontend .package-card,
 .service-accordion-card {
   position: relative;
-  overflow: visible;
 }
 
-.site-frontend .panel::before,
-.site-frontend .panel::after,
-.service-accordion-card::before,
-.service-accordion-card::after {
-  content: "";
-  position: absolute;
-  width: 9px;
-  height: 9px;
-  pointer-events: none;
-  opacity: .55;
-}
-
-.site-frontend .panel::before,
-.service-accordion-card::before {
-  top: -5px;
-  left: -5px;
-  border-top: 1px solid var(--c-accent);
-  border-left: 1px solid var(--c-accent);
-}
-
-.site-frontend .panel::after,
-.service-accordion-card::after {
-  bottom: -5px;
-  right: -5px;
-  border-bottom: 1px solid var(--c-accent);
-  border-right: 1px solid var(--c-accent);
-}
-
-/* Soft ambient depth on every frontend card — the "sophisticated" layer:
-   a diffuse shadow plus a hairline inner highlight instead of a flat border */
+/* Soft ambient depth on every frontend card — a diffuse shadow plus a
+   hairline inner highlight instead of a flat border */
 .site-frontend .panel,
 .site-frontend .package-card,
 .service-accordion-card {
@@ -1357,91 +1336,25 @@ section[id],
   box-shadow: 0 1px 0 0 rgba(255,255,255,.06) inset, 0 24px 48px -22px rgba(0,0,0,.7);
 }
 
-/* Hero atmosphere */
-.hero-glow {
-  position: absolute;
-  inset: -14% -20% auto -20%;
-  height: 76%;
-  z-index: -1;
-  background:
-    radial-gradient(50% 65% at 24% 18%, var(--c-accent-soft), transparent 70%),
-    radial-gradient(44% 60% at 80% 30%, var(--c-accent-2-soft), transparent 72%);
-  filter: blur(30px);
-}
-
-.hero-grid {
+/* Hero atmosphere: the uploaded blue/black gradient photo as a real
+   background, fading into the page's solid black by the bottom of the
+   section so scrolling past the hero reads as scrolling into black. */
+.hero-bg-image {
   position: absolute;
   inset: 0;
-  z-index: -1;
-  opacity: .4;
-  background-image: radial-gradient(var(--c-separator-soft) 1px, transparent 1px);
-  background-size: 28px 28px;
-  -webkit-mask-image: radial-gradient(60% 50% at 50% 26%, #000 0%, transparent 78%);
-  mask-image: radial-gradient(60% 50% at 50% 26%, #000 0%, transparent 78%);
+  background-image: url("/images/hero-gradient.jpg");
+  background-size: cover;
+  background-position: top right;
 }
 
-/* Route marquee — a running strip of the service area between hero and services */
-.route-marquee {
-  position: relative;
-  overflow: hidden;
-  border-top: 1px solid var(--c-separator-soft);
-  border-bottom: 1px solid var(--c-separator-soft);
-  background: var(--c-surface);
-  mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+.hero-bg-fade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.1) 0%, rgba(0,0,0,.05) 30%, var(--c-bg) 94%),
+    linear-gradient(0deg, transparent 0%, rgba(0,0,0,.35) 100%);
 }
 
-.route-marquee-track {
-  display: flex;
-  width: max-content;
-  animation: route-scroll 34s linear infinite;
-}
-
-.route-marquee-set {
-  display: flex;
-  flex-shrink: 0;
-}
-
-.route-marquee-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 13px 16px;
-  color: var(--c-text-secondary);
-  font-family: var(--font-mono-stack);
-  font-size: 12.5px;
-  font-weight: 500;
-  letter-spacing: .02em;
-  white-space: nowrap;
-}
-
-.route-marquee-item::after {
-  content: "";
-  width: 3px;
-  height: 3px;
-  margin-left: 16px;
-  border-radius: 999px;
-  background: var(--c-separator);
-}
-
-.route-marquee-icon {
-  width: 13px;
-  height: 13px;
-  color: var(--c-accent);
-  flex-shrink: 0;
-  opacity: .85;
-}
-
-@keyframes route-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .route-marquee-track {
-    animation: none;
-  }
-}
 
 /* Section divider — a quiet fading hairline with a centered mark,
    replacing the literal hazard-tape motif for something more editorial */
